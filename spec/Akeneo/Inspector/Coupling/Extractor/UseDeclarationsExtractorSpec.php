@@ -37,20 +37,8 @@ EOF;
         $tokens = Tokens::fromCode($content);
         $this->extract($tokens)->shouldReturn(
             [
-                'TranslatableInterface' => [
-                    'aliased'   => false,
-                    'end'       => 24,
-                    'fullName'  => 'Pim\Bundle\TranslationBundle\Entity\TranslatableInterface',
-                    'shortName' => 'TranslatableInterface',
-                    'start'     => 13
-                ],
-                'VersionableInterface' => [
-                    'aliased'   => false,
-                    'end'       => 37,
-                    'fullName'  => 'Pim\Bundle\VersioningBundle\Model\VersionableInterface',
-                    'shortName' => 'VersionableInterface',
-                    'start'     => 26
-                ]
+                'Pim\Bundle\TranslationBundle\Entity\TranslatableInterface',
+                'Pim\Bundle\VersioningBundle\Model\VersionableInterface'
             ]
         );
     }

@@ -33,16 +33,17 @@ class Detector
         $namespaceExtractor = new NamespaceExtractor();
         $classnameExtractor = new ClassNameExtractor();
         foreach ($finder as $file) {
+
             if (strpos($file->getRelativePath(), $namespace) === 0) {
                 $content = $file->getContents();
                 $tokens = Tokens::fromCode($content);
                 $classNamespace = $namespaceExtractor->extract($tokens);
-                $className = $classnameExtractor->extract($tokens);
-                $classFullName = sprintf('%s\%s', $classNamespace, $className);
+                $className      = $classnameExtractor->extract($tokens);
+                $classFullName  = sprintf('%s\%s', $classNamespace, $className);
+
                 $useDeclarationExtractor = new UseDeclarationsExtractor();
                 $useDeclarations = $useDeclarationExtractor->extract($tokens);
-                foreach ($useDeclarations as $useDeclaration) {
-                    $useFullName = $useDeclaration['fullName'];
+                foreach ($useDeclarations as $useFullName) {
                     foreach ($forbiddenUses as $forbiddenUse) {
                         if (strpos($useFullName, $forbiddenUse) !== false) {
                             $couplingViolations[$classFullName][] = $useFullName;

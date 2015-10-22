@@ -36,6 +36,7 @@ class UseViolationsFilter
         $filteredFqcnUses = $violations->getFullQualifiedClassNameViolations();
         foreach ($filteredFqcnUses as $className => $uses) {
             foreach ($uses as $useIndex => $use) {
+                // TODO: it only supports exact exclude FQCN, could be a regex
                 if (in_array($use, $this->excludedUses)) {
                     unset($filteredFqcnUses[$className][$useIndex]);
                 }

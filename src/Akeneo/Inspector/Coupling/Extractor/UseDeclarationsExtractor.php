@@ -41,25 +41,11 @@ class UseDeclarationsExtractor
 
             if (1 === count($declarationParts)) {
                 $fullName = $declarationContent;
-                $declarationParts = explode('\\', $fullName);
-                $shortName = end($declarationParts);
-                $aliased = false;
             } else {
                 $fullName = $declarationParts[0];
-                $shortName = $declarationParts[1];
-                $declarationParts = explode('\\', $fullName);
-                $aliased = $shortName !== end($declarationParts);
             }
 
-            $shortName = trim($shortName);
-
-            $uses[$shortName] = array(
-                'aliased' => $aliased,
-                'end' => $declarationEndIndex,
-                'fullName' => trim($fullName),
-                'shortName' => $shortName,
-                'start' => $index,
-            );
+            $uses[] = trim($fullName);
         }
 
         return $uses;
