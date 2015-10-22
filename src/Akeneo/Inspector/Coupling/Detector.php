@@ -2,6 +2,9 @@
 
 namespace Akeneo\Inspector\Coupling;
 
+use Akeneo\Inspector\Coupling\Extractor\ClassNameExtractor;
+use Akeneo\Inspector\Coupling\Extractor\NamespaceExtractor;
+use Akeneo\Inspector\Coupling\Extractor\UseDeclarationsExtractor;
 use Symfony\Component\Finder\Finder;
 use Symfony\CS\Tokenizer\Tokens;
 
