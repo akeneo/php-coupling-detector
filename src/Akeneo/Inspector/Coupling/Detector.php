@@ -19,7 +19,7 @@ class Detector
      * @param string $namespace
      * @param array  $forbiddenUses
      *
-     * @return Violation
+     * @return Violations
      */
     public function detectCoupling($path, $namespace, $forbiddenUses)
     {
@@ -53,6 +53,6 @@ class Detector
             }
         }
 
-        return new Violation($forbiddenUses, $forbiddenUseCounter);
+        return new Violations($forbiddenUses, $forbiddenUseCounter, $namespace);
     }
 }

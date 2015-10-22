@@ -1,10 +1,19 @@
 Inspector
 =========
 
-Command tools to ease review and enforce quality of Akeneo PIM community and enterprise editions. 
+A set of command to ease the review of Akeneo PIM community and enterprise editions and enforce quality. 
 
-Coupling, long story short
---------------------------
+It relies on internal pieces of fabpot/php-cs-fixer to easily parse code and detect issues.
+
+How to Use?
+-----------
+
+```
+    php inspector coupling-pim-community-dev /home/nico/git/pim-ce-orm/src/
+```
+
+Akeneo Coupling, Long Story Short
+---------------------------------
 
 At the very beginning, we used only Bundles in Akeneo PIM and we encountered some issues to re-use business code which was too much coupled with Symfony Framework and Doctrine ORM.
 
@@ -12,9 +21,12 @@ Then we started to introduce Components to write our very new business code, to 
 
 So we're face a new difficulty, the new Components may depends on several classes located to Bundles and it's "normal" because these classes should be located in Components.
 
+From Akeneo PIM 1.3, we've also introduced Akeneo namespace to extract several pieces of code re-useable for other projects.
+
 The "where to put my code rule" is harder to follow and review, that's why there is an attempt to provide commands to automatically check coupling violations.
 
-From Akeneo PIM 1.3, we've also introduced Akeneo namespace to extract several piece of code re-useable for other projects.
+Namespace rules
+---------------
 
 So basic rules are the following,
  - Akeneo/Component: should never use a Bundle, never use the namespace Pim, never use the namespace PimEnterprise
@@ -22,3 +34,9 @@ So basic rules are the following,
  - Pim/Component: should never use a Bundle, never use the namespace PimEnterprise
  - Pim/Bundle: should never use the namespace PimEnterprise
  - PimEnterprise/Component: should never use a Bundle
+
+Pim Bundles rules
+-----------------
+
+Pim/Bundle/CatalogBundle ...
+
