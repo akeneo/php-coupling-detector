@@ -1,0 +1,22 @@
+#!/usr/bin/env php
+
+<?php
+/**
+ * @author    Nicolas Dupont <nicolas@akeneo.com>
+ * @copyright 2015 Akeneo SAS (http://www.akeneo.com)
+ * @license   http://opensource.org/licenses/MIT MIT
+ */
+set_error_handler(function ($severity, $message, $file, $line) {
+    if ($severity & error_reporting()) {
+        throw new ErrorException($message, 0, $severity, $file, $line);
+    }
+});
+// installed via composer
+if (file_exists($a = __DIR__.'/../../autoload.php')) {
+    require_once $a;
+} else {
+    require_once __DIR__.'/vendor/autoload.php';
+}
+use Akeneo\Inspector\Console\Application;
+$application = new Application();
+$application->run();
