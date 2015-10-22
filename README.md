@@ -14,5 +14,11 @@ So we're face a new difficulty, the new Components may depends on several classe
 
 The "where to put my code rule" is harder to follow and review, that's why there is an attempt to provide commands to automatically check coupling violations.
 
-From Akeneo PIM 1.1 we've also introduced Akeneo namespace to extract business code re-useable for other projects.
+From Akeneo PIM 1.3, we've also introduced Akeneo namespace to extract several piece of code re-useable for other projects.
 
+So basic rules are the following,
+ - Akeneo/Component: should never use a Bundle, never use the namespace Pim, never use the namespace PimEnterprise
+ - Akeneo/Bundle: should never use the namespace Pim, never use the namespace PimEnterprise
+ - Pim/Component: should never use a Bundle, never use the namespace PimEnterprise
+ - Pim/Bundle: should never use the namespace PimEnterprise
+ - PimEnterprise/Component: should never use a Bundle
