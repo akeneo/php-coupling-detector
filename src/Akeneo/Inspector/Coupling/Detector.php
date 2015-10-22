@@ -19,40 +19,37 @@ class Detector
      * @param string $namespace
      * @param array  $forbiddenUses
      *
-     * @return Violations
+     * @return UseViolations
      */
     public function detectCoupling($path, $namespace, $forbiddenUses)
     {
-        $forbiddenUseCounter = [];
         $couplingViolations = [];
         $finder = new Finder();
         $finder->files()->in($path)->name('*.php');
+
+        $namespaceExtractor = new NamespaceExtractor();
+        $classnameExtractor = new ClassNameExtractor();
         foreach ($finder as $file) {
             if (strpos($file->getRelativePath(), $namespace) === 0) {
-
-                $relativePathName = $file->getRelativePathname();
                 $content = $file->getContents();
                 $tokens = Tokens::fromCode($content);
-                $useDeclarationsIndexes = $tokens->getImportUseIndexes();
-                $useDeclarationExtractor = new NamespaceUseDeclarationsExtractor();
-                $useDeclarations = $useDeclarationExtractor->extractNamespaceUseDeclarations($tokens, $useDeclarationsIndexes);
-
+                $classNamespace = $namespaceExtractor->extract($tokens);
+                $className = $classnameExtractor->extract($tokens);
+                $classFullName = sprintf('%s\%s', $classNamespace, $className);
+                $useDeclarationExtractor = new UseDeclarationsExtractor();
+                $useDeclarations = $useDeclarationExtractor->extract($tokens);
                 foreach ($useDeclarations as $useDeclaration) {
                     $useFullName = $useDeclaration['fullName'];
                     foreach ($forbiddenUses as $forbiddenUse) {
                         if (strpos($useFullName, $forbiddenUse) !== false) {
-                            $couplingViolations[$relativePathName][] = $useFullName;
-                            if (!isset($forbiddenUseCounter[$useFullName])) {
-                                $forbiddenUseCounter[$useFullName] = 1;
-                            } else {
-                                $forbiddenUseCounter[$useFullName]++;
-                            }
+                            $couplingViolations[$classFullName][] = $useFullName;
+                            break;
                         }
                     }
                 }
             }
         }
 
-        return new Violations($forbiddenUses, $forbiddenUseCounter, $namespace);
+        return new UseViolations($couplingViolations);
     }
 }

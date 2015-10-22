@@ -5,7 +5,7 @@ namespace Akeneo\Inspector\Coupling;
 use Symfony\CS\Tokenizer\Tokens;
 
 /**
- * Extracts used namespace declarations
+ * Extracts the namespace declarations used as imports in a file
  *
  * @author    Dariusz Rumiński <dariusz.ruminski@gmail.com>
  * @author    Nicolas Dupont <nicolas@akeneo.com>
@@ -14,20 +14,19 @@ use Symfony\CS\Tokenizer\Tokens;
  *
  * @see Symfony\CS\Fixer\Symfony\UnusedUseFixer
  */
-class NamespaceUseDeclarationsExtractor
+class UseDeclarationsExtractor
 {
     /**
      * Copy/paste from a private method of Symfony\CS\Fixer\Symfony\UnusedUseFixer
      *
      * @param Tokens $tokens
-     * @param array  $useIndexes
      *
      * @return array
      */
-    public function extractNamespaceUseDeclarations(Tokens $tokens, array $useIndexes)
+    public function extract(Tokens $tokens)
     {
         $uses = array();
-
+        $useIndexes = $tokens->getImportUseIndexes();
         foreach ($useIndexes as $index) {
             $declarationEndIndex = $tokens->getNextTokenOfKind($index, array(';'));
             $declarationContent = $tokens->generatePartialCode($index + 1, $declarationEndIndex - 1);

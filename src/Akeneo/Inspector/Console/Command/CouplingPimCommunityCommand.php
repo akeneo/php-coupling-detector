@@ -3,7 +3,7 @@
 namespace Akeneo\Inspector\Console\Command;
 
 use Akeneo\Inspector\Coupling\Detector;
-use Akeneo\Inspector\Coupling\ViolationsFilter;
+use Akeneo\Inspector\Coupling\UseViolationsFilter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -60,7 +60,6 @@ class CouplingPimCommunityCommand extends Command
             ],
             'Pim/Bundle'       => [],
         ];
-        $violationFilter = new ViolationsFilter($legacyExclusions);
 
         $output->writeln(sprintf('<info> Detect coupling violations (strict mode %s)</info>', $strictMode ? 'enabled' : 'disabled'));
         $totalCount = 0;
@@ -68,9 +67,10 @@ class CouplingPimCommunityCommand extends Command
             $detector = new Detector($namespace, $forbiddenUse);
             $violations = $detector->detectCoupling($path, $namespace, $forbiddenUse);
             if (!$strictMode) {
+                $violationFilter = new UseViolationsFilter($legacyExclusions[$namespace]);
                 $violations = $violationFilter->filter($violations);
             }
-            $forbiddenUseCounter = $violations->getSortedForbiddenUsesCounter();
+            $forbiddenUseCounter = $violations->getSortedForbiddenUsesCounters();
             $namespaceCount = 0;
             $output->writeln(sprintf('<info>>> Inspect namespace %s</info>', $namespace));
             foreach ($forbiddenUseCounter as $fullName => $count) {
