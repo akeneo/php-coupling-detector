@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Akeneo\\Inspector\\": "src/Akeneo/Inspector/"
+            "Akeneo\\CouplingDetector\\": "src/Akeneo/CouplingDetector/"
         }
     },
     "bin": ["bin/coupling-detector"],

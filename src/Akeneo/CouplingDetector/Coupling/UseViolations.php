@@ -1,6 +1,6 @@
 <?php
 
-namespace Akeneo\Inspector\Coupling;
+namespace Akeneo\CouplingDetector\Coupling;
 
 /**
  * Class UseViolations, allows to store import use violations, for instance when a class import the use of a

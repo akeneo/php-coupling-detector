@@ -1,6 +1,6 @@
 <?php
 
-namespace Akeneo\Inspector\Coupling\Extractor;
+namespace Akeneo\CouplingDetector\TokensExtractor;
 
 use Symfony\CS\Tokenizer\Tokens;
 

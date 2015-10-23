@@ -1,10 +1,10 @@
 <?php
 
-namespace Akeneo\Inspector\Coupling;
+namespace Akeneo\CouplingDetector\Coupling;
 
-use Akeneo\Inspector\Coupling\Extractor\ClassNameExtractor;
-use Akeneo\Inspector\Coupling\Extractor\NamespaceExtractor;
-use Akeneo\Inspector\Coupling\Extractor\UseDeclarationsExtractor;
+use Akeneo\CouplingDetector\TokensExtractor\ClassNameExtractor;
+use Akeneo\CouplingDetector\TokensExtractor\NamespaceExtractor;
+use Akeneo\CouplingDetector\TokensExtractor\UseDeclarationsExtractor;
 use Symfony\Component\Finder\Finder;
 use Symfony\CS\Tokenizer\Tokens;
 
