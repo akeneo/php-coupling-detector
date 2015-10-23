@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @copyright 2015 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/MIT MIT
  */
-class CouplingPimCommunityCommand extends Command
+class PimCommunityCommand extends Command
 {
     /**
      * {@inheritedDoc}
@@ -25,7 +25,7 @@ class CouplingPimCommunityCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('coupling-pim-community-dev')
+            ->setName('pim-community-dev')
             ->setDefinition(
                 array(
                     new InputArgument('path', InputArgument::REQUIRED, 'The pim community dev src path', null),

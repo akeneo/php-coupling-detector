@@ -22,6 +22,7 @@
             "Akeneo\\Inspector\\": "src/Akeneo/Inspector/"
         }
     },
+    "bin": ["bin/coupling-detector"],
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"
