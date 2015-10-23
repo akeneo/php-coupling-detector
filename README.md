@@ -1,5 +1,5 @@
-Inspector
-=========
+Coupling Detector
+=================
 
 A set of command to ease the review of Akeneo PIM community and enterprise editions and enforce quality. 
 
@@ -8,8 +8,10 @@ It relies on internal pieces of fabpot/php-cs-fixer to easily parse code and det
 How to Use?
 -----------
 
+In your `https://github.com/akeneo/pim-community-dev` fork (or clone).
+
 ```
-    php inspector coupling-pim-community-dev /home/nico/git/pim-ce-orm/src/
+    php bin/coupling-detector pim-community-dev
 ```
 
 Akeneo Coupling, Long Story Short

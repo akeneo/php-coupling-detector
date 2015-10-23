@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Akeneo\Inspector\Coupling;
+namespace Akeneo\CouplingDetector\Coupling;
 
 /**
  * Coupling violations filter

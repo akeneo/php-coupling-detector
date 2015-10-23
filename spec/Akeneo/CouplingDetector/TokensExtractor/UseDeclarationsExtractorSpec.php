@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Akeneo\Inspector\Coupling\Extractor;
+namespace spec\Akeneo\CouplingDetector\TokensExtractor;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -10,7 +10,7 @@ class UseDeclarationsExtractorSpec extends ObjectBehavior
 {
     function it_is_initializable()
     {
-        $this->shouldHaveType('Akeneo\Inspector\Coupling\Extractor\UseDeclarationsExtractor');
+        $this->shouldHaveType('Akeneo\CouplingDetector\TokensExtractor\UseDeclarationsExtractor');
     }
 
     function it_extracts_the_class_namespace()

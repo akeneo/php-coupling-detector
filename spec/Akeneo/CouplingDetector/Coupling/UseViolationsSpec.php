@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Akeneo\Inspector\Coupling;
+namespace spec\Akeneo\CouplingDetector\Coupling;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -14,7 +14,7 @@ class UseViolationsSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('Akeneo\Inspector\Coupling\UseViolations');
+        $this->shouldHaveType('Akeneo\CouplingDetector\Coupling\UseViolations');
     }
 
     function it_provides_forbidden_full_qualified_class_name_uses()

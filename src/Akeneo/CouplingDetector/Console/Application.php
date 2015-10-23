@@ -1,8 +1,8 @@
 <?php
 
-namespace Akeneo\Inspector\Console;
+namespace Akeneo\CouplingDetector\Console;
 
-use Akeneo\Inspector\Console\Command\PimCommunityCommand;
+use Akeneo\CouplingDetector\Console\Command\PimCommunityCommand;
 use Symfony\Component\Console\Application as BaseApplication;
 
 /**
@@ -18,7 +18,7 @@ class Application extends BaseApplication
     public function __construct()
     {
         error_reporting(-1);
-        parent::__construct('Akeneo coupling inspector');
+        parent::__construct('Akeneo coupling detector');
         $this->add(new PimCommunityCommand());
     }
 }
