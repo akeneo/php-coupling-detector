@@ -23,4 +23,4 @@ before_script:
     - composer self-update --no-interaction
 
 script:
-    - bin/phpspec run 
+    - php bin/phpspec run
