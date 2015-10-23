@@ -28,15 +28,23 @@ The "where to put my code rule" is harder to follow and review, that's why there
 Namespace rules
 ---------------
 
-So basic rules are the following,
- - Akeneo/Component: should never use a Bundle, never use the namespace Pim, never use the namespace PimEnterprise
- - Akeneo/Bundle: should never use the namespace Pim, never use the namespace PimEnterprise
- - Pim/Component: should never use a Bundle, never use the namespace PimEnterprise
- - Pim/Bundle: should never use the namespace PimEnterprise
- - PimEnterprise/Component: should never use a Bundle
+ - Akeneo: should never use the namespace Pim or PimEnterprise
+ - Pim: should never use the namespace PimEnterprise
+ - PimEnterprise: -
+
+Components vs Bundles rules
+---------------------------
+
+ - Component: should never use a Bundle
+ - Bundle: -
 
 Pim Bundles rules
 -----------------
 
-Pim/Bundle/CatalogBundle ...
+ - Pim/Bundle/CatalogBundle ...
 
+Others
+------
+
+ - Deprecated uses
+ - Services aliases uses, for instance, forbid, pim_something in a akeneo namespace
