@@ -1,7 +1,8 @@
 <?php
 
-namespace Akeneo\CouplingDetector\Coupling;
+namespace Akeneo\CouplingDetector;
 
+use Akeneo\CouplingDetector\Coupling\UseViolations;
 use Akeneo\CouplingDetector\FilesReader;
 use Akeneo\CouplingDetector\RulesApplier;
 use Akeneo\CouplingDetector\TokensExtractor\ClassNameExtractor;

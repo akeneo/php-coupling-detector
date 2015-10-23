@@ -2,7 +2,7 @@
 
 namespace Akeneo\CouplingDetector\Console\Command;
 
-use Akeneo\CouplingDetector\Coupling\Detector;
+use Akeneo\CouplingDetector\Detector;
 use Akeneo\CouplingDetector\Coupling\UseViolationsFilter;
 use Akeneo\CouplingDetector\FilesReader;
 use Akeneo\CouplingDetector\RulesApplier;
@@ -55,7 +55,7 @@ class PimCommunityCommand extends Command
                 exit(1);
             }
         }
-        $path = $binPath.'/src/'; //TODO!! for tests purposes . 'Akeneo/Component/Classification/';
+        $path = $binPath.'/src/';
         $strictMode = $input->getOption('strict');
 
         $output->writeln(sprintf('<info> Detect coupling violations (strict mode %s)</info>', $strictMode ? 'enabled' : 'disabled'));

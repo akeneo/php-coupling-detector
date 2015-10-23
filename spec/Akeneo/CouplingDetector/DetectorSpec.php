@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Akeneo\CouplingDetector\Coupling;
+namespace spec\Akeneo\CouplingDetector;
 
 use Akeneo\CouplingDetector\FilesReader;
 use Akeneo\CouplingDetector\RulesApplier;
@@ -12,7 +12,7 @@ class DetectorSpec extends ObjectBehavior
 {
     function it_is_initializable()
     {
-        $this->shouldHaveType('Akeneo\CouplingDetector\Coupling\Detector');
+        $this->shouldHaveType('Akeneo\CouplingDetector\Detector');
     }
 
     function it_detects_uses_violations(FilesReader $reader, SplFileInfo $file, RulesApplier $applier)
