@@ -14,6 +14,14 @@ In your `https://github.com/akeneo/pim-community-dev` fork (or clone).
     php bin/coupling-detector pim-community-dev
 ```
 
+You can use `--strict` option to display all violations (by default, it exclude legacy violations).
+
+You can use `--output` option to display,
+
+ - the list of class with their use violations with `default` value (default one)
+ - the count of each violation use with `count` value,
+ - nothing with `none` value,
+
 Akeneo Coupling, Long Story Short
 ---------------------------------
 

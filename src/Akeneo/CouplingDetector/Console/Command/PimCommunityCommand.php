@@ -2,8 +2,12 @@
 
 namespace Akeneo\CouplingDetector\Console\Command;
 
-use Akeneo\CouplingDetector\Coupling\Detector;
+use Akeneo\CouplingDetector\Coupling\UseViolations;
+use Akeneo\CouplingDetector\Detector;
 use Akeneo\CouplingDetector\Coupling\UseViolationsFilter;
+use Akeneo\CouplingDetector\FilesReader;
+use Akeneo\CouplingDetector\RulesApplier;
+use Akeneo\CouplingDetector\UseViolationRule;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -27,6 +31,11 @@ class PimCommunityCommand extends Command
             ->setName('pim-community-dev')
             ->setDefinition(
                 array(
+                    new InputOption(
+                        'output',
+                        '',
+                        InputOption::VALUE_REQUIRED, 'Output mode, "default", "count", "none"', 'default'
+                    ),
                     new InputOption('strict', '', InputOption::VALUE_NONE, 'Apply strict rules without legacy exceptions'),
                 )
             )
@@ -38,10 +47,116 @@ class PimCommunityCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // check the project path
+        $path = $this->getProjectPath();
+        $strictMode = $input->getOption('strict');
+        $displayMode = $input->getOption('output');
+
+        if ('none' !== $displayMode) {
+            $output->writeln(
+                sprintf(
+                    '<info> Detect coupling violations (strict mode %s)</info>',
+                    $strictMode ? 'enabled' : 'disabled'
+                )
+            );
+        }
+
+        $rules = [
+            new UseViolationRule(
+                'Akeneo\Component',
+                ['Pim', 'PimEnterprise', 'Bundle', 'Doctrine\ORM']
+            ),
+            new UseViolationRule(
+                'Akeneo\Bundle',
+                ['Pim', 'PimEnterprise']
+            ),
+            new UseViolationRule(
+                'Pim\Component',
+                ['PimEnterprise', 'Bundle', 'Doctrine\ORM']
+            ),
+            new UseViolationRule(
+                'Pim\Bundle',
+                ['PimEnterprise']
+            ),
+            new UseViolationRule(
+                'Pim\Bundle\CatalogBundle',
+                ['EnrichBundle', 'UIBundle', 'TransformBundle', 'BaseConnectorBundle', 'ConnectorBundle', 'BatchBundle']
+            ),
+        ];
+
+        $legacyExclusions = [
+            'Akeneo\Component' => [
+                'Pim\Bundle\TranslationBundle\Entity\TranslatableInterface'
+            ],
+            'Pim\Component'    => [
+                'Pim\Bundle\CatalogBundle\Repository\AssociationTypeRepositoryInterface'
+            ],
+        ];
+        $useViolationsFilter = new UseViolationsFilter($legacyExclusions);
+
+        $detector = new Detector();
+        $reader = new FilesReader($path);
+        $applier = new RulesApplier($rules);
+
+        $violations = $detector->detectUseViolations($reader, $applier);
+        if (!$strictMode) {
+            // $violations = $useViolationsFilter->filter($violations);
+            // TODO: to be refactored, does not work with new reading strategy
+        }
+
+        if ('default' === $displayMode) {
+            $this->displayStandardViolations($output, $violations);
+
+        } elseif ('count' === $displayMode) {
+            $this->displayCounterViolations($output, $violations);
+        }
+
+        return count($violations->getFullQualifiedClassNameViolations()) > 0;
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @param UseViolations   $violations
+     */
+    protected function displayStandardViolations(OutputInterface $output, UseViolations $violations)
+    {
+        $violations = $violations->getFullQualifiedClassNameViolations();
+        $totalCount = 0;
+        foreach ($violations as $className => $violationUses) {
+            $output->writeln(sprintf('<info>%s</info>', $className));
+            foreach ($violationUses as $use) {
+                $output->writeln(sprintf('<info> - use %s</info>', $use));
+            }
+            $totalCount += count($violationUses);
+        }
+        $output->writeln(sprintf('<info>Total coupling issues %s</info>', $totalCount));
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @param UseViolations   $violations
+     */
+    protected function displayCounterViolations(OutputInterface $output, UseViolations $violations)
+    {
+        $forbiddenUseCounter = $violations->getSortedForbiddenUsesCounters();
+        $totalCount = 0;
+        foreach ($forbiddenUseCounter as $fullName => $count) {
+            $output->writeln(sprintf('<info> - %d x %s</info>', $count, $fullName));
+            $totalCount += $count;
+        }
+        $output->writeln(sprintf('<info>Total coupling issues %s</info>', $totalCount));
+    }
+
+    /**
+     * @return string
+     */
+    protected function getProjectPath()
+    {
         $binPath = getcwd();
         $composerPath = $binPath.'/composer.json';
-        $errorMessage = sprintf('You must launch the command from the pim-community-dev repository, not from "%s"', $binPath).PHP_EOL;
+        $errorMessage = sprintf(
+                'You must launch the command from the pim-community-dev repository, not from "%s"',
+                $binPath
+            ).PHP_EOL;
         if (!file_exists($composerPath)) {
             fwrite(STDERR, $errorMessage);
             exit(1);
@@ -52,49 +167,7 @@ class PimCommunityCommand extends Command
                 exit(1);
             }
         }
-        $path = $binPath.'/src/';
-        $strictMode = $input->getOption('strict');
 
-        $namespaceToForbiddenUse = [
-            'Akeneo/Component' => ['Pim', 'PimEnterprise', 'Bundle'],
-            'Akeneo/Bundle'    => ['Pim', 'PimEnterprise'],
-            'Pim/Component'    => ['PimEnterprise', 'Bundle'],
-            'Pim/Bundle'       => ['PimEnterprise'],
-        ];
-
-        $legacyExclusions = [
-            'Akeneo/Component' => [
-                'Pim\Bundle\TranslationBundle\Entity\TranslatableInterface'
-            ],
-            'Akeneo/Bundle'    => [],
-            'Pim/Component'    => [
-                'Pim\Bundle\CatalogBundle\Repository\AssociationTypeRepositoryInterface'
-            ],
-            'Pim/Bundle'       => [],
-        ];
-
-        $output->writeln(sprintf('<info> Detect coupling violations (strict mode %s)</info>', $strictMode ? 'enabled' : 'disabled'));
-        $totalCount = 0;
-        foreach ($namespaceToForbiddenUse as $namespace => $forbiddenUse) {
-            $detector = new Detector($namespace, $forbiddenUse);
-            $violations = $detector->detectCoupling($path, $namespace, $forbiddenUse);
-            if (!$strictMode) {
-                $violationFilter = new UseViolationsFilter($legacyExclusions[$namespace]);
-                $violations = $violationFilter->filter($violations);
-            }
-            $forbiddenUseCounter = $violations->getSortedForbiddenUsesCounters();
-            $namespaceCount = 0;
-            $output->writeln(sprintf('<info>>> Inspect namespace %s</info>', $namespace));
-            foreach ($forbiddenUseCounter as $fullName => $count) {
-                $output->writeln(sprintf('<info> - %d x %s</info>', $count, $fullName));
-                $namespaceCount += $count;
-            }
-            $output->writeln(sprintf('<info>%d coupling issues for namespace %s</info>', $namespaceCount, $namespace));
-            $totalCount += $namespaceCount;
-        }
-
-        $output->writeln(sprintf('<info>Total coupling issues %s</info>', $totalCount));
-
-        return $totalCount;
+        return $binPath.'/src/';
     }
 }
