@@ -4,6 +4,9 @@ namespace Akeneo\CouplingDetector\Console\Command;
 
 use Akeneo\CouplingDetector\Coupling\Detector;
 use Akeneo\CouplingDetector\Coupling\UseViolationsFilter;
+use Akeneo\CouplingDetector\FilesReader;
+use Akeneo\CouplingDetector\RulesApplier;
+use Akeneo\CouplingDetector\UseViolationRule;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -52,47 +55,43 @@ class PimCommunityCommand extends Command
                 exit(1);
             }
         }
-        $path = $binPath.'/src/';
+        $path = $binPath.'/src/'; //TODO!! for tests purposes . 'Akeneo/Component/Classification/';
         $strictMode = $input->getOption('strict');
 
-        $namespaceToForbiddenUse = [
-            'Akeneo/Component' => ['Pim', 'PimEnterprise', 'Bundle'],
-            'Akeneo/Bundle'    => ['Pim', 'PimEnterprise'],
-            'Pim/Component'    => ['PimEnterprise', 'Bundle'],
-            'Pim/Bundle'       => ['PimEnterprise'],
+        $output->writeln(sprintf('<info> Detect coupling violations (strict mode %s)</info>', $strictMode ? 'enabled' : 'disabled'));
+
+        $rules = [
+            new UseViolationRule('Akeneo\Component', ['Pim', 'PimEnterprise', 'Bundle']),
+            new UseViolationRule('Akeneo\Bundle', ['Pim', 'PimEnterprise']),
+            new UseViolationRule('Pim\Component', ['PimEnterprise', 'Bundle']),
+            new UseViolationRule('Pim\Bundle', ['PimEnterprise']),
         ];
 
         $legacyExclusions = [
-            'Akeneo/Component' => [
+            'Akeneo\Component' => [
                 'Pim\Bundle\TranslationBundle\Entity\TranslatableInterface'
             ],
-            'Akeneo/Bundle'    => [],
-            'Pim/Component'    => [
+            'Pim\Component'    => [
                 'Pim\Bundle\CatalogBundle\Repository\AssociationTypeRepositoryInterface'
             ],
-            'Pim/Bundle'       => [],
         ];
+        $useViolationsFilter = new UseViolationsFilter($legacyExclusions);
 
-        $output->writeln(sprintf('<info> Detect coupling violations (strict mode %s)</info>', $strictMode ? 'enabled' : 'disabled'));
-        $totalCount = 0;
-        foreach ($namespaceToForbiddenUse as $namespace => $forbiddenUse) {
-            $detector = new Detector($namespace, $forbiddenUse);
-            $violations = $detector->detectCoupling($path, $namespace, $forbiddenUse);
-            if (!$strictMode) {
-                $violationFilter = new UseViolationsFilter($legacyExclusions[$namespace]);
-                $violations = $violationFilter->filter($violations);
-            }
-            $forbiddenUseCounter = $violations->getSortedForbiddenUsesCounters();
-            $namespaceCount = 0;
-            $output->writeln(sprintf('<info>>> Inspect namespace %s</info>', $namespace));
-            foreach ($forbiddenUseCounter as $fullName => $count) {
-                $output->writeln(sprintf('<info> - %d x %s</info>', $count, $fullName));
-                $namespaceCount += $count;
-            }
-            $output->writeln(sprintf('<info>%d coupling issues for namespace %s</info>', $namespaceCount, $namespace));
-            $totalCount += $namespaceCount;
+        $detector = new Detector();
+        $reader = new FilesReader($path);
+        $applier = new RulesApplier($rules);
+
+        $violations = $detector->detectUseViolations($reader, $applier);
+        if (!$strictMode) {
+            // $violations = $useViolationsFilter->filter($violations);
+            // TODO: to be refactored, does not work with new reading strategy
         }
-
+        $forbiddenUseCounter = $violations->getSortedForbiddenUsesCounters();
+        $totalCount = 0;
+        foreach ($forbiddenUseCounter as $fullName => $count) {
+            $output->writeln(sprintf('<info> - %d x %s</info>', $count, $fullName));
+            $totalCount += $count;
+        }
         $output->writeln(sprintf('<info>Total coupling issues %s</info>', $totalCount));
 
         return $totalCount;

@@ -2,14 +2,15 @@
 
 namespace Akeneo\CouplingDetector\Coupling;
 
+use Akeneo\CouplingDetector\FilesReader;
+use Akeneo\CouplingDetector\RulesApplier;
 use Akeneo\CouplingDetector\TokensExtractor\ClassNameExtractor;
 use Akeneo\CouplingDetector\TokensExtractor\NamespaceExtractor;
 use Akeneo\CouplingDetector\TokensExtractor\UseDeclarationsExtractor;
-use Symfony\Component\Finder\Finder;
 use Symfony\CS\Tokenizer\Tokens;
 
 /**
- * Detect coupling violation in a namespace
+ * Detect coupling use violations in a set of files by using rules
  *
  * @author    Nicolas Dupont <nicolas@akeneo.com>
  * @copyright 2015 Akeneo SAS (http://www.akeneo.com)
@@ -18,39 +19,29 @@ use Symfony\CS\Tokenizer\Tokens;
 class Detector
 {
     /**
-     * @param string $path
-     * @param string $namespace
-     * @param array  $forbiddenUses
+     * @param FilesReader  $reader
+     * @param RulesApplier $applier
      *
      * @return UseViolations
      */
-    public function detectCoupling($path, $namespace, $forbiddenUses)
+    public function detectUseViolations(FilesReader $reader, RulesApplier $applier)
     {
         $couplingViolations = [];
-        $finder = new Finder();
-        $finder->files()->in($path)->name('*.php');
-
         $namespaceExtractor = new NamespaceExtractor();
         $classnameExtractor = new ClassNameExtractor();
-        foreach ($finder as $file) {
 
-            if (strpos($file->getRelativePath(), $namespace) === 0) {
-                $content = $file->getContents();
-                $tokens = Tokens::fromCode($content);
-                $classNamespace = $namespaceExtractor->extract($tokens);
-                $className      = $classnameExtractor->extract($tokens);
-                $classFullName  = sprintf('%s\%s', $classNamespace, $className);
+        foreach ($reader->read() as $file) {
+            $content = $file->getContents();
+            $tokens = Tokens::fromCode($content);
+            $classNamespace = $namespaceExtractor->extract($tokens);
+            $className      = $classnameExtractor->extract($tokens);
 
-                $useDeclarationExtractor = new UseDeclarationsExtractor();
-                $useDeclarations = $useDeclarationExtractor->extract($tokens);
-                foreach ($useDeclarations as $useFullName) {
-                    foreach ($forbiddenUses as $forbiddenUse) {
-                        if (strpos($useFullName, $forbiddenUse) !== false) {
-                            $couplingViolations[$classFullName][] = $useFullName;
-                            break;
-                        }
-                    }
-                }
+            $classFullName  = sprintf('%s\%s', $classNamespace, $className);
+            $useDeclarationExtractor = new UseDeclarationsExtractor();
+            $useDeclarations = $useDeclarationExtractor->extract($tokens);
+            $useViolations = $applier->apply($classFullName, $useDeclarations);
+            if (count($useViolations) > 0) {
+                $couplingViolations[$classFullName] = $useViolations;
             }
         }
 
