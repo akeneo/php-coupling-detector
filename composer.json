@@ -1,5 +1,5 @@
 {
-    "name": "nidup/inspector",
+    "name": "nidup/coupling-detector",
     "description": "Coupling detector for Akeneo PIM projects",
     "license": "MIT",
     "authors": [
