@@ -28,7 +28,6 @@ class PimCommunityCommand extends Command
             ->setName('pim-community-dev')
             ->setDefinition(
                 array(
-                    new InputArgument('path', InputArgument::REQUIRED, 'The pim community dev src path', null),
                     new InputOption('strict', '', InputOption::VALUE_NONE, 'Apply strict rules without legacy exceptions'),
                 )
             )
@@ -40,7 +39,21 @@ class PimCommunityCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $path       = $input->getArgument('path');
+        // check the project path
+        $binPath = getcwd();
+        $composerPath = $binPath.'/composer.json';
+        $errorMessage = sprintf('You must launch the command from the pim-community-dev repository, not from "%s"', $binPath).PHP_EOL;
+        if (!file_exists($composerPath)) {
+            fwrite(STDERR, $errorMessage);
+            exit(1);
+        } else {
+            $composerContent = file_get_contents($composerPath);
+            if (false === strpos($composerContent, '"name": "akeneo/pim-community-dev"')) {
+                fwrite(STDERR, $errorMessage);
+                exit(1);
+            }
+        }
+        $path = $binPath.'/src/';
         $strictMode = $input->getOption('strict');
 
         $namespaceToForbiddenUse = [
