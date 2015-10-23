@@ -61,10 +61,26 @@ class PimCommunityCommand extends Command
         }
 
         $rules = [
-            new UseViolationRule('Akeneo\Component', ['Pim', 'PimEnterprise', 'Bundle']),
-            new UseViolationRule('Akeneo\Bundle', ['Pim', 'PimEnterprise']),
-            new UseViolationRule('Pim\Component', ['PimEnterprise', 'Bundle']),
-            new UseViolationRule('Pim\Bundle', ['PimEnterprise']),
+            new UseViolationRule(
+                'Akeneo\Component',
+                ['Pim', 'PimEnterprise', 'Bundle', 'Doctrine\ORM']
+            ),
+            new UseViolationRule(
+                'Akeneo\Bundle',
+                ['Pim', 'PimEnterprise']
+            ),
+            new UseViolationRule(
+                'Pim\Component',
+                ['PimEnterprise', 'Bundle', 'Doctrine\ORM']
+            ),
+            new UseViolationRule(
+                'Pim\Bundle',
+                ['PimEnterprise']
+            ),
+            new UseViolationRule(
+                'Pim\Bundle\CatalogBundle',
+                ['EnrichBundle', 'UIBundle', 'TransformBundle', 'BaseConnectorBundle', 'ConnectorBundle', 'BatchBundle']
+            ),
         ];
 
         $legacyExclusions = [
@@ -106,7 +122,7 @@ class PimCommunityCommand extends Command
         $violations = $violations->getFullQualifiedClassNameViolations();
         $totalCount = 0;
         foreach ($violations as $className => $violationUses) {
-            $output->writeln(sprintf('<info>Violations in %s</info>', $className));
+            $output->writeln(sprintf('<info>%s</info>', $className));
             foreach ($violationUses as $use) {
                 $output->writeln(sprintf('<info> - use %s</info>', $use));
             }
