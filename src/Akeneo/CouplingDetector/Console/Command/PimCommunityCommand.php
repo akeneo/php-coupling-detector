@@ -84,6 +84,16 @@ class PimCommunityCommand extends Command
                     'PdfGeneratorBundle', 'TranslationBundle', 'VersioningBundle', 'BaseConnectorBundle',
                     'ConnectorBundle', 'EnrichBundle', 'InstallerBundle', 'NavigationBundle', 'ReferenceDataBundle',
                     'UIBundle', 'WebServiceBundle', 'DashboardBundle', 'FilterBundle', 'JsFormValidationBundle',
+                    'NotificationBundle', 'TransformBundle', 'UserBundle', 'BatchBundle'
+                ]
+            ),
+            new UseViolationRule(
+                'Pim\Bundle\ConnectorBundle',
+                [
+                    'AnalyticsBundle', 'CommentBundle', 'DataGridBundle', 'ImportExportBundle', 'LocalizationBundle',
+                    'PdfGeneratorBundle', 'TranslationBundle', 'VersioningBundle', 'BaseConnectorBundle',
+                    'CatalogBundle', 'EnrichBundle', 'InstallerBundle', 'NavigationBundle', 'ReferenceDataBundle',
+                    'UIBundle', 'WebServiceBundle', 'DashboardBundle', 'FilterBundle', 'JsFormValidationBundle',
                     'NotificationBundle', 'TransformBundle', 'UserBundle'
                 ]
             ),
@@ -252,7 +262,7 @@ class PimCommunityCommand extends Command
             // duplicate code or extract
             'Pim\Bundle\CatalogBundle\MongoDB\Normalizer' => [
                 'Pim\Bundle\TransformBundle\Normalizer\Structured\TranslationNormalizer'
-            ]
+            ],
         ];
         $useViolationsFilter = new UseViolationsFilter($legacyExclusions);
 
