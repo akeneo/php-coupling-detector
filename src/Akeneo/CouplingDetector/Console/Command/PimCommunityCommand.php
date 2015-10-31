@@ -92,6 +92,48 @@ class PimCommunityCommand extends Command
             'Akeneo\Component\Classification\Repository' => [
                 'Doctrine\ORM\QueryBuilder'
             ],
+            'Pim\Component\Catalog' => [
+                // Model interfaces of CatalogBundle should be extracted in the catalog component
+                'Pim\Bundle\CatalogBundle\Model\ChannelInterface',
+                'Pim\Bundle\CatalogBundle\Model\LocaleInterface',
+                'Pim\Bundle\CatalogBundle\Model\ProductValueInterface',
+                'Pim\Bundle\CatalogBundle\Model\AttributeInterface',
+                'Pim\Bundle\CatalogBundle\Model\ProductInterface',
+                'Pim\Bundle\CatalogBundle\Model\AttributeOptionInterface',
+                'Pim\Bundle\CatalogBundle\Model\AssociationInterface',
+                'Pim\Bundle\CatalogBundle\Model\CategoryInterface',
+                'Pim\Bundle\CatalogBundle\Model\FamilyInterface',
+                'Pim\Bundle\CatalogBundle\Model\AttributeGroupInterface',
+                'Pim\Bundle\CatalogBundle\Model\GroupInterface',
+                'Pim\Bundle\CatalogBundle\Model\AssociationTypeInterface',
+                'Pim\Bundle\CatalogBundle\Model\ProductTemplateInterface',
+                'Pim\Bundle\CatalogBundle\Model\AttributeRequirementInterface',
+                // Repository interfaces of CatalogBundle should be extracted in the catalog component
+                'Pim\Bundle\CatalogBundle\Repository\AttributeRepositoryInterface',
+                'Pim\Bundle\CatalogBundle\Repository\ChannelRepositoryInterface',
+                'Pim\Bundle\CatalogBundle\Repository\GroupTypeRepositoryInterface',
+                'Pim\Bundle\CatalogBundle\Repository\LocaleRepositoryInterface',
+                'Pim\Bundle\CatalogBundle\Repository\AttributeGroupRepositoryInterface',
+                'Pim\Bundle\CatalogBundle\Repository\AttributeRequirementRepositoryInterface',
+                // Builder interface should be extracted in the catalog component
+                'Pim\Bundle\CatalogBundle\Builder\ProductBuilderInterface',
+                // Extract at least an interface of these factories in the catalog component (ideally move implem too)
+                'Pim\Bundle\CatalogBundle\Factory\FamilyFactory',
+                'Pim\Bundle\CatalogBundle\Factory\AttributeRequirementFactory',
+                'Pim\Bundle\CatalogBundle\Factory\MetricFactory',
+                // What to do with this class?
+                'Pim\Bundle\CatalogBundle\Validator\AttributeValidatorHelper',
+                // Extract this exception in the component, it should be more accurate than InvalidArgumentException
+                // as it looks only used in updaters
+                'Pim\Bundle\CatalogBundle\Exception\InvalidArgumentException',
+                // Avoid to use this manager, extract an interface from this or maybe use repository and depreciate it
+                'Pim\Bundle\CatalogBundle\Manager\CurrencyManager',
+                // What to do with this, cannot be extracted due to dependencies to symfony form
+                'Pim\Bundle\CatalogBundle\AttributeType\AbstractAttributeType',
+                'Pim\Bundle\CatalogBundle\AttributeType\AttributeTypes',
+                // Deprecated in 1.5, should be dropped the deprecated methods support
+                'Pim\Bundle\CatalogBundle\Updater\ProductUpdaterInterface'
+            ],
             'Pim\Component\Connector' => [
                 // Interfaces of BatchBundle should be extracted in an Akeneo component
                 'Akeneo\Bundle\BatchBundle\Entity\StepExecution',
@@ -120,7 +162,7 @@ class PimCommunityCommand extends Command
                 'Pim\Bundle\CatalogBundle\Repository\GroupTypeRepositoryInterface',
                 'Pim\Bundle\CatalogBundle\Repository\AssociationTypeRepositoryInterface',
                 'Pim\Bundle\CatalogBundle\Repository\ChannelRepositoryInterface',
-                // AttributeTypes of CatalogBundle should be extracted in the catalog component
+                // What to do with this, cannot be extracted due to dependencies to symfony form
                 'Pim\Bundle\CatalogBundle\AttributeType\AttributeTypes',
                 'Pim\Bundle\CatalogBundle\AttributeType\AbstractAttributeType',
                 // We need to check why we use these classes, interfaces should be extracted in the catalog component
