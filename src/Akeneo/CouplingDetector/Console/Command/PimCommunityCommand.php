@@ -182,6 +182,25 @@ class PimCommunityCommand extends Command
             'Pim\Component\Connector\Writer\File\YamlWriter' => [
                 'Pim\Bundle\BaseConnectorBundle\Writer\File\FileWriter'
             ],
+            // Same issues than catalog component updater classes, same fixes expected
+            'Pim\Component\ReferenceData\Updater' => [
+                'Pim\Bundle\CatalogBundle\Builder\ProductBuilderInterface',
+                'Pim\Bundle\CatalogBundle\Model\AttributeInterface',
+                'Pim\Bundle\CatalogBundle\Model\ProductInterface',
+                'Pim\Bundle\CatalogBundle\Model\ProductValueInterface',
+                'Pim\Bundle\CatalogBundle\Validator\AttributeValidatorHelper',
+                'Pim\Bundle\CatalogBundle\Exception\InvalidArgumentException',
+            ],
+            // Same issues than catalog component updater classes, same fixes expected
+            'Pim\Component\Localization' => [
+                'Pim\Bundle\CatalogBundle\Model\MetricInterface',
+                'Pim\Bundle\CatalogBundle\Model\ProductPriceInterface',
+                'Pim\Bundle\CatalogBundle\Model\ProductValueInterface',
+                'Pim\Bundle\CatalogBundle\AttributeType\AttributeTypes',
+                'Pim\Bundle\CatalogBundle\Repository\AttributeRepositoryInterface',
+                // Why we use it?
+                'Pim\Component\Localization\Normalizer\MetricNormalizer',
+            ],
             'Pim\Bundle\CatalogBundle\Repository' => [
                 // CatalogBundle repository interfaces should not rely on an EnrichBundle DataTransformer interface,
                 // this enrich interface is not even related to UI and should be moved
