@@ -92,8 +92,8 @@ class PimCommunityCommand extends Command
             'Akeneo\Component\Classification\Repository' => [
                 'Doctrine\ORM\QueryBuilder'
             ],
-            // Interfaces of BatchBundle should be extracted in an Akeneo component
             'Pim\Component\Connector' => [
+                // Interfaces of BatchBundle should be extracted in an Akeneo component
                 'Akeneo\Bundle\BatchBundle\Entity\StepExecution',
                 'Akeneo\Bundle\BatchBundle\Entity\JobExecution',
                 'Akeneo\Bundle\BatchBundle\Item\InvalidItemException',
@@ -105,19 +105,47 @@ class PimCommunityCommand extends Command
                 'Akeneo\Bundle\BatchBundle\Job\RuntimeErrorException',
                 'Akeneo\Bundle\BatchBundle\Step\AbstractStep',
                 'Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface',
+                // Model interfaces of CatalogBundle should be extracted in the catalog component
+                'Pim\Bundle\CatalogBundle\Model\ProductInterface',
+                'Pim\Bundle\CatalogBundle\Model\AttributeInterface',
+                'Pim\Bundle\CatalogBundle\Model\AssociationTypeInterface',
+                'Pim\Bundle\CatalogBundle\Model\FamilyInterface',
+                'Pim\Bundle\CatalogBundle\Model\GroupInterface',
+                'Pim\Bundle\CatalogBundle\Model\AttributeOptionInterface',
+                'Pim\Bundle\CatalogBundle\Model\ProductValueInterface',
+                // Repositories interfaces of CatalogBundle should be extracted in the catalog component
+                'Pim\Bundle\CatalogBundle\Repository\AttributeRepositoryInterface',
+                'Pim\Bundle\CatalogBundle\Repository\LocaleRepositoryInterface',
+                'Pim\Bundle\CatalogBundle\Repository\CurrencyRepositoryInterface',
+                'Pim\Bundle\CatalogBundle\Repository\GroupTypeRepositoryInterface',
+                'Pim\Bundle\CatalogBundle\Repository\AssociationTypeRepositoryInterface',
+                'Pim\Bundle\CatalogBundle\Repository\ChannelRepositoryInterface',
+                // AttributeTypes of CatalogBundle should be extracted in the catalog component
+                'Pim\Bundle\CatalogBundle\AttributeType\AttributeTypes',
+                'Pim\Bundle\CatalogBundle\AttributeType\AbstractAttributeType',
+                // We need to check why we use these classes, interfaces should be extracted in the catalog component
+                'Pim\Bundle\CatalogBundle\Manager\AttributeValuesResolver',
+                'Pim\Bundle\CatalogBundle\Manager\ProductTemplateApplierInterface',
+                'Pim\Bundle\CatalogBundle\Validator\Constraints\File',
+                // For factories and builders of CatalogBundle, interfaces should be created in the catalog component
+                'Pim\Bundle\CatalogBundle\Builder\ProductBuilderInterface',
+                'Pim\Bundle\CatalogBundle\Factory\AttributeFactory',
+                'Pim\Bundle\CatalogBundle\Factory\AssociationTypeFactory',
+                'Pim\Bundle\CatalogBundle\Factory\FamilyFactory',
+                'Pim\Bundle\CatalogBundle\Factory\GroupFactory',
+                // Version manager should be exploded with SRP and introduce different interfaces in a component
+                'Pim\Bundle\VersioningBundle\Manager\VersionManager'
             ],
             // Connector component should not rely on base connector file writer, move the implementation in BC manner
             'Pim\Component\Connector\Writer\File\YamlWriter' => [
                 'Pim\Bundle\BaseConnectorBundle\Writer\File\FileWriter'
             ],
-            // CatalogBundle repository interfaces should not rely on an EnrichBundle DataTransformer interface, this
-            // enrich interface is not even related to UI and should be moved
             'Pim\Bundle\CatalogBundle\Repository' => [
-                'Pim\Bundle\EnrichBundle\Form\DataTransformer\ChoicesProviderInterface'
-            ],
-            // CatalogBundle repository interfaces should not rely on a UIBundle repository interface, this ui interface
-            // should be moved
-            'Pim\Bundle\CatalogBundle\Repository' => [
+                // CatalogBundle repository interfaces should not rely on an EnrichBundle DataTransformer interface,
+                // this enrich interface is not even related to UI and should be moved
+                'Pim\Bundle\EnrichBundle\Form\DataTransformer\ChoicesProviderInterface',
+                // CatalogBundle repository interfaces should not rely on a UIBundle repository interface, this ui
+                // interface should be moved
                 'Pim\Bundle\UIBundle\Entity\Repository\OptionRepositoryInterface'
             ],
             // CatalogBundle MongoDB normalizers should not use a TransformBundle normalizer, will be better to
