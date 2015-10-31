@@ -84,15 +84,47 @@ class PimCommunityCommand extends Command
         ];
 
         $legacyExclusions = [
+            // TranslatableInterface should be moved in a Akeneo component
             'Akeneo\Component\Classification\Updater\CategoryUpdater' => [
                 'Pim\Bundle\TranslationBundle\Entity\TranslatableInterface'
             ],
+            // Repository interfaces should never expose QueryBuilder as parameter
             'Akeneo\Component\Classification\Repository' => [
                 'Doctrine\ORM\QueryBuilder'
             ],
-            'Pim\Component'    => [
-                'Pim\Bundle\CatalogBundle\Repository\AssociationTypeRepositoryInterface'
+            // Interfaces of BatchBundle should be extracted in an Akeneo component
+            'Pim\Component\Connector' => [
+                'Akeneo\Bundle\BatchBundle\Entity\StepExecution',
+                'Akeneo\Bundle\BatchBundle\Entity\JobExecution',
+                'Akeneo\Bundle\BatchBundle\Item\InvalidItemException',
+                'Akeneo\Bundle\BatchBundle\Item\ItemProcessorInterface',
+                'Akeneo\Bundle\BatchBundle\Item\ItemReaderInterface',
+                'Akeneo\Bundle\BatchBundle\Item\UploadedFileAwareInterface',
+                'Akeneo\Bundle\BatchBundle\Item\AbstractConfigurableStepElement',
+                'Akeneo\Bundle\BatchBundle\Item\ItemWriterInterface',
+                'Akeneo\Bundle\BatchBundle\Job\RuntimeErrorException',
+                'Akeneo\Bundle\BatchBundle\Step\AbstractStep',
+                'Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface',
             ],
+            // Connector component should not rely on base connector file writer, move the implementation in BC manner
+            'Pim\Component\Connector\Writer\File\YamlWriter' => [
+                'Pim\Bundle\BaseConnectorBundle\Writer\File\FileWriter'
+            ],
+            // CatalogBundle repository interfaces should not rely on an EnrichBundle DataTransformer interface, this
+            // enrich interface is not even related to UI and should be moved
+            'Pim\Bundle\CatalogBundle\Repository' => [
+                'Pim\Bundle\EnrichBundle\Form\DataTransformer\ChoicesProviderInterface'
+            ],
+            // CatalogBundle repository interfaces should not rely on a UIBundle repository interface, this ui interface
+            // should be moved
+            'Pim\Bundle\CatalogBundle\Repository' => [
+                'Pim\Bundle\UIBundle\Entity\Repository\OptionRepositoryInterface'
+            ],
+            // CatalogBundle MongoDB normalizers should not use a TransformBundle normalizer, will be better to
+            // duplicate code or extract
+            'Pim\Bundle\CatalogBundle\MongoDB\Normalizer' => [
+                'Pim\Bundle\TransformBundle\Normalizer\Structured\TranslationNormalizer'
+            ]
         ];
         $useViolationsFilter = new UseViolationsFilter($legacyExclusions);
 
