@@ -80,11 +80,14 @@ class PimCommunityCommand extends Command
             new UseViolationRule(
                 'Pim\Bundle\CatalogBundle',
                 [
+                    // bundles
                     'AnalyticsBundle', 'CommentBundle', 'DataGridBundle', 'ImportExportBundle', 'LocalizationBundle',
                     'PdfGeneratorBundle', 'TranslationBundle', 'VersioningBundle', 'BaseConnectorBundle',
                     'ConnectorBundle', 'EnrichBundle', 'InstallerBundle', 'NavigationBundle', 'ReferenceDataBundle',
                     'UIBundle', 'WebServiceBundle', 'DashboardBundle', 'FilterBundle', 'JsFormValidationBundle',
-                    'NotificationBundle', 'TransformBundle', 'UserBundle', 'BatchBundle'
+                    'NotificationBundle', 'TransformBundle', 'UserBundle', 'BatchBundle',
+                    // components
+                    'Connector'
                 ]
             ),
             new UseViolationRule(
