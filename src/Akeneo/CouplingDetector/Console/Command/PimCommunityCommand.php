@@ -79,7 +79,13 @@ class PimCommunityCommand extends Command
             ),
             new UseViolationRule(
                 'Pim\Bundle\CatalogBundle',
-                ['EnrichBundle', 'UIBundle', 'TransformBundle', 'BaseConnectorBundle', 'ConnectorBundle', 'BatchBundle']
+                [
+                    'AnalyticsBundle', 'CommentBundle', 'DataGridBundle', 'ImportExportBundle', 'LocalizationBundle',
+                    'PdfGeneratorBundle', 'TranslationBundle', 'VersioningBundle', 'BaseConnectorBundle',
+                    'ConnectorBundle', 'EnrichBundle', 'InstallerBundle', 'NavigationBundle', 'ReferenceDataBundle',
+                    'UIBundle', 'WebServiceBundle', 'DashboardBundle', 'FilterBundle', 'JsFormValidationBundle',
+                    'NotificationBundle', 'TransformBundle', 'UserBundle'
+                ]
             ),
         ];
 
@@ -200,6 +206,39 @@ class PimCommunityCommand extends Command
                 'Pim\Bundle\CatalogBundle\Repository\AttributeRepositoryInterface',
                 // Why we use it?
                 'Pim\Component\Localization\Normalizer\MetricNormalizer',
+            ],
+            'Pim\Bundle\CatalogBundle\Model' => [
+                // should be extracted in a component in a akeneo component in a BC way (localization?)
+                'Pim\Bundle\TranslationBundle\Entity\TranslatableInterface',
+                'Pim\Bundle\TranslationBundle\Entity\AbstractTranslation',
+                // should be extracted in a akeneo component in a BC way
+                'Pim\Bundle\VersioningBundle\Model\VersionableInterface',
+                // should be extracted in a akeneo component in a BC way
+                'Pim\Bundle\CommentBundle\Model\CommentSubjectInterface'
+            ],
+            'Pim\Bundle\CatalogBundle\Entity' => [
+                // should be extracted in a component in a akeneo component in a BC way (localization?)
+                'Pim\Bundle\TranslationBundle\Entity\TranslatableInterface',
+                'Pim\Bundle\TranslationBundle\Entity\AbstractTranslation',
+                // should be extracted in a akeneo component in a BC way
+                'Pim\Bundle\VersioningBundle\Model\VersionableInterface',
+            ],
+            'Pim\Bundle\CatalogBundle\EventSubscriber' => [
+                // should be extracted in a akeneo component in a BC way
+                'Pim\Bundle\VersioningBundle\Model\VersionableInterface',
+            ],
+            'Pim\Bundle\CatalogBundle\Doctrine\Common\Saver\GroupSaver' => [
+                // what to do with this, it's a weird way to share and update versionning context, could be re-worked
+                // with the versioning reworking (no more relying on doctrine events)
+                'Pim\Bundle\VersioningBundle\Manager\VersionContext'
+            ],
+            'Pim\Bundle\CatalogBundle\Manager\FamilyManager' =>[
+                // FamilyManager should be dropped and not even used
+                'Pim\Bundle\UserBundle\Context\UserContext'
+            ],
+            'Pim\Bundle\CatalogBundle\Helper\LocaleHelper' => [
+                // LocaleHelper should be simplified and moved to LocalizationBundle
+                'Pim\Bundle\UserBundle\Context\UserContext'
             ],
             'Pim\Bundle\CatalogBundle\Repository' => [
                 // CatalogBundle repository interfaces should not rely on an EnrichBundle DataTransformer interface,
