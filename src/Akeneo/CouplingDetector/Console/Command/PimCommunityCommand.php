@@ -84,8 +84,11 @@ class PimCommunityCommand extends Command
         ];
 
         $legacyExclusions = [
-            'Akeneo\Component' => [
+            'Akeneo\Component\Classification\Updater\CategoryUpdater' => [
                 'Pim\Bundle\TranslationBundle\Entity\TranslatableInterface'
+            ],
+            'Akeneo\Component\Classification\Repository' => [
+                'Doctrine\ORM\QueryBuilder'
             ],
             'Pim\Component'    => [
                 'Pim\Bundle\CatalogBundle\Repository\AssociationTypeRepositoryInterface'
@@ -99,8 +102,7 @@ class PimCommunityCommand extends Command
 
         $violations = $detector->detectUseViolations($reader, $applier);
         if (!$strictMode) {
-            // $violations = $useViolationsFilter->filter($violations);
-            // TODO: to be refactored, does not work with new reading strategy
+            $violations = $useViolationsFilter->filter($violations);
         }
 
         if ('default' === $displayMode) {
@@ -122,7 +124,9 @@ class PimCommunityCommand extends Command
         $violations = $violations->getFullQualifiedClassNameViolations();
         $totalCount = 0;
         foreach ($violations as $className => $violationUses) {
-            $output->writeln(sprintf('<info>%s</info>', $className));
+            if (0 < count($violationUses)) {
+                $output->writeln(sprintf('<info>%s</info>', $className));
+            }
             foreach ($violationUses as $use) {
                 $output->writeln(sprintf('<info> - use %s</info>', $use));
             }
