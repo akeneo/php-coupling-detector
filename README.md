@@ -1,9 +1,17 @@
 Coupling Detector
 =================
 
-A set of command to ease the review of Akeneo PIM community and enterprise editions and enforce quality. 
+A set of command to ease the review and enforce quality of Akeneo PIM community and enterprise editions.
 
 It relies on internal pieces of fabpot/php-cs-fixer to easily parse code and detect issues.
+
+It extracts use statements from classes and apply several rules to detect if a class introduces a forbidden coupling.
+
+The command execution must be efficient to be able to be launched on Travis CI.
+
+PS1: This tool in a very early stage of development
+
+PS2: here is a first attempt to use the checker https://github.com/akeneo/pim-community-dev/pull/3457
 
 How to Use?
 -----------
@@ -18,9 +26,9 @@ You can use `--strict` option to display all violations (by default, it exclude 
 
 You can use `--output` option to display,
 
- - the list of class with their use violations with `default` value (default one)
- - the count of each violation use with `count` value,
- - nothing with `none` value,
+ - `default` to display the list of classes with their use statement violations
+ - `count` to display the count of use for the list of forbidden use statements
+ - `none` to display nothing (to use only the command result)
 
 Akeneo Coupling, Long Story Short
 ---------------------------------
@@ -38,23 +46,28 @@ The "where to put my code rule" is harder to follow and review, that's why there
 Namespace rules
 ---------------
 
- - Akeneo: should never use the namespace Pim or PimEnterprise
- - Pim: should never use the namespace PimEnterprise
+ - Akeneo should never use the namespace Pim or PimEnterprise
+ - Pim should never use the namespace PimEnterprise
  - PimEnterprise: -
 
-Components vs Bundles rules
----------------------------
+Components rules
+----------------
 
- - Component: should never use a Bundle
- - Bundle: -
+ - Component should never use a Bundle, should never use Doctrine/ORM
 
-Pim Bundles rules
+Specific PIM Bundles rules
+--------------------------
+
+ - Pim/Bundle/CatalogBundle should not use any part of Pim/Bundle/EnrichBundle, etc
+ - Rules are defined in Akeneo\CouplingDetector\Console\Command\PimCommunityCommand
+
+Legacy Exclusions
 -----------------
 
- - Pim/Bundle/CatalogBundle ...
+For now, we exclude several violations because they are legacy way of doing, once the code re-worked in a backward compatible way, we'll be able to drop them.
 
-Others
-------
+More to come?
+-------------
 
- - Deprecated uses
+ - Deprecated uses, we should take a look on https://github.com/sensiolabs-de/deprecation-detector
  - Services aliases uses, for instance, forbid, pim_something in a akeneo namespace
