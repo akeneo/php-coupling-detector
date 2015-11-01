@@ -30,19 +30,36 @@ class UseViolationsFilter
      */
     public function filter(UseViolations $violations)
     {
-        if (empty($this->excludedUses)) {
-            return $violations;
-        }
-        $filteredFqcnUses = $violations->getFullQualifiedClassNameViolations();
-        foreach ($filteredFqcnUses as $className => $uses) {
-            foreach ($uses as $useIndex => $use) {
-                // TODO: it only supports exact exclude FQCN, could be a regex
-                if (in_array($use, $this->excludedUses)) {
-                    unset($filteredFqcnUses[$className][$useIndex]);
+        $fqcnViolationUses = $violations->getFullQualifiedClassNameViolations();
+        foreach ($fqcnViolationUses as $className => $forbiddenUses) {
+            $excludedUses = $this->getExcludedUses($className);
+            foreach ($forbiddenUses as $useIndex => $use) {
+                foreach ($excludedUses as $excludedUse) {
+                    if (0 === strpos($use, $excludedUse)) {
+                        unset($fqcnViolationUses[$className][$useIndex]);
+                        break;
+                    }
                 }
             }
         }
 
-        return new UseViolations($filteredFqcnUses);
+        return new UseViolations($fqcnViolationUses);
+    }
+
+    /**
+     * @param string $className
+     *
+     * @return array
+     */
+    protected function getExcludedUses($className)
+    {
+        $aggregatedUses = [];
+        foreach ($this->excludedUses as $namespace => $uses) {
+            if (0 === strpos($className, $namespace)) {
+                $aggregatedUses = array_merge($aggregatedUses, $uses);
+            }
+        }
+
+        return $aggregatedUses;
     }
 }
