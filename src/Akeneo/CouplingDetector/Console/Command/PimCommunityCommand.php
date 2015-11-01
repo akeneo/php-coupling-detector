@@ -285,7 +285,7 @@ class PimCommunityCommand extends Command
             $this->displayCounterViolations($output, $violations);
         }
 
-        return count($violations->getFullQualifiedClassNameViolations()) > 0;
+        return count($violations->getFullQualifiedClassNameViolations()) > 0 ? 1 : 0;
     }
 
     /**
