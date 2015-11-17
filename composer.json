@@ -1,6 +1,6 @@
 {
-    "name": "nidup/coupling-detector",
-    "description": "Coupling detector for Akeneo PIM projects",
+    "name": "nidup/php-coupling-detector",
+    "description": "PHP coupling detector",
     "license": "MIT",
     "authors": [
         {
