@@ -1,19 +1,19 @@
 <?php
 
-namespace spec\Akeneo\CouplingDetector\TokensExtractor;
+namespace spec\Akeneo\CouplingDetector\NodeExtractor;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Symfony\CS\Tokenizer\Tokens;
 
-class NamespaceExtractorSpec extends ObjectBehavior
+class ClassNameExtractorSpec extends ObjectBehavior
 {
     function it_is_initializable()
     {
-        $this->shouldHaveType('Akeneo\CouplingDetector\TokensExtractor\NamespaceExtractor');
+        $this->shouldHaveType('Akeneo\CouplingDetector\NodeExtractor\ClassNameExtractor');
     }
 
-    function it_extracts_the_class_namespace()
+    function it_extracts_the_class_name()
     {
         $content = <<<EOF
 <?php
@@ -35,11 +35,11 @@ interface FamilyInterface extends TranslatableInterface, ReferableInterface, Ver
 }
 EOF;
         $tokens = Tokens::fromCode($content);
-        $this->extract($tokens)->shouldReturn('Pim\Bundle\CatalogBundle\Model');
+        $this->extract($tokens)->shouldReturn('FamilyInterface');
     }
 
     function it_throws_an_exception_when_class_name_cannot_be_extracted(Tokens $tokens)
     {
-        $this->shouldThrow('Akeneo\CouplingDetector\TokensExtractor\ExtractionException')->duringExtract($tokens);
+        $this->shouldThrow('Akeneo\CouplingDetector\NodeExtractor\ExtractionException')->duringExtract($tokens);
     }
 }

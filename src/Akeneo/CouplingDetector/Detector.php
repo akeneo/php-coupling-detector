@@ -5,9 +5,9 @@ namespace Akeneo\CouplingDetector;
 use Akeneo\CouplingDetector\Coupling\UseViolations;
 use Akeneo\CouplingDetector\FilesReader;
 use Akeneo\CouplingDetector\RulesApplier;
-use Akeneo\CouplingDetector\TokensExtractor\ClassNameExtractor;
-use Akeneo\CouplingDetector\TokensExtractor\NamespaceExtractor;
-use Akeneo\CouplingDetector\TokensExtractor\UseDeclarationsExtractor;
+use Akeneo\CouplingDetector\NodeExtractor\ClassNameExtractor;
+use Akeneo\CouplingDetector\NodeExtractor\NamespaceExtractor;
+use Akeneo\CouplingDetector\NodeExtractor\UseDeclarationsExtractor;
 use Symfony\CS\Tokenizer\Tokens;
 
 /**
