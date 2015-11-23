@@ -71,6 +71,6 @@ class CouplingDetector
             $nodes[] = $extractor->extract($file);
         }
 
-       return $nodes;
+        return $nodes;
     }
 }

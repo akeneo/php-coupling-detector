@@ -2,12 +2,10 @@
 
 namespace Akeneo\CouplingDetector\Console\Command;
 
-use Akeneo\CouplingDetector\Coupling\UseViolations;
 use Akeneo\CouplingDetector\CouplingDetector;
 use Akeneo\CouplingDetector\Data\Rule;
 use Akeneo\CouplingDetector\Data\RuleInterface;
 use Akeneo\CouplingDetector\Data\ViolationInterface;
-use Akeneo\CouplingDetector\FilesReader;
 use Akeneo\CouplingDetector\NodeExtractor\NodeExtractorResolver;
 use Akeneo\CouplingDetector\RuleChecker;
 use Symfony\Component\Console\Command\Command;
@@ -17,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 
 /**
- * Detects the coupling issues in pim-community-dev
+ * Detects the coupling issues in pim-community-dev.
  *
  * @author    Nicolas Dupont <nicolas@akeneo.com>
  * @copyright 2015 Akeneo SAS (http://www.akeneo.com)
@@ -26,7 +24,7 @@ use Symfony\Component\Finder\Finder;
 class PimCommunityCommand extends Command
 {
     /**
-     * {@inheritedDoc}
+     * {@inheritedDoc}.
      */
     protected function configure()
     {
@@ -46,7 +44,7 @@ class PimCommunityCommand extends Command
     }
 
     /**
-     * {@inheritedDoc}
+     * {@inheritedDoc}.
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -84,8 +82,8 @@ class PimCommunityCommand extends Command
     }
 
     /**
-     * @param OutputInterface       $output
-     * @param ViolationInterface[]  $violations
+     * @param OutputInterface      $output
+     * @param ViolationInterface[] $violations
      */
     protected function displayStandardViolations(OutputInterface $output, array $violations)
     {
@@ -184,7 +182,7 @@ class PimCommunityCommand extends Command
                     'UserBundle',
                     'BatchBundle',
                     // components
-                    'Connector'
+                    'Connector',
                 ],
                 RuleInterface::TYPE_FORBIDDEN
             ),
@@ -212,7 +210,7 @@ class PimCommunityCommand extends Command
                     'JsFormValidationBundle',
                     'NotificationBundle',
                     'TransformBundle',
-                    'UserBundle'
+                    'UserBundle',
                 ],
                 RuleInterface::TYPE_FORBIDDEN
             ),
@@ -228,14 +226,14 @@ class PimCommunityCommand extends Command
     {
         $legacyExclusions = [
             // TranslatableInterface should be moved in a Akeneo component
-            'Akeneo\Component\Classification\Updater\CategoryUpdater'   => [
-                'Pim\Bundle\TranslationBundle\Entity\TranslatableInterface'
+            'Akeneo\Component\Classification\Updater\CategoryUpdater' => [
+                'Pim\Bundle\TranslationBundle\Entity\TranslatableInterface',
             ],
             // Repository interfaces should never expose QueryBuilder as parameter
-            'Akeneo\Component\Classification\Repository'                => [
-                'Doctrine\ORM\QueryBuilder'
+            'Akeneo\Component\Classification\Repository' => [
+                'Doctrine\ORM\QueryBuilder',
             ],
-            'Pim\Component\Catalog'                                     => [
+            'Pim\Component\Catalog' => [
                 // Model interfaces of CatalogBundle should be extracted in the catalog component
                 'Pim\Bundle\CatalogBundle\Model\ChannelInterface',
                 'Pim\Bundle\CatalogBundle\Model\LocaleInterface',
@@ -275,9 +273,9 @@ class PimCommunityCommand extends Command
                 'Pim\Bundle\CatalogBundle\AttributeType\AbstractAttributeType',
                 'Pim\Bundle\CatalogBundle\AttributeType\AttributeTypes',
                 // Deprecated in 1.5, should be dropped the deprecated methods support
-                'Pim\Bundle\CatalogBundle\Updater\ProductUpdaterInterface'
+                'Pim\Bundle\CatalogBundle\Updater\ProductUpdaterInterface',
             ],
-            'Pim\Component\Connector'                                   => [
+            'Pim\Component\Connector' => [
                 // Interfaces of BatchBundle should be extracted in an Akeneo component
                 'Akeneo\Bundle\BatchBundle\Entity\StepExecution',
                 'Akeneo\Bundle\BatchBundle\Entity\JobExecution',
@@ -319,14 +317,14 @@ class PimCommunityCommand extends Command
                 'Pim\Bundle\CatalogBundle\Factory\FamilyFactory',
                 'Pim\Bundle\CatalogBundle\Factory\GroupFactory',
                 // Version manager should be exploded with SRP and introduce different interfaces in a component
-                'Pim\Bundle\VersioningBundle\Manager\VersionManager'
+                'Pim\Bundle\VersioningBundle\Manager\VersionManager',
             ],
             // Connector component should not rely on base connector file writer, move the implementation in BC manner
-            'Pim\Component\Connector\Writer\File\YamlWriter'            => [
-                'Pim\Bundle\BaseConnectorBundle\Writer\File\FileWriter'
+            'Pim\Component\Connector\Writer\File\YamlWriter' => [
+                'Pim\Bundle\BaseConnectorBundle\Writer\File\FileWriter',
             ],
             // Same issues than catalog component updater classes, same fixes expected
-            'Pim\Component\ReferenceData\Updater'                       => [
+            'Pim\Component\ReferenceData\Updater' => [
                 'Pim\Bundle\CatalogBundle\Builder\ProductBuilderInterface',
                 'Pim\Bundle\CatalogBundle\Model\AttributeInterface',
                 'Pim\Bundle\CatalogBundle\Model\ProductInterface',
@@ -335,7 +333,7 @@ class PimCommunityCommand extends Command
                 'Pim\Bundle\CatalogBundle\Exception\InvalidArgumentException',
             ],
             // Same issues than catalog component updater classes, same fixes expected
-            'Pim\Component\Localization'                                => [
+            'Pim\Component\Localization' => [
                 'Pim\Bundle\CatalogBundle\Model\MetricInterface',
                 'Pim\Bundle\CatalogBundle\Model\ProductPriceInterface',
                 'Pim\Bundle\CatalogBundle\Model\ProductValueInterface',
@@ -344,51 +342,51 @@ class PimCommunityCommand extends Command
                 // Why we use it?
                 'Pim\Component\Localization\Normalizer\MetricNormalizer',
             ],
-            'Pim\Bundle\CatalogBundle\Model'                            => [
+            'Pim\Bundle\CatalogBundle\Model' => [
                 // should be extracted in a component in a akeneo component in a BC way (localization?)
                 'Pim\Bundle\TranslationBundle\Entity\TranslatableInterface',
                 'Pim\Bundle\TranslationBundle\Entity\AbstractTranslation',
                 // should be extracted in a akeneo component in a BC way
                 'Pim\Bundle\VersioningBundle\Model\VersionableInterface',
                 // should be extracted in a akeneo component in a BC way
-                'Pim\Bundle\CommentBundle\Model\CommentSubjectInterface'
+                'Pim\Bundle\CommentBundle\Model\CommentSubjectInterface',
             ],
-            'Pim\Bundle\CatalogBundle\Entity'                           => [
+            'Pim\Bundle\CatalogBundle\Entity' => [
                 // should be extracted in a component in a akeneo component in a BC way (localization?)
                 'Pim\Bundle\TranslationBundle\Entity\TranslatableInterface',
                 'Pim\Bundle\TranslationBundle\Entity\AbstractTranslation',
                 // should be extracted in a akeneo component in a BC way
                 'Pim\Bundle\VersioningBundle\Model\VersionableInterface',
             ],
-            'Pim\Bundle\CatalogBundle\EventSubscriber'                  => [
+            'Pim\Bundle\CatalogBundle\EventSubscriber' => [
                 // should be extracted in a akeneo component in a BC way
                 'Pim\Bundle\VersioningBundle\Model\VersionableInterface',
             ],
             'Pim\Bundle\CatalogBundle\Doctrine\Common\Saver\GroupSaver' => [
                 // what to do with this, it's a weird way to share and update versionning context, could be re-worked
                 // with the versioning reworking (no more relying on doctrine events)
-                'Pim\Bundle\VersioningBundle\Manager\VersionContext'
+                'Pim\Bundle\VersioningBundle\Manager\VersionContext',
             ],
-            'Pim\Bundle\CatalogBundle\Manager\FamilyManager'            => [
+            'Pim\Bundle\CatalogBundle\Manager\FamilyManager' => [
                 // FamilyManager should be dropped and not even used
-                'Pim\Bundle\UserBundle\Context\UserContext'
+                'Pim\Bundle\UserBundle\Context\UserContext',
             ],
-            'Pim\Bundle\CatalogBundle\Helper\LocaleHelper'              => [
+            'Pim\Bundle\CatalogBundle\Helper\LocaleHelper' => [
                 // LocaleHelper should be simplified and moved to LocalizationBundle
-                'Pim\Bundle\UserBundle\Context\UserContext'
+                'Pim\Bundle\UserBundle\Context\UserContext',
             ],
-            'Pim\Bundle\CatalogBundle\Repository'                       => [
+            'Pim\Bundle\CatalogBundle\Repository' => [
                 // CatalogBundle repository interfaces should not rely on an EnrichBundle DataTransformer interface,
                 // this enrich interface is not even related to UI and should be moved
                 'Pim\Bundle\EnrichBundle\Form\DataTransformer\ChoicesProviderInterface',
                 // CatalogBundle repository interfaces should not rely on a UIBundle repository interface, this ui
                 // interface should be moved
-                'Pim\Bundle\UIBundle\Entity\Repository\OptionRepositoryInterface'
+                'Pim\Bundle\UIBundle\Entity\Repository\OptionRepositoryInterface',
             ],
             // CatalogBundle MongoDB normalizers should not use a TransformBundle normalizer, will be better to
             // duplicate code or extract
-            'Pim\Bundle\CatalogBundle\MongoDB\Normalizer'               => [
-                'Pim\Bundle\TransformBundle\Normalizer\Structured\TranslationNormalizer'
+            'Pim\Bundle\CatalogBundle\MongoDB\Normalizer' => [
+                'Pim\Bundle\TransformBundle\Normalizer\Structured\TranslationNormalizer',
             ],
         ];
 

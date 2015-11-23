@@ -5,7 +5,7 @@ namespace Akeneo\CouplingDetector\NodeExtractor\PhpClass;
 use Symfony\CS\Tokenizer\Tokens;
 
 /**
- * Extracts the namespace declarations used as imports in a file
+ * Extracts the namespace declarations used as imports in a file.
  *
  * @author    Dariusz Rumiński <dariusz.ruminski@gmail.com>
  * @author    Nicolas Dupont <nicolas@akeneo.com>
@@ -17,7 +17,7 @@ use Symfony\CS\Tokenizer\Tokens;
 class UseDeclarationsExtractor
 {
     /**
-     * Copy/paste from a private method of Symfony\CS\Fixer\Symfony\UnusedUseFixer
+     * Copy/paste from a private method of Symfony\CS\Fixer\Symfony\UnusedUseFixer.
      *
      * @param Tokens $tokens
      *

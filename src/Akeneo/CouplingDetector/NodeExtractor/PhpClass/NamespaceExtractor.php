@@ -6,7 +6,7 @@ use Akeneo\CouplingDetector\NodeExtractor\ExtractionException;
 use Symfony\CS\Tokenizer\Tokens;
 
 /**
- * Extracts the namespace from a file
+ * Extracts the namespace from a file.
  *
  * @author    Nicolas Dupont <nicolas@akeneo.com>
  * @copyright 2015 Akeneo SAS (http://www.akeneo.com)
@@ -30,7 +30,6 @@ class NamespaceExtractor
                 $namespaceIndex = $tokens->getNextNonWhitespace($index);
                 $namespaceEndIndex = $tokens->getNextTokenOfKind($index, array(';'));
                 $namespace = trim($tokens->generatePartialCode($namespaceIndex, $namespaceEndIndex - 1));
-
             }
         }
 

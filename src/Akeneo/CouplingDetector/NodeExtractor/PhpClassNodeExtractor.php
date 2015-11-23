@@ -28,9 +28,9 @@ class PhpClassNodeExtractor implements NodeExtractorInterface
 
         $content = file_get_contents($file->getRealPath());
         $tokens = Tokens::fromCode($content);
-        $classNamespace  = $namespaceExtractor->extract($tokens);
-        $className       = $classNameExtractor->extract($tokens);
-        $classFullName   = sprintf('%s\%s', $classNamespace, $className);
+        $classNamespace = $namespaceExtractor->extract($tokens);
+        $className = $classNameExtractor->extract($tokens);
+        $classFullName = sprintf('%s\%s', $classNamespace, $className);
         $useDeclarations = $useDeclarationExtractor->extract($tokens);
 
         return new Node($useDeclarations, $classFullName, $file->getRealPath(), NodeInterface::TYPE_PHP_USE);

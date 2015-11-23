@@ -3,7 +3,7 @@
 namespace Akeneo\CouplingDetector\Data;
 
 /**
- * Rule
+ * Rule.
  *
  * @author  Julien Janvier <j.janvier@gmail.com>
  * @license http://opensource.org/licenses/MIT MIT

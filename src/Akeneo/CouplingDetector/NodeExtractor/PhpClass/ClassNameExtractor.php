@@ -6,7 +6,7 @@ use Akeneo\CouplingDetector\NodeExtractor\ExtractionException;
 use Symfony\CS\Tokenizer\Tokens;
 
 /**
- * Extracts the class name from a file
+ * Extracts the class name from a file.
  *
  * @author    Nicolas Dupont <nicolas@akeneo.com>
  * @copyright 2015 Akeneo SAS (http://www.akeneo.com)

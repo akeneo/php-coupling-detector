@@ -22,7 +22,7 @@ interface NodeInterface
      * @param string $subject
      */
     public function setSubject($subject);
-    
+
     /**
      * @return string
      */

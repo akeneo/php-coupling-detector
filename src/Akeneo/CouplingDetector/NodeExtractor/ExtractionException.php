@@ -3,7 +3,7 @@
 namespace Akeneo\CouplingDetector\NodeExtractor;
 
 /**
- * Class ExtractionException
+ * Class ExtractionException.
  *
  * @author    Nicolas Dupont <nicolas@akeneo.com>
  * @copyright 2015 Akeneo SAS (http://www.akeneo.com)

@@ -16,6 +16,7 @@ interface NodeExtractorInterface
      * @param \SplFileInfo $file
      *
      * @return NodeInterface
+     *
      * @throws ExtractionException
      */
     public function extract(\SplFileInfo $file);

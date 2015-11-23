@@ -3,7 +3,7 @@
 namespace Akeneo\CouplingDetector\NodeExtractor;
 
 /**
- * Resolves the node extractor according to the given file.s
+ * Resolves the node extractor according to the given file.s.
  *
  * @author  Julien Janvier <j.janvier@gmail.com>
  * @license http://opensource.org/licenses/MIT MIT

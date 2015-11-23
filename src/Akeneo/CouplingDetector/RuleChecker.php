@@ -51,7 +51,7 @@ class RuleChecker
     public function check(RuleInterface $rule, NodeInterface $node)
     {
         if (!$this->match($rule, $node)) {
-            return null;
+            return;
         }
 
         switch ($rule->getType()) {
@@ -88,7 +88,7 @@ class RuleChecker
                     $errors[] = $token;
                 }
             }
-         }
+        }
 
         if (count($errors)) {
             $type = $rule->getType() === RuleInterface::TYPE_FORBIDDEN ?
