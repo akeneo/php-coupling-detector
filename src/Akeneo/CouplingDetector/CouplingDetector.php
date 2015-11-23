@@ -16,6 +16,8 @@ use Symfony\Component\Finder\Finder;
  */
 class CouplingDetector
 {
+    const VERSION = 'master';
+
     /** @var NodeParserResolver */
     private $nodeExtractorResolver;
 
@@ -67,8 +69,8 @@ class CouplingDetector
     {
         $nodes = [];
         foreach ($finder as $file) {
-            $extractor = $this->nodeExtractorResolver->resolve($file);
-            $nodes[] = $extractor->parse($file);
+            $parser = $this->nodeExtractorResolver->resolve($file);
+            $nodes[] = $parser->parse($file);
         }
 
         return $nodes;
