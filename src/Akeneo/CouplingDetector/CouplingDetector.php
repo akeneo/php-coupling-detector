@@ -5,7 +5,7 @@ namespace Akeneo\CouplingDetector;
 use Akeneo\CouplingDetector\Domain\NodeInterface;
 use Akeneo\CouplingDetector\Domain\RuleInterface;
 use Akeneo\CouplingDetector\Domain\ViolationInterface;
-use Akeneo\CouplingDetector\NodeExtractor\NodeExtractorResolver;
+use Akeneo\CouplingDetector\NodeParser\NodeParserResolver;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -16,7 +16,7 @@ use Symfony\Component\Finder\Finder;
  */
 class CouplingDetector
 {
-    /** @var NodeExtractorResolver */
+    /** @var NodeParserResolver */
     private $nodeExtractorResolver;
 
     /** @var RuleChecker */
@@ -25,10 +25,10 @@ class CouplingDetector
     /**
      * CouplingDetector constructor.
      *
-     * @param NodeExtractorResolver $resolver
-     * @param RuleChecker           $checker
+     * @param NodeParserResolver $resolver
+     * @param RuleChecker        $checker
      */
-    public function __construct(NodeExtractorResolver $resolver, RuleChecker $checker)
+    public function __construct(NodeParserResolver $resolver, RuleChecker $checker)
     {
         $this->nodeExtractorResolver = $resolver;
         $this->ruleChecker = $checker;
@@ -68,7 +68,7 @@ class CouplingDetector
         $nodes = [];
         foreach ($finder as $file) {
             $extractor = $this->nodeExtractorResolver->resolve($file);
-            $nodes[] = $extractor->extract($file);
+            $nodes[] = $extractor->parse($file);
         }
 
         return $nodes;

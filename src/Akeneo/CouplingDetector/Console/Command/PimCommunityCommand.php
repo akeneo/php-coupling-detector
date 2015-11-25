@@ -6,7 +6,7 @@ use Akeneo\CouplingDetector\CouplingDetector;
 use Akeneo\CouplingDetector\Domain\Rule;
 use Akeneo\CouplingDetector\Domain\RuleInterface;
 use Akeneo\CouplingDetector\Domain\ViolationInterface;
-use Akeneo\CouplingDetector\NodeExtractor\NodeExtractorResolver;
+use Akeneo\CouplingDetector\NodeParser\NodeParserResolver;
 use Akeneo\CouplingDetector\RuleChecker;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -69,7 +69,7 @@ class PimCommunityCommand extends Command
             ->notPath('Oro')
         ;
 
-        $nodeExtractorResolver = new NodeExtractorResolver();
+        $nodeExtractorResolver = new NodeParserResolver();
         $ruleChecker = new RuleChecker();
         $coupling = new CouplingDetector($nodeExtractorResolver, $ruleChecker);
         $violations = $coupling->detect($finder, $this->getRules());

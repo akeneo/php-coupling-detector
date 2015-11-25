@@ -1,8 +1,8 @@
 <?php
 
-namespace Akeneo\CouplingDetector\NodeExtractor\PhpClass;
+namespace Akeneo\CouplingDetector\NodeParser\PhpClass;
 
-use Akeneo\CouplingDetector\NodeExtractor\ExtractionException;
+use Akeneo\CouplingDetector\NodeParser\ExtractionException;
 use Symfony\CS\Tokenizer\Tokens;
 
 /**
@@ -33,7 +33,7 @@ class ClassNameExtractor
         }
 
         if (null === $classyName) {
-            throw new ExtractionException('No way to extract class name of this class');
+            throw new ExtractionException('No way to parse class name of this class');
         }
 
         return $classyName;

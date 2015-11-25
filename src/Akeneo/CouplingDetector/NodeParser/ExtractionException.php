@@ -1,6 +1,6 @@
 <?php
 
-namespace Akeneo\CouplingDetector\NodeExtractor;
+namespace Akeneo\CouplingDetector\NodeParser;
 
 /**
  * Class ExtractionException.

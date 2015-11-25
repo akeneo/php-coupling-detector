@@ -1,17 +1,17 @@
 <?php
 
-namespace spec\Akeneo\CouplingDetector\NodeExtractor;
+namespace spec\Akeneo\CouplingDetector\NodeParser;
 
 use Akeneo\CouplingDetector\Domain\Node;
 use Akeneo\CouplingDetector\Domain\NodeInterface;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
-class PhpClassNodeExtractorSpec extends ObjectBehavior
+class PhpClassNodeParserSpec extends ObjectBehavior
 {
     function it_is_initializable()
     {
-        $this->shouldHaveType('Akeneo\CouplingDetector\NodeExtractor\PhpClassNodeExtractor');
+        $this->shouldHaveType('Akeneo\CouplingDetector\NodeParser\PhpClassNodeParser');
     }
 
     function it_extracts_use_statements_from_a_class()
@@ -24,12 +24,12 @@ class PhpClassNodeExtractorSpec extends ObjectBehavior
                 'PhpSpec\ObjectBehavior',
                 'Prophecy\Argument'
             ],
-            'spec\Akeneo\CouplingDetector\NodeExtractor\PhpClassNodeExtractorSpec',
+            'spec\Akeneo\CouplingDetector\NodeParser\PhpClassNodeParserSpec',
             __FILE__,
             NodeInterface::TYPE_PHP_USE
         );
 
-        $this->extract($file)->shouldBeLikeExpectedNode($expectedNode);
+        $this->parse($file)->shouldBeLikeExpectedNode($expectedNode);
     }
 
     public function getMatchers()

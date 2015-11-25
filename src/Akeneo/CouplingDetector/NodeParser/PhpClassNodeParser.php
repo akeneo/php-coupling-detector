@@ -1,12 +1,12 @@
 <?php
 
-namespace Akeneo\CouplingDetector\NodeExtractor;
+namespace Akeneo\CouplingDetector\NodeParser;
 
 use Akeneo\CouplingDetector\Domain\Node;
 use Akeneo\CouplingDetector\Domain\NodeInterface;
-use Akeneo\CouplingDetector\NodeExtractor\PhpClass\ClassNameExtractor;
-use Akeneo\CouplingDetector\NodeExtractor\PhpClass\NamespaceExtractor;
-use Akeneo\CouplingDetector\NodeExtractor\PhpClass\UseDeclarationsExtractor;
+use Akeneo\CouplingDetector\NodeParser\PhpClass\ClassNameExtractor;
+use Akeneo\CouplingDetector\NodeParser\PhpClass\NamespaceExtractor;
+use Akeneo\CouplingDetector\NodeParser\PhpClass\UseDeclarationsExtractor;
 use Symfony\CS\Tokenizer\Tokens;
 
 /**
@@ -18,9 +18,9 @@ use Symfony\CS\Tokenizer\Tokens;
  * @author  Julien Janvier <j.janvier@gmail.com>
  * @license http://opensource.org/licenses/MIT MIT
  */
-class PhpClassNodeExtractor implements NodeExtractorInterface
+class PhpClassNodeParser implements NodeParserInterface
 {
-    public function extract(\SplFileInfo $file)
+    public function parse(\SplFileInfo $file)
     {
         $namespaceExtractor = new NamespaceExtractor();
         $classNameExtractor = new ClassNameExtractor();

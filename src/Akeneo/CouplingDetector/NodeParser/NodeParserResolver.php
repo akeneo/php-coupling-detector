@@ -1,6 +1,6 @@
 <?php
 
-namespace Akeneo\CouplingDetector\NodeExtractor;
+namespace Akeneo\CouplingDetector\NodeParser;
 
 /**
  * Resolves the node extractor according to the given file.s.
@@ -8,15 +8,15 @@ namespace Akeneo\CouplingDetector\NodeExtractor;
  * @author  Julien Janvier <j.janvier@gmail.com>
  * @license http://opensource.org/licenses/MIT MIT
  */
-class NodeExtractorResolver
+class NodeParserResolver
 {
-    /** @var NodeExtractorInterface */
+    /** @var NodeParserInterface */
     private $phpClassExtractor;
 
     /**
      * @param \SplFileInfo $file
      *
-     * @return NodeExtractorInterface|null
+     * @return NodeParserInterface|null
      */
     public function resolve(\SplFileInfo $file)
     {
@@ -28,12 +28,12 @@ class NodeExtractorResolver
     }
 
     /**
-     * @return PhpClassNodeExtractor
+     * @return PhpClassNodeParser
      */
     private function getPhpClassExtractor()
     {
         if (null === $this->phpClassExtractor) {
-            $this->phpClassExtractor = new PhpClassNodeExtractor();
+            $this->phpClassExtractor = new PhpClassNodeParser();
         }
 
         return $this->phpClassExtractor;

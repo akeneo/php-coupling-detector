@@ -1,16 +1,16 @@
 <?php
 
-namespace Akeneo\CouplingDetector\NodeExtractor;
+namespace Akeneo\CouplingDetector\NodeParser;
 
 use Akeneo\CouplingDetector\Domain\NodeInterface;
 
 /**
- * Creates a node from a file by extracting its tokens.
+ * Creates a node from a file by parsing its tokens.
  *
  * @author  Julien Janvier <j.janvier@gmail.com>
  * @license http://opensource.org/licenses/MIT MIT
  */
-interface NodeExtractorInterface
+interface NodeParserInterface
 {
     /**
      * @param \SplFileInfo $file
@@ -19,5 +19,5 @@ interface NodeExtractorInterface
      *
      * @throws ExtractionException
      */
-    public function extract(\SplFileInfo $file);
+    public function parse(\SplFileInfo $file);
 }

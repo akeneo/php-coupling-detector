@@ -1,16 +1,16 @@
 <?php
 
-namespace spec\Akeneo\CouplingDetector\NodeExtractor;
+namespace spec\Akeneo\CouplingDetector\NodeParser;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
-class NodeExtractorResolverSpec extends ObjectBehavior
+class NodeParserResolverSpec extends ObjectBehavior
 {
     function it_resolves_php_files()
     {
         $file = new \SplFileInfo(__FILE__);
-        $this->resolve($file)->shouldReturnAnInstanceOf('Akeneo\CouplingDetector\NodeExtractor\PhpClassNodeExtractor');
+        $this->resolve($file)->shouldReturnAnInstanceOf('Akeneo\CouplingDetector\NodeParser\PhpClassNodeParser');
     }
 
     function it_does_not_resolve_non_supported_files()

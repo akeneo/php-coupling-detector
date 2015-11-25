@@ -1,8 +1,8 @@
 <?php
 
-namespace Akeneo\CouplingDetector\NodeExtractor\PhpClass;
+namespace Akeneo\CouplingDetector\NodeParser\PhpClass;
 
-use Akeneo\CouplingDetector\NodeExtractor\ExtractionException;
+use Akeneo\CouplingDetector\NodeParser\ExtractionException;
 use Symfony\CS\Tokenizer\Tokens;
 
 /**
@@ -34,7 +34,7 @@ class NamespaceExtractor
         }
 
         if (null === $namespace) {
-            throw new ExtractionException('No way to extract the namespace of this class');
+            throw new ExtractionException('No way to parse the namespace of this class');
         }
 
         return $namespace;

@@ -5,8 +5,8 @@ namespace spec\Akeneo\CouplingDetector;
 use Akeneo\CouplingDetector\Domain\NodeInterface;
 use Akeneo\CouplingDetector\Domain\RuleInterface;
 use Akeneo\CouplingDetector\Domain\ViolationInterface;
-use Akeneo\CouplingDetector\NodeExtractor\NodeExtractorInterface;
-use Akeneo\CouplingDetector\NodeExtractor\NodeExtractorResolver;
+use Akeneo\CouplingDetector\NodeParser\NodeParserInterface;
+use Akeneo\CouplingDetector\NodeParser\NodeParserResolver;
 use Akeneo\CouplingDetector\RuleChecker;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -14,7 +14,7 @@ use Symfony\Component\Finder\Finder;
 
 class CouplingDetectorSpec extends ObjectBehavior
 {
-    function let(NodeExtractorResolver $nodeExtractorResolver, RuleChecker $ruleChecker)
+    function let(NodeParserResolver $nodeExtractorResolver, RuleChecker $ruleChecker)
     {
         $this->beConstructedWith($nodeExtractorResolver, $ruleChecker);
     }
@@ -27,12 +27,12 @@ class CouplingDetectorSpec extends ObjectBehavior
         Finder $finder,
         RuleInterface $rule1,
         RuleInterface $rule2,
-        NodeExtractorInterface $extractor
+        NodeParserInterface $extractor
     ) {
         $file = new \SplFileObject(__FILE__);
         $finder->getIterator()->willReturn(new \ArrayIterator([$file]));
         $nodeExtractorResolver->resolve(Argument::any())->willReturn($extractor);
-        $extractor->extract($file)->willReturn($node);
+        $extractor->parse($file)->willReturn($node);
 
         $ruleChecker->check($rule1, $node)->willReturn(null);
         $ruleChecker->check($rule2, $node)->willReturn($violation);
