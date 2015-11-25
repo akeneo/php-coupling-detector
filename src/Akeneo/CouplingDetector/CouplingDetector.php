@@ -2,9 +2,9 @@
 
 namespace Akeneo\CouplingDetector;
 
-use Akeneo\CouplingDetector\Data\NodeInterface;
-use Akeneo\CouplingDetector\Data\RuleInterface;
-use Akeneo\CouplingDetector\Data\ViolationInterface;
+use Akeneo\CouplingDetector\Domain\NodeInterface;
+use Akeneo\CouplingDetector\Domain\RuleInterface;
+use Akeneo\CouplingDetector\Domain\ViolationInterface;
 use Akeneo\CouplingDetector\NodeExtractor\NodeExtractorResolver;
 use Symfony\Component\Finder\Finder;
 

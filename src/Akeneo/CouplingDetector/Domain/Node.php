@@ -1,6 +1,6 @@
 <?php
 
-namespace Akeneo\CouplingDetector\Data;
+namespace Akeneo\CouplingDetector\Domain;
 
 /**
  * A node is an item that will be parsed to check if it respects the coupling rules.
@@ -50,25 +50,9 @@ class Node implements NodeInterface
     /**
      * {@inheritdoc}
      */
-    public function setSubject($subject)
-    {
-        $this->subject = $subject;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getFilepath()
     {
         return $this->filepath;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setFilepath($filepath)
-    {
-        $this->filepath = $filepath;
     }
 
     /**
@@ -82,24 +66,8 @@ class Node implements NodeInterface
     /**
      * {@inheritdoc}
      */
-    public function setTokens($tokens)
-    {
-        $this->tokens = $tokens;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
     }
 }

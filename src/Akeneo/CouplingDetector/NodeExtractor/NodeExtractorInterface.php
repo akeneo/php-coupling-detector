@@ -2,7 +2,7 @@
 
 namespace Akeneo\CouplingDetector\NodeExtractor;
 
-use Akeneo\CouplingDetector\Data\NodeInterface;
+use Akeneo\CouplingDetector\Domain\NodeInterface;
 
 /**
  * Creates a node from a file by extracting its tokens.

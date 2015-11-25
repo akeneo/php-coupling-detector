@@ -2,8 +2,8 @@
 
 namespace Akeneo\CouplingDetector\NodeExtractor;
 
-use Akeneo\CouplingDetector\Data\Node;
-use Akeneo\CouplingDetector\Data\NodeInterface;
+use Akeneo\CouplingDetector\Domain\Node;
+use Akeneo\CouplingDetector\Domain\NodeInterface;
 use Akeneo\CouplingDetector\NodeExtractor\PhpClass\ClassNameExtractor;
 use Akeneo\CouplingDetector\NodeExtractor\PhpClass\NamespaceExtractor;
 use Akeneo\CouplingDetector\NodeExtractor\PhpClass\UseDeclarationsExtractor;

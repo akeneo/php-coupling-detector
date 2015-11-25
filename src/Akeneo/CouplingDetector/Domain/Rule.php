@@ -1,6 +1,6 @@
 <?php
 
-namespace Akeneo\CouplingDetector\Data;
+namespace Akeneo\CouplingDetector\Domain;
 
 /**
  * Rule.
@@ -49,25 +49,9 @@ class Rule implements RuleInterface
     /**
      * {@inheritdoc}
      */
-    public function setSubject($subject)
-    {
-        $this->subject = $subject;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
     }
 
     /**
@@ -81,24 +65,8 @@ class Rule implements RuleInterface
     /**
      * {@inheritdoc}
      */
-    public function setRequirements(array $requirements)
-    {
-        $this->requirements = $requirements;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getDescription()
     {
         return $this->description;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
     }
 }

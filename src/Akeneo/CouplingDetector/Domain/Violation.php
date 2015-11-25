@@ -1,6 +1,6 @@
 <?php
 
-namespace Akeneo\CouplingDetector\Data;
+namespace Akeneo\CouplingDetector\Domain;
 
 /**
  * A violation is raised when a node does not follow a rule.
@@ -49,25 +49,9 @@ class Violation implements ViolationInterface
     /**
      * {@inheritdoc}
      */
-    public function setRule(RuleInterface $rule)
-    {
-        $this->rule = $rule;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getNode()
     {
         return $this->node;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setNode(NodeInterface $node)
-    {
-        $this->node = $node;
     }
 
     /**
@@ -81,24 +65,8 @@ class Violation implements ViolationInterface
     /**
      * {@inheritdoc}
      */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getTokenViolations()
     {
         return $this->tokenViolations;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setTokenViolations(array $tokenViolations)
-    {
-        $this->tokenViolations = $tokenViolations;
     }
 }

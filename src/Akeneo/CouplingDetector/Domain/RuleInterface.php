@@ -1,6 +1,6 @@
 <?php
 
-namespace Akeneo\CouplingDetector\Data;
+namespace Akeneo\CouplingDetector\Domain;
 
 /**
  * Rule.
@@ -20,19 +20,9 @@ interface RuleInterface
     public function getSubject();
 
     /**
-     * @param string $subject
-     */
-    public function setSubject($subject);
-
-    /**
      * @return array
      */
     public function getRequirements();
-
-    /**
-     * @param array $requirements
-     */
-    public function setRequirements(array $requirements);
 
     /**
      * @return string
@@ -40,17 +30,7 @@ interface RuleInterface
     public function getType();
 
     /**
-     * @param string $type
-     */
-    public function setType($type);
-
-    /**
      * @return string
      */
     public function getDescription();
-
-    /**
-     * @param string $description
-     */
-    public function setDescription($description);
 }

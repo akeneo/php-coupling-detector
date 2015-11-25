@@ -2,9 +2,9 @@
 
 namespace spec\Akeneo\CouplingDetector;
 
-use Akeneo\CouplingDetector\Data\NodeInterface;
-use Akeneo\CouplingDetector\Data\RuleInterface;
-use Akeneo\CouplingDetector\Data\ViolationInterface;
+use Akeneo\CouplingDetector\Domain\NodeInterface;
+use Akeneo\CouplingDetector\Domain\RuleInterface;
+use Akeneo\CouplingDetector\Domain\ViolationInterface;
 use Akeneo\CouplingDetector\NodeExtractor\NodeExtractorInterface;
 use Akeneo\CouplingDetector\NodeExtractor\NodeExtractorResolver;
 use Akeneo\CouplingDetector\RuleChecker;
@@ -40,6 +40,6 @@ class CouplingDetectorSpec extends ObjectBehavior
         $violations = $this->detect($finder, [$rule1, $rule2]);
         $violations->shouldHaveCount(1);
         $violations->shouldBeArray();
-        $violations[0]->shouldBeAnInstanceOf('Akeneo\CouplingDetector\Data\ViolationInterface');
+        $violations[0]->shouldBeAnInstanceOf('Akeneo\CouplingDetector\Domain\ViolationInterface');
     }
 }

@@ -2,8 +2,8 @@
 
 namespace spec\Akeneo\CouplingDetector\NodeExtractor;
 
-use Akeneo\CouplingDetector\Data\Node;
-use Akeneo\CouplingDetector\Data\NodeInterface;
+use Akeneo\CouplingDetector\Domain\Node;
+use Akeneo\CouplingDetector\Domain\NodeInterface;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -19,8 +19,8 @@ class PhpClassNodeExtractorSpec extends ObjectBehavior
         $file = new \SplFileInfo(__FILE__);
         $expectedNode = new Node(
             [
-                'Akeneo\CouplingDetector\Data\Node',
-                'Akeneo\CouplingDetector\Data\NodeInterface',
+                'Akeneo\CouplingDetector\Domain\Node',
+                'Akeneo\CouplingDetector\Domain\NodeInterface',
                 'PhpSpec\ObjectBehavior',
                 'Prophecy\Argument'
             ],

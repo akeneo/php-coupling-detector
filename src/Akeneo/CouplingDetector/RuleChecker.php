@@ -2,10 +2,10 @@
 
 namespace Akeneo\CouplingDetector;
 
-use Akeneo\CouplingDetector\Data\NodeInterface;
-use Akeneo\CouplingDetector\Data\RuleInterface;
-use Akeneo\CouplingDetector\Data\Violation;
-use Akeneo\CouplingDetector\Data\ViolationInterface;
+use Akeneo\CouplingDetector\Domain\NodeInterface;
+use Akeneo\CouplingDetector\Domain\RuleInterface;
+use Akeneo\CouplingDetector\Domain\Violation;
+use Akeneo\CouplingDetector\Domain\ViolationInterface;
 
 /**
  * Check if a node respects or matches a rule.

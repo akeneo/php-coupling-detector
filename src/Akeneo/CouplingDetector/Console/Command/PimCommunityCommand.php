@@ -3,9 +3,9 @@
 namespace Akeneo\CouplingDetector\Console\Command;
 
 use Akeneo\CouplingDetector\CouplingDetector;
-use Akeneo\CouplingDetector\Data\Rule;
-use Akeneo\CouplingDetector\Data\RuleInterface;
-use Akeneo\CouplingDetector\Data\ViolationInterface;
+use Akeneo\CouplingDetector\Domain\Rule;
+use Akeneo\CouplingDetector\Domain\RuleInterface;
+use Akeneo\CouplingDetector\Domain\ViolationInterface;
 use Akeneo\CouplingDetector\NodeExtractor\NodeExtractorResolver;
 use Akeneo\CouplingDetector\RuleChecker;
 use Symfony\Component\Console\Command\Command;

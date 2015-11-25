@@ -2,8 +2,6 @@
 
 namespace spec\Akeneo\CouplingDetector\NodeExtractor;
 
-use Akeneo\CouplingDetector\Data\Node;
-use Akeneo\CouplingDetector\Data\NodeInterface;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 

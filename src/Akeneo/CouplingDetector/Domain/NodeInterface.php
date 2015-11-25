@@ -1,6 +1,6 @@
 <?php
 
-namespace Akeneo\CouplingDetector\Data;
+namespace Akeneo\CouplingDetector\Domain;
 
 /**
  * A node is an item that will be parsed to check if it respects the coupling rules.
@@ -19,19 +19,9 @@ interface NodeInterface
     public function getSubject();
 
     /**
-     * @param string $subject
-     */
-    public function setSubject($subject);
-
-    /**
      * @return string
      */
     public function getFilepath();
-
-    /**
-     * @param string $filepath
-     */
-    public function setFilepath($filepath);
 
     /**
      * @return array
@@ -39,17 +29,7 @@ interface NodeInterface
     public function getTokens();
 
     /**
-     * @param array $tokens
-     */
-    public function setTokens($tokens);
-
-    /**
      * @return string
      */
     public function getType();
-
-    /**
-     * @param string $type
-     */
-    public function setType($type);
 }
