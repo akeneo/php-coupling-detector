@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Akeneo\CouplingDetector\TokensExtractor;
+namespace spec\Akeneo\CouplingDetector\NodeParser\PhpClass;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -10,7 +10,7 @@ class ClassNameExtractorSpec extends ObjectBehavior
 {
     function it_is_initializable()
     {
-        $this->shouldHaveType('Akeneo\CouplingDetector\TokensExtractor\ClassNameExtractor');
+        $this->shouldHaveType('Akeneo\CouplingDetector\NodeParser\PhpClass\ClassNameExtractor');
     }
 
     function it_extracts_the_class_name()
@@ -40,6 +40,6 @@ EOF;
 
     function it_throws_an_exception_when_class_name_cannot_be_extracted(Tokens $tokens)
     {
-        $this->shouldThrow('Akeneo\CouplingDetector\TokensExtractor\ExtractionException')->duringExtract($tokens);
+        $this->shouldThrow('Akeneo\CouplingDetector\NodeParser\ExtractionException')->duringExtract($tokens);
     }
 }

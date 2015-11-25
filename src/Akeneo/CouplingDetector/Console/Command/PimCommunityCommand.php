@@ -2,19 +2,20 @@
 
 namespace Akeneo\CouplingDetector\Console\Command;
 
-use Akeneo\CouplingDetector\Coupling\UseViolations;
-use Akeneo\CouplingDetector\Detector;
-use Akeneo\CouplingDetector\Coupling\UseViolationsFilter;
-use Akeneo\CouplingDetector\FilesReader;
-use Akeneo\CouplingDetector\RulesApplier;
-use Akeneo\CouplingDetector\UseViolationRule;
+use Akeneo\CouplingDetector\CouplingDetector;
+use Akeneo\CouplingDetector\Domain\Rule;
+use Akeneo\CouplingDetector\Domain\RuleInterface;
+use Akeneo\CouplingDetector\Domain\ViolationInterface;
+use Akeneo\CouplingDetector\NodeParser\NodeParserResolver;
+use Akeneo\CouplingDetector\RuleChecker;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Finder\Finder;
 
 /**
- * Detects the coupling issues in pim-community-dev
+ * Detects the coupling issues in pim-community-dev.
  *
  * @author    Nicolas Dupont <nicolas@akeneo.com>
  * @copyright 2015 Akeneo SAS (http://www.akeneo.com)
@@ -23,7 +24,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class PimCommunityCommand extends Command
 {
     /**
-     * {@inheritedDoc}
+     * {@inheritedDoc}.
      */
     protected function configure()
     {
@@ -34,7 +35,7 @@ class PimCommunityCommand extends Command
                     new InputOption(
                         'output',
                         '',
-                        InputOption::VALUE_REQUIRED, 'Output mode, "default", "count", "none"', 'default'
+                        InputOption::VALUE_REQUIRED, 'Output mode, "default", "none"', 'default'
                     ),
                     new InputOption('strict', '', InputOption::VALUE_NONE, 'Apply strict rules without legacy exceptions'),
                 )
@@ -43,7 +44,7 @@ class PimCommunityCommand extends Command
     }
 
     /**
-     * {@inheritedDoc}
+     * {@inheritedDoc}.
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -60,56 +61,177 @@ class PimCommunityCommand extends Command
             );
         }
 
+        $finder = new Finder();
+        $finder
+            ->files()
+            ->in($path)
+            ->name('*.php')
+            ->notPath('Oro')
+        ;
+
+        $nodeExtractorResolver = new NodeParserResolver();
+        $ruleChecker = new RuleChecker();
+        $coupling = new CouplingDetector($nodeExtractorResolver, $ruleChecker);
+        $violations = $coupling->detect($finder, $this->getRules());
+
+        if ('none' !== $displayMode) {
+            $this->displayStandardViolations($output, $violations);
+        }
+
+        return count($violations) > 0 ? 1 : 0;
+    }
+
+    /**
+     * @param OutputInterface      $output
+     * @param ViolationInterface[] $violations
+     */
+    protected function displayStandardViolations(OutputInterface $output, array $violations)
+    {
+        $totalCount = 0;
+        foreach ($violations as $violation) {
+            $rule = $violation->getRule();
+            $node = $violation->getNode();
+            $errorType = RuleInterface::TYPE_DISCOURAGED === $rule->getType() ? 'warning' : 'error';
+
+            $output->writeln('');
+            $output->writeln(sprintf('Rule "%s" violated in file "%s"', $rule->getSubject(), $node->getFilepath()));
+            foreach ($violation->getTokenViolations() as $token) {
+                $output->writeln(sprintf('<%s> - use %s</%s>', $errorType, $token, $errorType));
+            }
+            $totalCount += count($violation->getTokenViolations());
+        }
+        $output->writeln(sprintf('<info>Total coupling issues: %d.</info>', $totalCount));
+    }
+
+    /**
+     * @return string
+     */
+    protected function getProjectPath()
+    {
+        $binPath = getcwd();
+        $composerPath = $binPath.'/composer.json';
+        $errorMessage = sprintf(
+                'You must launch the command from the pim-community-dev repository, not from "%s"',
+                $binPath
+            ).PHP_EOL;
+        if (!file_exists($composerPath)) {
+            fwrite(STDERR, $errorMessage);
+            exit(1);
+        } else {
+            $composerContent = file_get_contents($composerPath);
+            if (false === strpos($composerContent, '"name": "akeneo/pim-community-dev"')) {
+                fwrite(STDERR, $errorMessage);
+                exit(1);
+            }
+        }
+
+        return $binPath.'/src/';
+    }
+
+    /**
+     * @return array
+     */
+    private function getRules()
+    {
         $rules = [
-            new UseViolationRule(
+            new Rule(
                 'Akeneo\Component',
-                ['Pim', 'PimEnterprise', 'Bundle', 'Doctrine\ORM']
+                ['Pim', 'PimEnterprise', 'Bundle', 'Doctrine\ORM'],
+                RuleInterface::TYPE_FORBIDDEN
             ),
-            new UseViolationRule(
+            new Rule(
                 'Akeneo\Bundle',
-                ['Pim', 'PimEnterprise']
+                ['Pim', 'PimEnterprise'],
+                RuleInterface::TYPE_FORBIDDEN
             ),
-            new UseViolationRule(
+            new Rule(
                 'Pim\Component',
-                ['PimEnterprise', 'Bundle', 'Doctrine\ORM']
+                ['PimEnterprise', 'Bundle', 'Doctrine\ORM'],
+                RuleInterface::TYPE_FORBIDDEN
             ),
-            new UseViolationRule(
+            new Rule(
                 'Pim\Bundle',
-                ['PimEnterprise']
+                ['PimEnterprise'],
+                RuleInterface::TYPE_FORBIDDEN
             ),
-            new UseViolationRule(
+            new Rule(
                 'Pim\Bundle\CatalogBundle',
                 [
                     // bundles
-                    'AnalyticsBundle', 'CommentBundle', 'DataGridBundle', 'ImportExportBundle', 'LocalizationBundle',
-                    'PdfGeneratorBundle', 'TranslationBundle', 'VersioningBundle', 'BaseConnectorBundle',
-                    'ConnectorBundle', 'EnrichBundle', 'InstallerBundle', 'NavigationBundle', 'ReferenceDataBundle',
-                    'UIBundle', 'WebServiceBundle', 'DashboardBundle', 'FilterBundle', 'JsFormValidationBundle',
-                    'NotificationBundle', 'TransformBundle', 'UserBundle', 'BatchBundle',
+                    'AnalyticsBundle',
+                    'CommentBundle',
+                    'DataGridBundle',
+                    'ImportExportBundle',
+                    'LocalizationBundle',
+                    'PdfGeneratorBundle',
+                    'TranslationBundle',
+                    'VersioningBundle',
+                    'BaseConnectorBundle',
+                    'ConnectorBundle',
+                    'EnrichBundle',
+                    'InstallerBundle',
+                    'NavigationBundle',
+                    'ReferenceDataBundle',
+                    'UIBundle',
+                    'WebServiceBundle',
+                    'DashboardBundle',
+                    'FilterBundle',
+                    'JsFormValidationBundle',
+                    'NotificationBundle',
+                    'TransformBundle',
+                    'UserBundle',
+                    'BatchBundle',
                     // components
-                    'Connector'
-                ]
+                    'Connector',
+                ],
+                RuleInterface::TYPE_FORBIDDEN
             ),
-            new UseViolationRule(
+            new Rule(
                 'Pim\Bundle\ConnectorBundle',
                 [
-                    'AnalyticsBundle', 'CommentBundle', 'DataGridBundle', 'ImportExportBundle', 'LocalizationBundle',
-                    'PdfGeneratorBundle', 'TranslationBundle', 'VersioningBundle', 'BaseConnectorBundle',
-                    'CatalogBundle', 'EnrichBundle', 'InstallerBundle', 'NavigationBundle', 'ReferenceDataBundle',
-                    'UIBundle', 'WebServiceBundle', 'DashboardBundle', 'FilterBundle', 'JsFormValidationBundle',
-                    'NotificationBundle', 'TransformBundle', 'UserBundle'
-                ]
+                    'AnalyticsBundle',
+                    'CommentBundle',
+                    'DataGridBundle',
+                    'ImportExportBundle',
+                    'LocalizationBundle',
+                    'PdfGeneratorBundle',
+                    'TranslationBundle',
+                    'VersioningBundle',
+                    'BaseConnectorBundle',
+                    'CatalogBundle',
+                    'EnrichBundle',
+                    'InstallerBundle',
+                    'NavigationBundle',
+                    'ReferenceDataBundle',
+                    'UIBundle',
+                    'WebServiceBundle',
+                    'DashboardBundle',
+                    'FilterBundle',
+                    'JsFormValidationBundle',
+                    'NotificationBundle',
+                    'TransformBundle',
+                    'UserBundle',
+                ],
+                RuleInterface::TYPE_FORBIDDEN
             ),
         ];
 
+        return $rules;
+    }
+
+    /**
+     * @return array
+     */
+    private function getLegacyExclusions()
+    {
         $legacyExclusions = [
             // TranslatableInterface should be moved in a Akeneo component
             'Akeneo\Component\Classification\Updater\CategoryUpdater' => [
-                'Pim\Bundle\TranslationBundle\Entity\TranslatableInterface'
+                'Pim\Bundle\TranslationBundle\Entity\TranslatableInterface',
             ],
             // Repository interfaces should never expose QueryBuilder as parameter
             'Akeneo\Component\Classification\Repository' => [
-                'Doctrine\ORM\QueryBuilder'
+                'Doctrine\ORM\QueryBuilder',
             ],
             'Pim\Component\Catalog' => [
                 // Model interfaces of CatalogBundle should be extracted in the catalog component
@@ -151,7 +273,7 @@ class PimCommunityCommand extends Command
                 'Pim\Bundle\CatalogBundle\AttributeType\AbstractAttributeType',
                 'Pim\Bundle\CatalogBundle\AttributeType\AttributeTypes',
                 // Deprecated in 1.5, should be dropped the deprecated methods support
-                'Pim\Bundle\CatalogBundle\Updater\ProductUpdaterInterface'
+                'Pim\Bundle\CatalogBundle\Updater\ProductUpdaterInterface',
             ],
             'Pim\Component\Connector' => [
                 // Interfaces of BatchBundle should be extracted in an Akeneo component
@@ -195,11 +317,11 @@ class PimCommunityCommand extends Command
                 'Pim\Bundle\CatalogBundle\Factory\FamilyFactory',
                 'Pim\Bundle\CatalogBundle\Factory\GroupFactory',
                 // Version manager should be exploded with SRP and introduce different interfaces in a component
-                'Pim\Bundle\VersioningBundle\Manager\VersionManager'
+                'Pim\Bundle\VersioningBundle\Manager\VersionManager',
             ],
             // Connector component should not rely on base connector file writer, move the implementation in BC manner
             'Pim\Component\Connector\Writer\File\YamlWriter' => [
-                'Pim\Bundle\BaseConnectorBundle\Writer\File\FileWriter'
+                'Pim\Bundle\BaseConnectorBundle\Writer\File\FileWriter',
             ],
             // Same issues than catalog component updater classes, same fixes expected
             'Pim\Component\ReferenceData\Updater' => [
@@ -227,7 +349,7 @@ class PimCommunityCommand extends Command
                 // should be extracted in a akeneo component in a BC way
                 'Pim\Bundle\VersioningBundle\Model\VersionableInterface',
                 // should be extracted in a akeneo component in a BC way
-                'Pim\Bundle\CommentBundle\Model\CommentSubjectInterface'
+                'Pim\Bundle\CommentBundle\Model\CommentSubjectInterface',
             ],
             'Pim\Bundle\CatalogBundle\Entity' => [
                 // should be extracted in a component in a akeneo component in a BC way (localization?)
@@ -243,15 +365,15 @@ class PimCommunityCommand extends Command
             'Pim\Bundle\CatalogBundle\Doctrine\Common\Saver\GroupSaver' => [
                 // what to do with this, it's a weird way to share and update versionning context, could be re-worked
                 // with the versioning reworking (no more relying on doctrine events)
-                'Pim\Bundle\VersioningBundle\Manager\VersionContext'
+                'Pim\Bundle\VersioningBundle\Manager\VersionContext',
             ],
-            'Pim\Bundle\CatalogBundle\Manager\FamilyManager' =>[
+            'Pim\Bundle\CatalogBundle\Manager\FamilyManager' => [
                 // FamilyManager should be dropped and not even used
-                'Pim\Bundle\UserBundle\Context\UserContext'
+                'Pim\Bundle\UserBundle\Context\UserContext',
             ],
             'Pim\Bundle\CatalogBundle\Helper\LocaleHelper' => [
                 // LocaleHelper should be simplified and moved to LocalizationBundle
-                'Pim\Bundle\UserBundle\Context\UserContext'
+                'Pim\Bundle\UserBundle\Context\UserContext',
             ],
             'Pim\Bundle\CatalogBundle\Repository' => [
                 // CatalogBundle repository interfaces should not rely on an EnrichBundle DataTransformer interface,
@@ -259,92 +381,15 @@ class PimCommunityCommand extends Command
                 'Pim\Bundle\EnrichBundle\Form\DataTransformer\ChoicesProviderInterface',
                 // CatalogBundle repository interfaces should not rely on a UIBundle repository interface, this ui
                 // interface should be moved
-                'Pim\Bundle\UIBundle\Entity\Repository\OptionRepositoryInterface'
+                'Pim\Bundle\UIBundle\Entity\Repository\OptionRepositoryInterface',
             ],
             // CatalogBundle MongoDB normalizers should not use a TransformBundle normalizer, will be better to
             // duplicate code or extract
             'Pim\Bundle\CatalogBundle\MongoDB\Normalizer' => [
-                'Pim\Bundle\TransformBundle\Normalizer\Structured\TranslationNormalizer'
+                'Pim\Bundle\TransformBundle\Normalizer\Structured\TranslationNormalizer',
             ],
         ];
-        $useViolationsFilter = new UseViolationsFilter($legacyExclusions);
 
-        $detector = new Detector();
-        $reader = new FilesReader($path);
-        $applier = new RulesApplier($rules);
-
-        $violations = $detector->detectUseViolations($reader, $applier);
-        if (!$strictMode) {
-            $violations = $useViolationsFilter->filter($violations);
-        }
-
-        if ('default' === $displayMode) {
-            $this->displayStandardViolations($output, $violations);
-
-        } elseif ('count' === $displayMode) {
-            $this->displayCounterViolations($output, $violations);
-        }
-
-        return count($violations->getFullQualifiedClassNameViolations()) > 0 ? 1 : 0;
-    }
-
-    /**
-     * @param OutputInterface $output
-     * @param UseViolations   $violations
-     */
-    protected function displayStandardViolations(OutputInterface $output, UseViolations $violations)
-    {
-        $violations = $violations->getFullQualifiedClassNameViolations();
-        $totalCount = 0;
-        foreach ($violations as $className => $violationUses) {
-            if (0 < count($violationUses)) {
-                $output->writeln(sprintf('<info>%s</info>', $className));
-            }
-            foreach ($violationUses as $use) {
-                $output->writeln(sprintf('<info> - use %s</info>', $use));
-            }
-            $totalCount += count($violationUses);
-        }
-        $output->writeln(sprintf('<info>Total coupling issues %s</info>', $totalCount));
-    }
-
-    /**
-     * @param OutputInterface $output
-     * @param UseViolations   $violations
-     */
-    protected function displayCounterViolations(OutputInterface $output, UseViolations $violations)
-    {
-        $forbiddenUseCounter = $violations->getSortedForbiddenUsesCounters();
-        $totalCount = 0;
-        foreach ($forbiddenUseCounter as $fullName => $count) {
-            $output->writeln(sprintf('<info> - %d x %s</info>', $count, $fullName));
-            $totalCount += $count;
-        }
-        $output->writeln(sprintf('<info>Total coupling issues %s</info>', $totalCount));
-    }
-
-    /**
-     * @return string
-     */
-    protected function getProjectPath()
-    {
-        $binPath = getcwd();
-        $composerPath = $binPath.'/composer.json';
-        $errorMessage = sprintf(
-                'You must launch the command from the pim-community-dev repository, not from "%s"',
-                $binPath
-            ).PHP_EOL;
-        if (!file_exists($composerPath)) {
-            fwrite(STDERR, $errorMessage);
-            exit(1);
-        } else {
-            $composerContent = file_get_contents($composerPath);
-            if (false === strpos($composerContent, '"name": "akeneo/pim-community-dev"')) {
-                fwrite(STDERR, $errorMessage);
-                exit(1);
-            }
-        }
-
-        return $binPath.'/src/';
+        return $legacyExclusions;
     }
 }

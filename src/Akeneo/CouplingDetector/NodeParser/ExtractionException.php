@@ -1,9 +1,9 @@
 <?php
 
-namespace Akeneo\CouplingDetector\TokensExtractor;
+namespace Akeneo\CouplingDetector\NodeParser;
 
 /**
- * Class ExtractionException
+ * Class ExtractionException.
  *
  * @author    Nicolas Dupont <nicolas@akeneo.com>
  * @copyright 2015 Akeneo SAS (http://www.akeneo.com)

@@ -1,12 +1,12 @@
 <?php
 
-namespace Akeneo\CouplingDetector\TokensExtractor;
+namespace Akeneo\CouplingDetector\NodeParser\PhpClass;
 
-use Akeneo\CouplingDetector\TokensExtractor\ExtractionException;
+use Akeneo\CouplingDetector\NodeParser\ExtractionException;
 use Symfony\CS\Tokenizer\Tokens;
 
 /**
- * Extracts the namespace from a file
+ * Extracts the namespace from a file.
  *
  * @author    Nicolas Dupont <nicolas@akeneo.com>
  * @copyright 2015 Akeneo SAS (http://www.akeneo.com)
@@ -30,12 +30,11 @@ class NamespaceExtractor
                 $namespaceIndex = $tokens->getNextNonWhitespace($index);
                 $namespaceEndIndex = $tokens->getNextTokenOfKind($index, array(';'));
                 $namespace = trim($tokens->generatePartialCode($namespaceIndex, $namespaceEndIndex - 1));
-
             }
         }
 
         if (null === $namespace) {
-            throw new ExtractionException('No way to extract the namespace of this class');
+            throw new ExtractionException('No way to parse the namespace of this class');
         }
 
         return $namespace;
