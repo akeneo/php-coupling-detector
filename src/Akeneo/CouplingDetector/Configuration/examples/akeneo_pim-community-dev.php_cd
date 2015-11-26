@@ -1,15 +1,12 @@
 <?php
 
+use \Akeneo\CouplingDetector\Configuration\DefaultFinder;
 use \Akeneo\CouplingDetector\Configuration\Configuration;
 use \Akeneo\CouplingDetector\Data\Rule;
 use \Akeneo\CouplingDetector\Data\RuleInterface;
-use \Symfony\Component\Finder\Finder;
 
-$finder = new Finder();
-$finder
-    ->files()
-    ->name('*.php')
-    ->notPath('Oro');
+$finder = new DefaultFinder();
+$finder->notPath('Oro');
 
 $rules = [
     new Rule(
@@ -260,6 +257,6 @@ $legacyExclusions = [
     ],
 ];
 
-$config = new Configuration($finder, $rules);
+$config = new Configuration($rules, $finder);
 
 return $config;

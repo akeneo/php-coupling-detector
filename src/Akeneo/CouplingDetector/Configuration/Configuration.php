@@ -2,7 +2,7 @@
 
 namespace Akeneo\CouplingDetector\Configuration;
 
-use Akeneo\CouplingDetector\Data\RuleInterface;
+use Akeneo\CouplingDetector\Domain\RuleInterface;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -22,11 +22,15 @@ class Configuration
     /**
      * Configuration constructor.
      *
-     * @param Finder          $finder
      * @param RuleInterface[] $rules
+     * @param Finder          $finder
      */
-    public function __construct(Finder $finder, array $rules)
+    public function __construct(array $rules, Finder $finder = null)
     {
+        if (null === $finder) {
+            $finder = new DefaultFinder();
+        }
+
         $this->finder = $finder;
         $this->rules = $rules;
     }
