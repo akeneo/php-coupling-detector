@@ -3,16 +3,15 @@
 namespace Akeneo\CouplingDetector\Domain;
 
 /**
- * Rule.
+ * Exclusion, allows to exclude violations
  *
- * @author  Julien Janvier <j.janvier@gmail.com>
+ * @author  Nicolas Dupont <nicolas@akeneo.com>
  * @license http://opensource.org/licenses/MIT MIT
  */
-interface RuleInterface
+interface ExclusionInterface
 {
-    const TYPE_FORBIDDEN = 'forbidden';
-    const TYPE_DISCOURAGED = 'discouraged';
-    const TYPE_ONLY = 'only';
+    const TYPE_LEGACY = 'legacy';
+    const TYPE_DEPRECATED = 'deprecated';
 
     /**
      * @return string
@@ -22,7 +21,7 @@ interface RuleInterface
     /**
      * @return array
      */
-    public function getRequirements();
+    public function getExcludedRequirements();
 
     /**
      * @return string
