@@ -2,8 +2,8 @@
 
 use \Akeneo\CouplingDetector\Configuration\DefaultFinder;
 use \Akeneo\CouplingDetector\Configuration\Configuration;
-use \Akeneo\CouplingDetector\Data\Rule;
-use \Akeneo\CouplingDetector\Data\RuleInterface;
+use \Akeneo\CouplingDetector\Domain\Rule;
+use \Akeneo\CouplingDetector\Domain\RuleInterface;
 
 $finder = new DefaultFinder();
 $finder->notPath('Oro');
@@ -22,6 +22,11 @@ $rules = [
     new Rule(
         'Pim\Component',
         ['PimEnterprise', 'Bundle', 'Doctrine\ORM'],
+        RuleInterface::TYPE_FORBIDDEN
+    ),
+    new Rule(
+        'PimEnterprise\Component',
+        ['Bundle', 'Doctrine\ORM'],
         RuleInterface::TYPE_FORBIDDEN
     ),
     new Rule(
