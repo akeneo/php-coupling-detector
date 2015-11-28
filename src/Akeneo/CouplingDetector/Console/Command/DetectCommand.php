@@ -4,9 +4,9 @@ namespace Akeneo\CouplingDetector\Console\Command;
 
 use Akeneo\CouplingDetector\Configuration\Configuration;
 use Akeneo\CouplingDetector\CouplingDetector;
-use Akeneo\CouplingDetector\Data\RuleInterface;
-use Akeneo\CouplingDetector\Data\ViolationInterface;
-use Akeneo\CouplingDetector\NodeExtractor\NodeExtractorResolver;
+use Akeneo\CouplingDetector\Domain\RuleInterface;
+use Akeneo\CouplingDetector\Domain\ViolationInterface;
+use Akeneo\CouplingDetector\NodeParser\NodeParserResolver;
 use Akeneo\CouplingDetector\RuleChecker;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -67,38 +67,38 @@ your project. The file must return an instance of ``Akeneo\CouplingDetector\Conf
 which lets you configure the rules and the directories that need to be analyzed.
 Here is an example below:
     <?php
-    use \Akeneo\CouplingDetector\Data\Rule;
-    use \Akeneo\CouplingDetector\Data\RuleInterface;
+    use \Akeneo\CouplingDetector\Domain\Rule;
+    use \Akeneo\CouplingDetector\Domain\RuleInterface;
 
-    $finder = new \Symfony\Component\Finder\Finder();
-    $finder
+    \$finder = new \Symfony\Component\Finder\Finder();
+    \$finder
         ->files()
         ->name('*.php')
         ->notPath('foo/bar/');
 
-    $rules = [
+    \$rules = [
         new Rule('foo', ['bar', 'baz'], RuleInterface::TYPE_FORBIDDEN),
         new Rule('zoo', ['too'], RuleInterface::TYPE_DISCOURAGED),
         new Rule('bli', ['bla', 'ble', 'blu'], RuleInterface::TYPE_ONLY),
     ];
 
-    return new \Akeneo\CouplingDetector\Configuration\Configuration($rules, $finder);
+    return new \Akeneo\CouplingDetector\Configuration\Configuration(\$rules, \$finder);
     ?>
 
 You can also use the default finder implementation if you want to analyse all the PHP files
 of your directory:
     <?php
-    use \Akeneo\CouplingDetector\Data\Rule;
-    use \Akeneo\CouplingDetector\Data\RuleInterface;
+    use \Akeneo\CouplingDetector\Domain\Rule;
+    use \Akeneo\CouplingDetector\Domain\RuleInterface;
 
-    $rules = [
+    \$rules = [
         new Rule('foo', ['bar', 'baz'], RuleInterface::TYPE_FORBIDDEN),
         new Rule('zoo', ['too'], RuleInterface::TYPE_DISCOURAGED),
         new Rule('bli', ['bla', 'ble', 'blu'], RuleInterface::TYPE_ONLY),
     ];
 
     return new \Akeneo\CouplingDetector\Configuration\Configuration(
-        $rules,
+        \$rules,
         \Akeneo\CouplingDetector\Configuration\DefaultFinder
     );
     ?>
@@ -151,9 +151,9 @@ HELP
         $finder = $config->getFinder();
         $finder->in($path);
 
-        $nodeExtractorResolver = new NodeExtractorResolver();
+        $nodeParserResolver = new NodeParserResolver();
         $ruleChecker = new RuleChecker();
-        $detector = new CouplingDetector($nodeExtractorResolver, $ruleChecker);
+        $detector = new CouplingDetector($nodeParserResolver, $ruleChecker);
 
         $violations = $detector->detect($finder, $rules);
 
