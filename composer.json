@@ -6,6 +6,9 @@
         {
             "name": "Nicolas Dupont <nicolas@akeneo.com>",
             "homepage": "http://www.akeneo.com"
+        },
+        {
+            "name": "Julien Janvier <j.janvier@gmail.com>"
         }
     ],
     "require": {
