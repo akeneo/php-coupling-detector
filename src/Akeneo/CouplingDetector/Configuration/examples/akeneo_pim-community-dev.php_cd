@@ -120,21 +120,6 @@ $exclusions = [
     new Exclusion(
         'Pim\Component\Catalog',
         [
-            // Model interfaces of CatalogBundle should be extracted in the catalog component
-            'Pim\Bundle\CatalogBundle\Model\ChannelInterface',
-            'Pim\Bundle\CatalogBundle\Model\LocaleInterface',
-            'Pim\Bundle\CatalogBundle\Model\ProductValueInterface',
-            'Pim\Bundle\CatalogBundle\Model\AttributeInterface',
-            'Pim\Bundle\CatalogBundle\Model\ProductInterface',
-            'Pim\Bundle\CatalogBundle\Model\AttributeOptionInterface',
-            'Pim\Bundle\CatalogBundle\Model\AssociationInterface',
-            'Pim\Bundle\CatalogBundle\Model\CategoryInterface',
-            'Pim\Bundle\CatalogBundle\Model\FamilyInterface',
-            'Pim\Bundle\CatalogBundle\Model\AttributeGroupInterface',
-            'Pim\Bundle\CatalogBundle\Model\GroupInterface',
-            'Pim\Bundle\CatalogBundle\Model\AssociationTypeInterface',
-            'Pim\Bundle\CatalogBundle\Model\ProductTemplateInterface',
-            'Pim\Bundle\CatalogBundle\Model\AttributeRequirementInterface',
             // Repository interfaces of CatalogBundle should be extracted in the catalog component
             'Pim\Bundle\CatalogBundle\Repository\AttributeRepositoryInterface',
             'Pim\Bundle\CatalogBundle\Repository\ChannelRepositoryInterface',
@@ -197,15 +182,6 @@ $exclusions = [
             'Akeneo\Bundle\BatchBundle\Job\RuntimeErrorException',
             'Akeneo\Bundle\BatchBundle\Step\AbstractStep',
             'Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface',
-            // Model interfaces of CatalogBundle should be extracted in the catalog component
-            'Pim\Bundle\CatalogBundle\Model\ProductInterface',
-            'Pim\Bundle\CatalogBundle\Model\AttributeInterface',
-            'Pim\Bundle\CatalogBundle\Model\AssociationTypeInterface',
-            'Pim\Bundle\CatalogBundle\Model\FamilyInterface',
-            'Pim\Bundle\CatalogBundle\Model\GroupInterface',
-            'Pim\Bundle\CatalogBundle\Model\AttributeOptionInterface',
-            'Pim\Bundle\CatalogBundle\Model\ProductValueInterface',
-            'Pim\Bundle\CatalogBundle\Model\ProductPriceInterface',
             // Repositories interfaces of CatalogBundle should be extracted in the catalog component
             'Pim\Bundle\CatalogBundle\Repository\AttributeRepositoryInterface',
             'Pim\Bundle\CatalogBundle\Repository\LocaleRepositoryInterface',
@@ -247,9 +223,6 @@ $exclusions = [
         'Pim\Component\ReferenceData\Updater',
         [
             'Pim\Bundle\CatalogBundle\Builder\ProductBuilderInterface',
-            'Pim\Bundle\CatalogBundle\Model\AttributeInterface',
-            'Pim\Bundle\CatalogBundle\Model\ProductInterface',
-            'Pim\Bundle\CatalogBundle\Model\ProductValueInterface',
             'Pim\Bundle\CatalogBundle\Validator\AttributeValidatorHelper',
             'Pim\Bundle\CatalogBundle\Exception\InvalidArgumentException',
         ],
