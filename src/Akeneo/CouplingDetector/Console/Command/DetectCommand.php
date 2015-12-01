@@ -44,12 +44,6 @@ class DetectCommand extends Command
                         InputOption::VALUE_REQUIRED,
                         'file path of the configuration file'
                     ),
-                    new InputOption(
-                        'strict',
-                        null,
-                        InputOption::VALUE_NONE,
-                        'Apply strict rules without legacy exceptions'
-                    ),
                 ]
             )
             ->setDescription('Detect coupling violations')
@@ -134,10 +128,7 @@ HELP
             $configFile = $configDir . DIRECTORY_SEPARATOR . '.php_cd';
         }
 
-        $strictMode = $input->getOption('strict');
-        $output->writeln(
-            sprintf('<info>Detecting coupling violations (strict mode %s)...</info>', $strictMode ? 'enabled' : 'disabled')
-        );
+        $output->writeln('<info>Detecting coupling violations...</info>');
 
         $config = $this->loadConfiguration($configFile);
         $rules = $config->getRules();
