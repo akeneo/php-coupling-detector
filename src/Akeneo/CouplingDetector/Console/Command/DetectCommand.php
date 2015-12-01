@@ -9,6 +9,7 @@ use Akeneo\CouplingDetector\Domain\ViolationInterface;
 use Akeneo\CouplingDetector\NodeParser\NodeParserResolver;
 use Akeneo\CouplingDetector\RuleChecker;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -148,7 +149,7 @@ HELP
         $detector = new CouplingDetector($nodeParserResolver, $ruleChecker);
 
         $violations = $detector->detect($finder, $rules);
-        $this->displayStandardViolations($output, $violations);
+        $this->outputViolations($output, $violations, $input->getOption('verbose'));
 
         return $this->determineExitCode($violations);
     }
@@ -178,19 +179,46 @@ HELP
     /**
      * @param OutputInterface      $output
      * @param ViolationInterface[] $violations
+     * @param bool                 $verbose
      */
-    protected function displayStandardViolations(OutputInterface $output, array $violations)
+    protected function outputViolations(OutputInterface $output, array $violations, $verbose = false)
     {
+        $warningStyle = new OutputFormatterStyle('white', 'yellow', ['bold']);
+        $output->getFormatter()->setStyle('warning', $warningStyle);
+        $errorStyle = new OutputFormatterStyle('white', 'red', ['bold']);
+        $output->getFormatter()->setStyle('error', $errorStyle);
+
         $nbErrors = 0;
         foreach ($violations as $violation) {
             $rule = $violation->getRule();
             $node = $violation->getNode();
             $errorType = RuleInterface::TYPE_DISCOURAGED === $rule->getType() ? 'warning' : 'error';
 
+            $msg = !$verbose ?
+                sprintf(
+                    'Node <comment>%s</comment> does not respect the rule <comment>%s</comment> because of the tokens:',
+                    $node->getFilepath(),
+                    $rule->getSubject()
+                ):
+                sprintf(<<<MSG
+Node <comment>%s</comment> does not respect the following rule <comment>%s</comment>:
+    * type: %s
+    * description: %s
+    * requirements: %s
+The following tokens are wrong:
+MSG
+                    ,
+                    $node->getFilepath(),
+                    $rule->getSubject(),
+                    $rule->getType(),
+                    $rule->getDescription() ?: 'N/A',
+                    implode(', ', $rule->getRequirements())
+                );
+
             $output->writeln('');
-            $output->writeln(sprintf('Rule "%s" violated in file "%s"', $rule->getSubject(), $node->getFilepath()));
+            $output->writeln($msg);
             foreach ($violation->getTokenViolations() as $token) {
-                $output->writeln(sprintf('<%s> - use %s</%s>', $errorType, $token, $errorType));
+                $output->writeln(sprintf('    * <%s>%s</%s>', $errorType, $token, $errorType));
             }
 
             $nbErrors += count($violation->getTokenViolations());
