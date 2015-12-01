@@ -1,5 +1,5 @@
 {
-    "name": "nidup/php-coupling-detector",
+    "name": "akeneo/php-coupling-detector",
     "description": "PHP coupling detector",
     "license": "MIT",
     "authors": [
