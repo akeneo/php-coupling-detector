@@ -2,6 +2,7 @@
 
 namespace Akeneo\CouplingDetector\Configuration;
 
+use Akeneo\CouplingDetector\Domain\ExclusionInterface;
 use Akeneo\CouplingDetector\Domain\RuleInterface;
 use Symfony\Component\Finder\Finder;
 
@@ -16,23 +17,24 @@ class Configuration
     /** @var RuleInterface[] */
     private $rules;
 
+    /** @var ExclusionInterface[] */
+    private $exclusions;
+
     /** @var Finder */
     private $finder;
 
     /**
      * Configuration constructor.
      *
-     * @param RuleInterface[] $rules
-     * @param Finder          $finder
+     * @param Finder               $finder
+     * @param RuleInterface[]      $rules
+     * @param ExclusionInterface[] $exclusions
      */
-    public function __construct(array $rules, Finder $finder = null)
+    public function __construct(Finder $finder, array $rules, array $exclusions = [])
     {
-        if (null === $finder) {
-            $finder = new DefaultFinder();
-        }
-
         $this->finder = $finder;
         $this->rules = $rules;
+        $this->exclusions = $exclusions;
     }
 
     /**
@@ -41,6 +43,14 @@ class Configuration
     public function getRules()
     {
         return $this->rules;
+    }
+
+    /**
+     * @return ExclusionInterface[]
+     */
+    public function getExclusions()
+    {
+        return $this->exclusions;
     }
 
     /**

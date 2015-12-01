@@ -3,18 +3,18 @@
 namespace Akeneo\CouplingDetector\Domain;
 
 /**
- * Rule.
+ * Exclusion.
  *
- * @author  Julien Janvier <j.janvier@gmail.com>
+ * @author  Nicolas Dupont <nicolas@akeneo.com>
  * @license http://opensource.org/licenses/MIT MIT
  */
-class Rule implements RuleInterface
+class Exclusion implements ExclusionInterface
 {
     /** @var string */
     private $subject;
 
     /** @var array */
-    private $requirements = [];
+    private $excludedRequirements = [];
 
     /** @var string */
     private $type;
@@ -26,14 +26,14 @@ class Rule implements RuleInterface
      * Rule constructor.
      *
      * @param string $subject
-     * @param array  $requirements
+     * @param array  $excludedRequirements
      * @param string $type
      * @param string $description
      */
-    public function __construct($subject, array $requirements, $type, $description = null)
+    public function __construct($subject, array $excludedRequirements, $type, $description = null)
     {
-        $this->requirements = $requirements;
         $this->subject = $subject;
+        $this->excludedRequirements = $excludedRequirements;
         $this->type = $type;
         $this->description = $description;
     }
@@ -57,9 +57,9 @@ class Rule implements RuleInterface
     /**
      * {@inheritdoc}
      */
-    public function getRequirements()
+    public function getExcludedRequirements()
     {
-        return $this->requirements;
+        return $this->excludedRequirements;
     }
 
     /**

@@ -148,6 +148,7 @@ HELP
         }
 
         $rules = $config->getRules();
+        $exclusions = (true === $strictMode) ? [] : $config->getExclusions();
         $finder = $config->getFinder();
         $finder->in($path);
 
@@ -155,7 +156,7 @@ HELP
         $ruleChecker = new RuleChecker();
         $detector = new CouplingDetector($nodeParserResolver, $ruleChecker);
 
-        $violations = $detector->detect($finder, $rules);
+        $violations = $detector->detect($finder, $rules, $exclusions);
 
         if ('none' !== $displayMode) {
             $this->displayStandardViolations($output, $violations);
