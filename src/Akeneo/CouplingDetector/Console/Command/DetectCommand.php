@@ -41,12 +41,6 @@ class DetectCommand extends Command
                         'file path of the configuration file'
                     ),
                     new InputOption(
-                        'output',
-                        null,
-                        InputOption::VALUE_REQUIRED, 'Output mode, "default", "none"',
-                        'default'
-                    ),
-                    new InputOption(
                         'strict',
                         null,
                         InputOption::VALUE_NONE,
@@ -133,20 +127,12 @@ HELP
             $configFile = $configDir . DIRECTORY_SEPARATOR . '.php_cd';
         }
 
-        $config = $this->loadConfiguration($configFile);
-
         $strictMode = $input->getOption('strict');
-        $displayMode = $input->getOption('output');
+        $output->writeln(
+            sprintf('<info> Detect coupling violations (strict mode %s)</info>', $strictMode ? 'enabled' : 'disabled')
+        );
 
-        if ('none' !== $displayMode) {
-            $output->writeln(
-                sprintf(
-                    '<info> Detect coupling violations (strict mode %s)</info>',
-                    $strictMode ? 'enabled' : 'disabled'
-                )
-            );
-        }
-
+        $config = $this->loadConfiguration($configFile);
         $rules = $config->getRules();
         $finder = $config->getFinder();
         $finder->in($path);
@@ -156,12 +142,9 @@ HELP
         $detector = new CouplingDetector($nodeParserResolver, $ruleChecker);
 
         $violations = $detector->detect($finder, $rules);
+        $this->displayStandardViolations($output, $violations);
 
-        if ('none' !== $displayMode) {
-            $this->displayStandardViolations($output, $violations);
-        }
-
-        return count($violations) > 0 ? 1 : 0;
+        return count($violations);
     }
 
     /**
