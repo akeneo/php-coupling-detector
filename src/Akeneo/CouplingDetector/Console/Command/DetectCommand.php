@@ -24,6 +24,9 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class DetectCommand extends Command
 {
+     const EXIT_WITH_WARNINGS = 10;
+     const EXIT_WITH_ERRORS = 99;
+
     /**
      * {@inheritedDoc}.
      */
@@ -55,6 +58,9 @@ The <info>%command.name%</info> command detects coupling problems for a given fi
 coupling rules that have been defined:
     <info>php %command.full_name% /path/to/dir</info>
     <info>php %command.full_name% /path/to/file</info>
+
+The exit status of the <info>%command.name%</info> command can be: 0 if no violations have been raised, 10 in case of
+warnings and 99 in case of errors.
 
 You can save the configuration in a <comment>.php_cd</comment> file in the root directory of
 your project. The file must return an instance of ``Akeneo\CouplingDetector\Configuration\Configuration``,
@@ -129,7 +135,7 @@ HELP
 
         $strictMode = $input->getOption('strict');
         $output->writeln(
-            sprintf('<info> Detect coupling violations (strict mode %s)</info>', $strictMode ? 'enabled' : 'disabled')
+            sprintf('<info>Detecting coupling violations (strict mode %s)...</info>', $strictMode ? 'enabled' : 'disabled')
         );
 
         $config = $this->loadConfiguration($configFile);
@@ -144,7 +150,29 @@ HELP
         $violations = $detector->detect($finder, $rules);
         $this->displayStandardViolations($output, $violations);
 
-        return count($violations);
+        return $this->determineExitCode($violations);
+    }
+
+    /**
+     * @param ViolationInterface[] $violations
+     *
+     * @return int
+     */
+    protected function determineExitCode(array $violations)
+    {
+        if (0 === count($violations)) {
+            return 0;
+        }
+
+        $exitCode = self::EXIT_WITH_WARNINGS;
+        foreach ($violations as $violation) {
+            if (ViolationInterface::TYPE_ERROR=== $violation->getType()) {
+                $exitCode = self::EXIT_WITH_ERRORS;
+                break;
+            }
+        }
+
+        return $exitCode;
     }
 
     /**
@@ -153,7 +181,7 @@ HELP
      */
     protected function displayStandardViolations(OutputInterface $output, array $violations)
     {
-        $totalCount = 0;
+        $nbErrors = 0;
         foreach ($violations as $violation) {
             $rule = $violation->getRule();
             $node = $violation->getNode();
@@ -164,9 +192,16 @@ HELP
             foreach ($violation->getTokenViolations() as $token) {
                 $output->writeln(sprintf('<%s> - use %s</%s>', $errorType, $token, $errorType));
             }
-            $totalCount += count($violation->getTokenViolations());
+
+            $nbErrors += count($violation->getTokenViolations());
         }
-        $output->writeln(sprintf('<info>Total coupling issues: %d.</info>', $totalCount));
+
+        if (0 === $nbErrors) {
+            $output->writeln('<info>No coupling issues found :)</info>');
+        } else {
+            $output->writeln('');
+            $output->writeln(sprintf('<info>%d coupling issues found!</info>', $nbErrors));
+        }
     }
 
     /**
