@@ -36,7 +36,7 @@ class DetectCommand extends Command
         $this
             ->setName('detect')
             ->setDefinition(
-                [
+                array(
                     new InputArgument('path', InputArgument::OPTIONAL, 'path of the project', null),
                     new InputOption(
                         'config-file',
@@ -44,7 +44,7 @@ class DetectCommand extends Command
                         InputOption::VALUE_REQUIRED,
                         'file path of the configuration file'
                     ),
-                ]
+                )
             )
             ->setDescription('Detect coupling violations')
             ->setHelp(
@@ -174,9 +174,9 @@ HELP
      */
     protected function outputViolations(OutputInterface $output, array $violations, $verbose = false)
     {
-        $warningStyle = new OutputFormatterStyle('white', 'yellow', ['bold']);
+        $warningStyle = new OutputFormatterStyle('white', 'yellow', array('bold'));
         $output->getFormatter()->setStyle('warning', $warningStyle);
-        $errorStyle = new OutputFormatterStyle('white', 'red', ['bold']);
+        $errorStyle = new OutputFormatterStyle('white', 'red', array('bold'));
         $output->getFormatter()->setStyle('error', $errorStyle);
 
         $nbErrors = 0;

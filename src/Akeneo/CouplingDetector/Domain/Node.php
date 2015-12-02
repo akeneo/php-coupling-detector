@@ -18,7 +18,7 @@ class Node implements NodeInterface
     private $filepath;
 
     /** @var array */
-    private $tokens = [];
+    private $tokens = array();
 
     /** @var string */
     private $type;

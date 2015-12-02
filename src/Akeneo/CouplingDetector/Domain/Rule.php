@@ -14,7 +14,7 @@ class Rule implements RuleInterface
     private $subject;
 
     /** @var array */
-    private $requirements = [];
+    private $requirements = array();
 
     /** @var string */
     private $type;

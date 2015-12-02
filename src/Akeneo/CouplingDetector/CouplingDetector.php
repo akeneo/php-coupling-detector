@@ -47,7 +47,7 @@ class CouplingDetector
     public function detect(Finder $finder, array $rules)
     {
         $nodes = $this->parseNodes($finder);
-        $violations = [];
+        $violations = array();
 
         foreach ($rules as $rule) {
             foreach ($nodes as $node) {
@@ -67,7 +67,7 @@ class CouplingDetector
      */
     private function parseNodes(Finder $finder)
     {
-        $nodes = [];
+        $nodes = array();
         foreach ($finder as $file) {
             $parser = $this->nodeExtractorResolver->resolve($file);
             $nodes[] = $parser->parse($file);

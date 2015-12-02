@@ -80,7 +80,7 @@ class RuleChecker
      */
     private function checkForbiddenOrDiscouragedRule(RuleInterface $rule, NodeInterface $node)
     {
-        $errors = [];
+        $errors = array();
 
         foreach ($node->getTokens() as $token) {
             foreach ($rule->getRequirements() as $req) {
@@ -113,7 +113,7 @@ class RuleChecker
      */
     private function checkOnlyRule(RuleInterface $rule, NodeInterface $node)
     {
-        $errors = [];
+        $errors = array();
 
         foreach ($node->getTokens() as $token) {
             $fitRuleRequirements = false;

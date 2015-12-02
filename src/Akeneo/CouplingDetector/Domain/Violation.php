@@ -20,7 +20,7 @@ class Violation implements ViolationInterface
     private $type;
 
     /** @var array */
-    private $tokenViolations = [];
+    private $tokenViolations = array();
 
     /**
      * Violation constructor.

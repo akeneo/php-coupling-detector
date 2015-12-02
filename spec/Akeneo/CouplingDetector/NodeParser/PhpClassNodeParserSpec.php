@@ -18,12 +18,12 @@ class PhpClassNodeParserSpec extends ObjectBehavior
     {
         $file = new \SplFileInfo(__FILE__);
         $expectedNode = new Node(
-            [
+            array(
                 'Akeneo\CouplingDetector\Domain\Node',
                 'Akeneo\CouplingDetector\Domain\NodeInterface',
                 'PhpSpec\ObjectBehavior',
                 'Prophecy\Argument'
-            ],
+            ),
             'spec\Akeneo\CouplingDetector\NodeParser\PhpClassNodeParserSpec',
             __FILE__,
             NodeInterface::TYPE_PHP_USE
@@ -34,7 +34,7 @@ class PhpClassNodeParserSpec extends ObjectBehavior
 
     public function getMatchers()
     {
-        return [
+        return array(
             'beLikeExpectedNode' => function ($subject, $expected) {
                 return
                     $subject->getTokens() === $expected->getTokens() &&
@@ -42,6 +42,6 @@ class PhpClassNodeParserSpec extends ObjectBehavior
                     $subject->getFilePath() === $expected->getFilePath() &&
                     $subject->getType() === $expected->getType();
             },
-        ];
+        );
     }
 }
