@@ -9,6 +9,7 @@ use Akeneo\CouplingDetector\Domain\ViolationInterface;
 use Akeneo\CouplingDetector\NodeParser\NodeParserResolver;
 use Akeneo\CouplingDetector\RuleChecker;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -24,6 +25,9 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class DetectCommand extends Command
 {
+     const EXIT_WITH_WARNINGS = 10;
+     const EXIT_WITH_ERRORS = 99;
+
     /**
      * {@inheritedDoc}.
      */
@@ -40,18 +44,6 @@ class DetectCommand extends Command
                         InputOption::VALUE_REQUIRED,
                         'file path of the configuration file'
                     ),
-                    new InputOption(
-                        'output',
-                        null,
-                        InputOption::VALUE_REQUIRED, 'Output mode, "default", "none"',
-                        'default'
-                    ),
-                    new InputOption(
-                        'strict',
-                        null,
-                        InputOption::VALUE_NONE,
-                        'Apply strict rules without legacy exceptions'
-                    ),
                 ]
             )
             ->setDescription('Detect coupling violations')
@@ -61,6 +53,9 @@ The <info>%command.name%</info> command detects coupling problems for a given fi
 coupling rules that have been defined:
     <info>php %command.full_name% /path/to/dir</info>
     <info>php %command.full_name% /path/to/file</info>
+
+The exit status of the <info>%command.name%</info> command can be: 0 if no violations have been raised, 10 in case of
+warnings and 99 in case of errors.
 
 You can save the configuration in a <comment>.php_cd</comment> file in the root directory of
 your project. The file must return an instance of ``Akeneo\CouplingDetector\Configuration\Configuration``,
@@ -133,20 +128,9 @@ HELP
             $configFile = $configDir . DIRECTORY_SEPARATOR . '.php_cd';
         }
 
+        $output->writeln('<info>Detecting coupling violations...</info>');
+
         $config = $this->loadConfiguration($configFile);
-
-        $strictMode = $input->getOption('strict');
-        $displayMode = $input->getOption('output');
-
-        if ('none' !== $displayMode) {
-            $output->writeln(
-                sprintf(
-                    '<info> Detect coupling violations (strict mode %s)</info>',
-                    $strictMode ? 'enabled' : 'disabled'
-                )
-            );
-        }
-
         $rules = $config->getRules();
         $finder = $config->getFinder();
         $finder->in($path);
@@ -156,34 +140,87 @@ HELP
         $detector = new CouplingDetector($nodeParserResolver, $ruleChecker);
 
         $violations = $detector->detect($finder, $rules);
+        $this->outputViolations($output, $violations, $input->getOption('verbose'));
 
-        if ('none' !== $displayMode) {
-            $this->displayStandardViolations($output, $violations);
+        return $this->determineExitCode($violations);
+    }
+
+    /**
+     * @param ViolationInterface[] $violations
+     *
+     * @return int
+     */
+    protected function determineExitCode(array $violations)
+    {
+        if (0 === count($violations)) {
+            return 0;
         }
 
-        return count($violations) > 0 ? 1 : 0;
+        $exitCode = self::EXIT_WITH_WARNINGS;
+        foreach ($violations as $violation) {
+            if (ViolationInterface::TYPE_ERROR=== $violation->getType()) {
+                $exitCode = self::EXIT_WITH_ERRORS;
+                break;
+            }
+        }
+
+        return $exitCode;
     }
 
     /**
      * @param OutputInterface      $output
      * @param ViolationInterface[] $violations
+     * @param bool                 $verbose
      */
-    protected function displayStandardViolations(OutputInterface $output, array $violations)
+    protected function outputViolations(OutputInterface $output, array $violations, $verbose = false)
     {
-        $totalCount = 0;
+        $warningStyle = new OutputFormatterStyle('white', 'yellow', ['bold']);
+        $output->getFormatter()->setStyle('warning', $warningStyle);
+        $errorStyle = new OutputFormatterStyle('white', 'red', ['bold']);
+        $output->getFormatter()->setStyle('error', $errorStyle);
+
+        $nbErrors = 0;
         foreach ($violations as $violation) {
             $rule = $violation->getRule();
             $node = $violation->getNode();
             $errorType = RuleInterface::TYPE_DISCOURAGED === $rule->getType() ? 'warning' : 'error';
 
+            $msg = !$verbose ?
+                sprintf(
+                    'Node <comment>%s</comment> does not respect the rule <comment>%s</comment> because of the tokens:',
+                    $node->getFilepath(),
+                    $rule->getSubject()
+                ):
+                sprintf(<<<MSG
+Node <comment>%s</comment> does not respect the following rule <comment>%s</comment>:
+    * type: %s
+    * description: %s
+    * requirements: %s
+The following tokens are wrong:
+MSG
+                    ,
+                    $node->getFilepath(),
+                    $rule->getSubject(),
+                    $rule->getType(),
+                    $rule->getDescription() ?: 'N/A',
+                    implode(', ', $rule->getRequirements())
+                );
+
             $output->writeln('');
-            $output->writeln(sprintf('Rule "%s" violated in file "%s"', $rule->getSubject(), $node->getFilepath()));
+            $output->writeln($msg);
             foreach ($violation->getTokenViolations() as $token) {
-                $output->writeln(sprintf('<%s> - use %s</%s>', $errorType, $token, $errorType));
+                $output->writeln(sprintf('    * <%s>%s</%s>', $errorType, $token, $errorType));
             }
-            $totalCount += count($violation->getTokenViolations());
+
+            $nbErrors += count($violation->getTokenViolations());
         }
-        $output->writeln(sprintf('<info>Total coupling issues: %d.</info>', $totalCount));
+
+        if (0 === $nbErrors) {
+            $output->writeln('<info>No coupling issues found :)</info>');
+        } else {
+            $output->writeln('');
+            $output->writeln(sprintf('<info>%d coupling issues found!</info>', $nbErrors));
+        }
     }
 
     /**
