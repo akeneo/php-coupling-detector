@@ -10,7 +10,7 @@ use Akeneo\CouplingDetector\Domain\ViolationInterface;
 /**
  * Check if a node respects or matches a rule.
  *
- * There 3 types or rules at the moment:
+ * There are 3 types or rules at the moment:
  *   -"forbidden": A node respects such a rule if no rule token is present in the node. In case the node does not
  *                 respect this rule, an error violation will be sent.
  *   -"discouraged": A node respects such a rule if no rule token is present in the node. In case the node does not
