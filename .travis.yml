@@ -1,11 +1,18 @@
 language: php
+
+# use the new container infrastructure
+#sudo: false
+
 php:
   - "5.5"
   - "5.4"
+  - "5.3"
+  - '7.0'
   - "hhvm"
 
 matrix:
     allow_failures:
+        - php: "7.0"
         - php: hhvm
 
 cache:
