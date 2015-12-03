@@ -36,10 +36,10 @@ interface FamilyInterface extends TranslatableInterface, ReferableInterface, Ver
 EOF;
         $tokens = Tokens::fromCode($content);
         $this->extract($tokens)->shouldReturn(
-            [
+            array(
                 'Pim\Bundle\TranslationBundle\Entity\TranslatableInterface',
                 'Pim\Bundle\VersioningBundle\Model\VersionableInterface'
-            ]
+            )
         );
     }
 }
