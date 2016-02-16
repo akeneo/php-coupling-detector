@@ -10,7 +10,7 @@ use Akeneo\CouplingDetector\Domain\ViolationInterface;
 /**
  * Check if a node respects or matches a rule.
  *
- * There 3 types or rules at the moment:
+ * There are 3 types or rules at the moment:
  *   -"forbidden": A node respects such a rule if no rule token is present in the node. In case the node does not
  *                 respect this rule, an error violation will be sent.
  *   -"discouraged": A node respects such a rule if no rule token is present in the node. In case the node does not
@@ -51,7 +51,7 @@ class RuleChecker
     public function check(RuleInterface $rule, NodeInterface $node)
     {
         if (!$this->match($rule, $node)) {
-            return;
+            return null;
         }
 
         switch ($rule->getType()) {
@@ -83,10 +83,9 @@ class RuleChecker
         $errors = array();
 
         foreach ($node->getTokens() as $token) {
-            foreach ($rule->getRequirements() as $req) {
-                if (strpos($token, $req) !== false && !in_array($token, $errors)) {
-                    $errors[] = $token;
-                }
+            if (!$this->checkTokenForForbiddenOrDiscouragedRule($rule, $token) &&
+                !in_array($token, $errors)) {
+                $errors[] = $token;
             }
         }
 
@@ -103,7 +102,26 @@ class RuleChecker
     }
 
     /**
-     * Checks if a node respects a "forbidden" or "discouraged" rule.
+     * Checks if a token fits a "forbidden" / "discouraged" rule or not.
+     *
+     * @param RuleInterface $rule
+     * @param string        $token
+     *
+     * @return bool
+     */
+    private function checkTokenForForbiddenOrDiscouragedRule(RuleInterface $rule, $token)
+    {
+        foreach ($rule->getRequirements() as $req) {
+            if (strpos($token, $req) !== false) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if a node respects a "only" rule.
      * A node respects such a rule if the node contains only tokens defined in the rule.
      *
      * @param RuleInterface $rule
@@ -116,13 +134,8 @@ class RuleChecker
         $errors = array();
 
         foreach ($node->getTokens() as $token) {
-            $fitRuleRequirements = false;
-            foreach ($rule->getRequirements() as $req) {
-                if (false !== strpos($token, $req)) {
-                    $fitRuleRequirements = true;
-                }
-            }
-            if (!$fitRuleRequirements && !in_array($token, $errors)) {
+            if (!$this->checkTokenForOnlyRule($rule, $token) &&
+                !in_array($token, $errors)) {
                 $errors[] = $token;
             }
         }
@@ -132,5 +145,25 @@ class RuleChecker
         }
 
         return null;
+    }
+
+    /**
+     * Checks if a token fits a "only" rule or not.
+     *
+     * @param RuleInterface $rule
+     * @param string        $token
+     *
+     * @return bool
+     */
+    private function checkTokenForOnlyRule(RuleInterface $rule, $token)
+    {
+        $fitRuleRequirements = false;
+        foreach ($rule->getRequirements() as $req) {
+            if (false !== strpos($token, $req)) {
+                $fitRuleRequirements = true;
+            }
+        }
+
+        return $fitRuleRequirements;
     }
 }
