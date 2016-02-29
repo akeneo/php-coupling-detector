@@ -36,6 +36,10 @@ class Rule implements RuleInterface
         $this->subject = $subject;
         $this->type = $type;
         $this->description = $description;
+
+        if (RuleInterface::TYPE_ONLY === $this->type) {
+            $this->requirements[] = $this->subject;
+        }
     }
 
     /**
