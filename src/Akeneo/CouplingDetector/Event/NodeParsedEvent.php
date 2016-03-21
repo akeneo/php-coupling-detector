@@ -5,7 +5,6 @@ namespace Akeneo\CouplingDetector\Event;
 use Akeneo\CouplingDetector\Domain\NodeInterface;
 use Symfony\Component\EventDispatcher\Event;
 
-
 /**
  * Dispatched when a node has been parsed.
  *

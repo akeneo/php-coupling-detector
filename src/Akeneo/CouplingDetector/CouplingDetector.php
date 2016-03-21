@@ -49,8 +49,8 @@ class CouplingDetector
         EventDispatcherInterface $eventDispatcher
     ) {
         $this->nodeParserResolver = $resolver;
-        $this->ruleChecker        = $checker;
-        $this->eventDispatcher    = $eventDispatcher;
+        $this->ruleChecker = $checker;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

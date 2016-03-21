@@ -5,7 +5,7 @@ namespace Akeneo\CouplingDetector\Configuration;
 use Symfony\Component\Finder\Finder;
 
 /**
- * Default finder implementation
+ * Default finder implementation.
  *
  * @author  Julien Janvier <j.janvier@gmail.com>
  * @license http://opensource.org/licenses/MIT MIT

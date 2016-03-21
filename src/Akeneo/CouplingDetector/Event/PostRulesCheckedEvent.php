@@ -2,7 +2,6 @@
 
 namespace Akeneo\CouplingDetector\Event;
 
-use Akeneo\CouplingDetector\Domain\RuleInterface;
 use Akeneo\CouplingDetector\Domain\ViolationInterface;
 use Symfony\Component\EventDispatcher\Event;
 

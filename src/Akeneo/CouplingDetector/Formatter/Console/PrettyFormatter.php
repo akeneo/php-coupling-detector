@@ -42,7 +42,7 @@ class PrettyFormatter extends AbstractFormatter
      */
     protected function outputPreNodesParsed(PreNodesParsedEvent $event)
     {
-        $this->output->writeln(sprintf("Parsing %s nodes<blink>...</blink>", $this->nodeCount));
+        $this->output->writeln(sprintf('Parsing %s nodes<blink>...</blink>', $this->nodeCount));
     }
 
     /**
@@ -64,15 +64,15 @@ class PrettyFormatter extends AbstractFormatter
      */
     protected function outputPreRulesChecked(PreRulesCheckedEvent $event)
     {
-        $this->output->writeln(sprintf("Checking %s rules<blink>...</blink>", $this->ruleCount));
+        $this->output->writeln(sprintf('Checking %s rules<blink>...</blink>', $this->ruleCount));
     }
 
     /**
      * {@inheritdoc}
      */
-    protected  function outputNodeChecked(NodeChecked $event)
+    protected function outputNodeChecked(NodeChecked $event)
     {
-        if (null ===$event->getViolation()) {
+        if (null === $event->getViolation()) {
             return;
         }
 
@@ -84,10 +84,10 @@ class PrettyFormatter extends AbstractFormatter
 
         $msg = !$this->verbose ?
             sprintf(
-                "Node <comment>%s</comment> does not respect the rule <comment>%s</comment> because of the tokens:",
+                'Node <comment>%s</comment> does not respect the rule <comment>%s</comment> because of the tokens:',
                 $node->getFilepath(),
                 $rule->getSubject()
-            ):
+            ) :
             sprintf(<<<MSG
 Node <comment>%s</comment> does not respect the rule <comment>%s</comment>:
     * type: %s
@@ -103,36 +103,36 @@ MSG
                 implode(', ', $rule->getRequirements())
             );
 
-        $this->output->writeln("");
+        $this->output->writeln('');
         $this->output->writeln($msg);
         foreach ($violation->getTokenViolations() as $token) {
-            $this->output->writeln(sprintf("    * <%s>%s</%s>", $errorType, $token, $errorType));
+            $this->output->writeln(sprintf('    * <%s>%s</%s>', $errorType, $token, $errorType));
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    protected  function outputRuleChecked(RuleCheckedEvent $event)
+    protected function outputRuleChecked(RuleCheckedEvent $event)
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    protected  function outputPostRulesChecked(PostRulesCheckedEvent $event)
+    protected function outputPostRulesChecked(PostRulesCheckedEvent $event)
     {
-        $this->output->writeln("");
-        $this->output->writeln("");
+        $this->output->writeln('');
+        $this->output->writeln('');
 
         if (0 === $this->violationsCount) {
-            $this->output->write("<passed-bg>No coupling issues found </passed-bg>");
+            $this->output->write('<passed-bg>No coupling issues found </passed-bg>');
             $this->output->write("<passed-bg>\xE2\x9C\x94</passed-bg>");
             $this->output->write("<passed-bg>\xF0\x9F\x98\x83</passed-bg>");
             $this->output->writeln("<passed-bg>\xF0\x9F\x8D\xBB</passed-bg>");
         } else {
             $this->output->write(
-                sprintf("<broken-bg>%d coupling issues found </broken-bg>", $this->violationsCount)
+                sprintf('<broken-bg>%d coupling issues found </broken-bg>', $this->violationsCount)
             );
             $this->output->write("<broken-bg>\xE2\x9C\x96</broken-bg>");
             $this->output->write("<broken-bg>\xF0\x9F\x98\xA5</broken-bg>");

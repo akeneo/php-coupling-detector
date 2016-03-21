@@ -53,12 +53,12 @@ abstract class AbstractFormatter implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            Events::PRE_NODES_PARSED   => 'preNodesParsed',
-            Events::NODE_PARSED        => 'nodeParsed',
-            Events::POST_NODES_PARSED  => 'postNodesParsed',
-            Events::PRE_RULES_CHECKED  => 'preRulesChecked',
-            Events::NODE_CHECKED       => 'nodeChecked',
-            Events::RULE_CHECKED       => 'ruleChecked',
+            Events::PRE_NODES_PARSED => 'preNodesParsed',
+            Events::NODE_PARSED => 'nodeParsed',
+            Events::POST_NODES_PARSED => 'postNodesParsed',
+            Events::PRE_RULES_CHECKED => 'preRulesChecked',
+            Events::NODE_CHECKED => 'nodeChecked',
+            Events::RULE_CHECKED => 'ruleChecked',
             Events::POST_RULES_CHECKED => 'postRulesChecked',
         );
     }
@@ -77,7 +77,7 @@ abstract class AbstractFormatter implements EventSubscriberInterface
      */
     public function nodeParsed(NodeParsedEvent $event)
     {
-        $this->parsingNodeIteration++;
+        ++$this->parsingNodeIteration;
         $this->outputNodeParsed($event);
     }
 
@@ -103,7 +103,7 @@ abstract class AbstractFormatter implements EventSubscriberInterface
      */
     public function nodeChecked(NodeChecked $event)
     {
-        $this->checkingNodeIteration++;
+        ++$this->checkingNodeIteration;
         $key = $event->getNode()->getFilepath();
         if (null !== $event->getViolation() && !in_array($key, $this->nodesOnError)) {
             $this->nodesOnError[] = $key;
@@ -117,9 +117,9 @@ abstract class AbstractFormatter implements EventSubscriberInterface
      */
     public function ruleChecked(RuleCheckedEvent $event)
     {
-        $this->checkingRuleIteration++;
+        ++$this->checkingRuleIteration;
         $this->checkingNodeIteration = 0;
-        $key = $event->getRule()->getSubject() . $event->getRule()->getType();
+        $key = $event->getRule()->getSubject().$event->getRule()->getType();
         $nbErrors = count($event->getViolations());
         if (0 !== $nbErrors && !in_array($key, $this->rulesOnError)) {
             $this->rulesOnError[$key] = $event->getRule();
@@ -137,11 +137,11 @@ abstract class AbstractFormatter implements EventSubscriberInterface
         $this->outputPostRulesChecked($event);
     }
 
-    protected abstract function outputPreNodesParsed(PreNodesParsedEvent $event);
-    protected abstract function outputNodeParsed(NodeParsedEvent $event);
-    protected abstract function outputPostNodesParsed(PostNodesParsedEvent $event);
-    protected abstract function outputPreRulesChecked(PreRulesCheckedEvent $event);
-    protected abstract function outputNodeChecked(NodeChecked $event);
-    protected abstract function outputRuleChecked(RuleCheckedEvent $event);
-    protected abstract function outputPostRulesChecked(PostRulesCheckedEvent $event);
+    abstract protected function outputPreNodesParsed(PreNodesParsedEvent $event);
+    abstract protected function outputNodeParsed(NodeParsedEvent $event);
+    abstract protected function outputPostNodesParsed(PostNodesParsedEvent $event);
+    abstract protected function outputPreRulesChecked(PreRulesCheckedEvent $event);
+    abstract protected function outputNodeChecked(NodeChecked $event);
+    abstract protected function outputRuleChecked(RuleCheckedEvent $event);
+    abstract protected function outputPostRulesChecked(PostRulesCheckedEvent $event);
 }

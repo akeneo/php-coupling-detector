@@ -28,8 +28,8 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class DetectCommand extends Command
 {
-     const EXIT_WITH_WARNINGS = 10;
-     const EXIT_WITH_ERRORS = 99;
+    const EXIT_WITH_WARNINGS = 10;
+    const EXIT_WITH_ERRORS = 99;
 
     private $formats = ['pretty', 'dot'];
 
@@ -138,7 +138,7 @@ HELP
         if (null !== $path = $input->getArgument('path')) {
             $filesystem = new Filesystem();
             if (!$filesystem->isAbsolutePath($path)) {
-                $path = getcwd() . DIRECTORY_SEPARATOR . $path;
+                $path = getcwd().DIRECTORY_SEPARATOR.$path;
             }
         }
 
@@ -150,7 +150,7 @@ HELP
                 $configDir = getcwd();
                 // path is directory
             }
-            $configFile = $configDir . DIRECTORY_SEPARATOR . '.php_cd';
+            $configFile = $configDir.DIRECTORY_SEPARATOR.'.php_cd';
         }
 
         $config = $this->loadConfiguration($configFile);
@@ -181,7 +181,7 @@ HELP
 
         $exitCode = self::EXIT_WITH_WARNINGS;
         foreach ($violations as $violation) {
-            if (ViolationInterface::TYPE_ERROR=== $violation->getType()) {
+            if (ViolationInterface::TYPE_ERROR === $violation->getType()) {
                 $exitCode = self::EXIT_WITH_ERRORS;
                 break;
             }

@@ -38,7 +38,7 @@ class DotFormatter extends AbstractFormatter
      */
     protected function outputPreNodesParsed(PreNodesParsedEvent $event)
     {
-        $this->output->writeln("Parsing nodes");
+        $this->output->writeln('Parsing nodes');
     }
 
     /**
@@ -46,7 +46,7 @@ class DotFormatter extends AbstractFormatter
      */
     protected function outputNodeParsed(NodeParsedEvent $event)
     {
-        $this->output->write("<passed>.</passed>");
+        $this->output->write('<passed>.</passed>');
         $this->displayProgress($this->output, $this->parsingNodeIteration, $this->nodeCount);
     }
 
@@ -68,7 +68,7 @@ class DotFormatter extends AbstractFormatter
     /**
      * {@inheritdoc}
      */
-    protected  function outputNodeChecked(NodeChecked $event)
+    protected function outputNodeChecked(NodeChecked $event)
     {
         $key = $event->getNode()->getFilepath();
         if (null !== $event->getViolation() && !in_array($key, $this->nodesOnError)) {
@@ -79,13 +79,13 @@ class DotFormatter extends AbstractFormatter
     /**
      * {@inheritdoc}
      */
-    protected  function outputRuleChecked(RuleCheckedEvent $event)
+    protected function outputRuleChecked(RuleCheckedEvent $event)
     {
         $nbErrors = count($event->getViolations());
         if (0 === $nbErrors) {
-            $this->output->write("<passed>.</passed>");
+            $this->output->write('<passed>.</passed>');
         } else {
-            $this->output->write("<broken-bg>E</broken-bg>");
+            $this->output->write('<broken-bg>E</broken-bg>');
         }
 
         $this->displayProgress($this->output, $this->checkingRuleIteration, $this->ruleCount);
@@ -94,13 +94,13 @@ class DotFormatter extends AbstractFormatter
     /**
      * {@inheritdoc}
      */
-    protected  function outputPostRulesChecked(PostRulesCheckedEvent $event)
+    protected function outputPostRulesChecked(PostRulesCheckedEvent $event)
     {
-        $this->output->writeln("");
-        $this->output->writeln("");
+        $this->output->writeln('');
+        $this->output->writeln('');
         $this->output->writeln(
             sprintf(
-                "%d rules (<passed>%d passed</passed>, <broken>%d broken</broken>)",
+                '%d rules (<passed>%d passed</passed>, <broken>%d broken</broken>)',
                 $this->ruleCount,
                 $this->ruleCount - count($this->rulesOnError),
                 count($this->rulesOnError)
@@ -108,7 +108,7 @@ class DotFormatter extends AbstractFormatter
         );
         $this->output->writeln(
             sprintf(
-                "%d nodes (<passed>%d passed</passed>, <broken>%d broken</broken>)",
+                '%d nodes (<passed>%d passed</passed>, <broken>%d broken</broken>)',
                 $this->nodeCount,
                 $this->nodeCount - count($this->nodesOnError),
                 count($this->nodesOnError)
@@ -116,7 +116,7 @@ class DotFormatter extends AbstractFormatter
         );
 
         if ($this->violationsCount > 0) {
-            $this->output->writeln(sprintf("<broken-bg>%d coupling problems</broken-bg>", $this->violationsCount));
+            $this->output->writeln(sprintf('<broken-bg>%d coupling problems</broken-bg>', $this->violationsCount));
         }
     }
 
