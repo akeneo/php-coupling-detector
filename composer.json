@@ -30,7 +30,7 @@
             "Akeneo\\CouplingDetector\\": "src/Akeneo/CouplingDetector/"
         }
     },
-    "bin": ["bin/coupling-detector"],
+    "bin": ["bin/php-coupling-detector"],
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"

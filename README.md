@@ -40,8 +40,8 @@ you're good to go:
 The detect command detects coupling problems for a given file or directory depending on the
  coupling rules that have been defined:
  
-     php bin/coupling-detector detect /path/to/dir
-     php bin/coupling-detector detect /path/to/file
+     php bin/php-coupling-detector detect /path/to/dir
+     php bin/php-coupling-detector detect /path/to/file
  
  The exit status of the detect command can be: 0 if no violations have been raised, 10 in case of
  warnings and 99 in case of errors.
@@ -91,4 +91,4 @@ The detect command detects coupling problems for a given file or directory depen
  
  With the ``--config-file`` option you can specify the path to the ``.php_cd`` file:
  
-     php bin/coupling-detector detect /path/to/dir --config-file=/path/to/my/configuration.php_cd
+     php bin/php-coupling-detector detect /path/to/dir --config-file=/path/to/my/configuration.php_cd
