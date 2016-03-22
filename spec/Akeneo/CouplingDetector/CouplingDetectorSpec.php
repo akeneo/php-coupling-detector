@@ -36,7 +36,7 @@ class CouplingDetectorSpec extends ObjectBehavior
         NodeParserInterface $extractor
     ) {
         $file = new \SplFileObject(__FILE__);
-        $finder->getIterator()->willReturn(new \ArrayIterator([$file]));
+        $finder->getIterator()->willReturn(new \ArrayIterator(array($file)));
         $nodeExtractorResolver->resolve(Argument::any())->willReturn($extractor);
         $extractor->parse($file)->willReturn($node);
 
@@ -51,7 +51,7 @@ class CouplingDetectorSpec extends ObjectBehavior
         $eventDispatcher->dispatch(Events::RULE_CHECKED, Argument::type('Akeneo\CouplingDetector\Event\RuleCheckedEvent'))->shouldBeCalledTimes(2);
         $eventDispatcher->dispatch(Events::POST_RULES_CHECKED, Argument::type('Akeneo\CouplingDetector\Event\PostRulesCheckedEvent'))->shouldBeCalled();
 
-        $violations = $this->detect($finder, [$rule1, $rule2]);
+        $violations = $this->detect($finder, array($rule1, $rule2));
         $violations->shouldHaveCount(1);
         $violations->shouldBeArray();
         $violations[0]->shouldBeAnInstanceOf('Akeneo\CouplingDetector\Domain\ViolationInterface');
