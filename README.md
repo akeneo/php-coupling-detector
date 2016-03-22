@@ -10,9 +10,10 @@ But adding a new kind of coupling detections is doable in the future. We could f
  coupling issues of Symfony services that are defined in YAML or XML
 
 At the moment, 3 types of rules are supported:
-    * *forbidden*: A node respects such a rule if no rule token is present in the node. In case the node does not respect this rule, an error violation will be sent.
-    * *discouraged*: A node respects such a rule if no rule token is present in the node. In case the node does not respect this rule, a warning violation will be sent.
-    * *only*: A node respects such a rule if the node contains only tokens defined in the rule. In case the node does not respect this rule, an error violation will be sent.
+
+* _forbidden_: A node respects such a rule if no rule token is present in the node. In case the node does not respect this rule, an error violation will be sent.
+* _discouraged_: A node respects such a rule if no rule token is present in the node. In case the node does not respect this rule, a warning violation will be sent.
+* _only_: A node respects such a rule if the node contains only tokens defined in the rule. In case the node does not respect this rule, an error violation will be sent.
 
 ## Requirements
 
@@ -40,8 +41,8 @@ you're good to go:
 The detect command detects coupling problems for a given file or directory depending on the
  coupling rules that have been defined:
  
-     php bin/coupling-detector detect /path/to/dir
-     php bin/coupling-detector detect /path/to/file
+     php bin/php-coupling-detector detect /path/to/dir
+     php bin/php-coupling-detector detect /path/to/file
  
  The exit status of the detect command can be: 0 if no violations have been raised, 10 in case of
  warnings and 99 in case of errors.
@@ -91,4 +92,4 @@ The detect command detects coupling problems for a given file or directory depen
  
  With the ``--config-file`` option you can specify the path to the ``.php_cd`` file:
  
-     php bin/coupling-detector detect /path/to/dir --config-file=/path/to/my/configuration.php_cd
+     php bin/php-coupling-detector detect /path/to/dir --config-file=/path/to/my/configuration.php_cd

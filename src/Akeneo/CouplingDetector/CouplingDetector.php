@@ -5,7 +5,16 @@ namespace Akeneo\CouplingDetector;
 use Akeneo\CouplingDetector\Domain\NodeInterface;
 use Akeneo\CouplingDetector\Domain\RuleInterface;
 use Akeneo\CouplingDetector\Domain\ViolationInterface;
+use Akeneo\CouplingDetector\Event\PostNodesParsedEvent;
+use Akeneo\CouplingDetector\Event\Events;
+use Akeneo\CouplingDetector\Event\NodeChecked;
+use Akeneo\CouplingDetector\Event\NodeParsedEvent;
+use Akeneo\CouplingDetector\Event\PreNodesParsedEvent;
+use Akeneo\CouplingDetector\Event\PreRulesCheckedEvent;
+use Akeneo\CouplingDetector\Event\RuleCheckedEvent;
+use Akeneo\CouplingDetector\Event\PostRulesCheckedEvent;
 use Akeneo\CouplingDetector\NodeParser\NodeParserResolver;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -19,21 +28,29 @@ class CouplingDetector
     const VERSION = 'master';
 
     /** @var NodeParserResolver */
-    private $nodeExtractorResolver;
+    private $nodeParserResolver;
 
     /** @var RuleChecker */
     private $ruleChecker;
 
+    /** @var EventDispatcherInterface */
+    private $eventDispatcher;
+
     /**
      * CouplingDetector constructor.
      *
-     * @param NodeParserResolver $resolver
-     * @param RuleChecker        $checker
+     * @param NodeParserResolver       $resolver
+     * @param RuleChecker              $checker
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(NodeParserResolver $resolver, RuleChecker $checker)
-    {
-        $this->nodeExtractorResolver = $resolver;
+    public function __construct(
+        NodeParserResolver $resolver,
+        RuleChecker $checker,
+        EventDispatcherInterface $eventDispatcher
+    ) {
+        $this->nodeParserResolver = $resolver;
         $this->ruleChecker = $checker;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -49,13 +66,32 @@ class CouplingDetector
         $nodes = $this->parseNodes($finder);
         $violations = array();
 
+        $this->eventDispatcher->dispatch(Events::PRE_RULES_CHECKED, new PreRulesCheckedEvent($rules));
+
         foreach ($rules as $rule) {
+            $ruleViolations = array();
+
             foreach ($nodes as $node) {
-                if (null !== $violation = $this->ruleChecker->check($rule, $node)) {
-                    $violations[] = $violation;
+                $violation = $this->ruleChecker->check($rule, $node);
+                if (null !== $violation) {
+                    $ruleViolations[] = $violation;
                 }
+
+                $this->eventDispatcher->dispatch(
+                    Events::NODE_CHECKED,
+                    new NodeChecked($node, $rule, $violation)
+                );
             }
+
+            $this->eventDispatcher->dispatch(
+                Events::RULE_CHECKED,
+                new RuleCheckedEvent($rule, $ruleViolations)
+            );
+
+            $violations = array_merge($violations, $ruleViolations);
         }
+
+        $this->eventDispatcher->dispatch(Events::POST_RULES_CHECKED, new PostRulesCheckedEvent($violations));
 
         return $violations;
     }
@@ -67,11 +103,18 @@ class CouplingDetector
      */
     private function parseNodes(Finder $finder)
     {
+        $this->eventDispatcher->dispatch(Events::PRE_NODES_PARSED, new PreNodesParsedEvent($finder));
+
         $nodes = array();
         foreach ($finder as $file) {
-            $parser = $this->nodeExtractorResolver->resolve($file);
-            $nodes[] = $parser->parse($file);
+            if (null !== $parser = $this->nodeParserResolver->resolve($file)) {
+                $node = $parser->parse($file);
+                $nodes[] = $node;
+                $this->eventDispatcher->dispatch(Events::NODE_PARSED, new NodeParsedEvent($node));
+            }
         }
+
+        $this->eventDispatcher->dispatch(Events::POST_NODES_PARSED, new PostNodesParsedEvent($nodes));
 
         return $nodes;
     }

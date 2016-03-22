@@ -51,7 +51,7 @@ class RuleChecker
     public function check(RuleInterface $rule, NodeInterface $node)
     {
         if (!$this->match($rule, $node)) {
-            return null;
+            return;
         }
 
         switch ($rule->getType()) {
@@ -98,7 +98,7 @@ class RuleChecker
             return new Violation($node, $rule, $errors, $type);
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -144,7 +144,7 @@ class RuleChecker
             return new Violation($node, $rule, $errors, ViolationInterface::TYPE_ERROR);
         }
 
-        return null;
+        return;
     }
 
     /**
