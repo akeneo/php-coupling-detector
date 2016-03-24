@@ -8,6 +8,7 @@ use Akeneo\CouplingDetector\CouplingDetector;
 use Akeneo\CouplingDetector\Domain\ViolationInterface;
 use Akeneo\CouplingDetector\Formatter\Console\DotFormatter;
 use Akeneo\CouplingDetector\Formatter\Console\PrettyFormatter;
+use Akeneo\CouplingDetector\Formatter\SimpleFormatter;
 use Akeneo\CouplingDetector\NodeParser\NodeParserResolver;
 use Akeneo\CouplingDetector\RuleChecker;
 use Symfony\Component\Console\Command\Command;
@@ -31,7 +32,7 @@ class DetectCommand extends Command
     const EXIT_WITH_WARNINGS = 10;
     const EXIT_WITH_ERRORS = 99;
 
-    private $formats = ['pretty', 'dot'];
+    private $formats = ['pretty', 'dot', 'simple'];
 
     /**
      * {@inheritedDoc}.
@@ -230,6 +231,9 @@ HELP
             $formatter = new DotFormatter($output);
         } elseif ('pretty' === $formatterName) {
             $formatter = new PrettyFormatter($output, $verbose);
+        }
+          elseif ('simple' === $formatterName) {
+            $formatter = new SimpleFormatter();
         } else {
             throw new \RuntimeException(
                 sprintf('Format "%s" is unknown. Available formats: %s.', $formatterName, implode(', ', $this->formats))
