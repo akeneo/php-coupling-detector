@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>PHP Coupling Detector by akeneo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">PHP Coupling Detector</h1>
+      <h2 class="project-tagline">Detect all the coupling issues of your project with respect to the coupling rules you have defined.</h2>
+      <a href="https://github.com/akeneo/php-coupling-detector" class="btn">View on GitHub</a>
+      <a href="https://github.com/akeneo/php-coupling-detector/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/akeneo/php-coupling-detector/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <p>At the moment, only PHP coupling issues are detected by analyzing the use statements of the classes in your project. 
+But adding a new kind of coupling detections is doable in the future. We could for example imagine to detect the 
+ coupling issues of Symfony services that are defined in YAML or XML</p>
+
+<p>At the moment, 3 types of rules are supported:</p>
+
+<ul>
+<li>
+<em>forbidden</em>: A node respects such a rule if no rule token is present in the node. In case the node does not respect this rule, an error violation will be sent.</li>
+<li>
+<em>discouraged</em>: A node respects such a rule if no rule token is present in the node. In case the node does not respect this rule, a warning violation will be sent.</li>
+<li>
+<em>only</em>: A node respects such a rule if the node contains only tokens defined in the rule. In case the node does not respect this rule, an error violation will be sent.</li>
+</ul>
+
+<h2>
+<a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Requirements</h2>
+
+<p>PHP needs to be a minimum version of PHP 5.3.6.</p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
+
+<h3>
+<a id="globally-composer" class="anchor" href="#globally-composer" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Globally (Composer)</h3>
+
+<p>To install PHP-Coupling-Detector, install Composer and issue the following command:</p>
+
+<p>.. code-block:: bash</p>
+
+<pre><code>$ ./composer.phar global require akeneo/php-coupling-detector
+</code></pre>
+
+<p>Then, make sure you have <code>~/.composer/vendor/bin</code> in your <code>PATH</code>, and
+you're good to go:</p>
+
+<p>.. code-block:: bash</p>
+
+<pre><code>export PATH="$PATH:$HOME/.composer/vendor/bin"
+</code></pre>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>The detect command detects coupling problems for a given file or directory depending on the
+ coupling rules that have been defined:</p>
+
+<pre><code> php bin/php-coupling-detector detect /path/to/dir
+ php bin/php-coupling-detector detect /path/to/file
+</code></pre>
+
+<p>The exit status of the detect command can be: 0 if no violations have been raised, 10 in case of
+ warnings and 99 in case of errors.</p>
+
+<p>You can save the configuration in a <code>.php_cd</code> file in the root directory of
+ your project. The file must return an instance of <code>Akeneo\CouplingDetector\Configuration\Configuration</code>,
+ which lets you configure the rules and the directories that need to be analyzed.
+ Here is an example below:</p>
+
+<pre><code> &lt;?php
+ use \Akeneo\CouplingDetector\Domain\Rule;
+ use \Akeneo\CouplingDetector\Domain\RuleInterface;
+
+ $finder = new \Symfony\Component\Finder\Finder();
+ $finder
+     -&gt;files()
+     -&gt;name('*.php')
+     -&gt;notPath('foo/bar/');
+
+ $rules = [
+     new Rule('foo', ['bar', 'baz'], RuleInterface::TYPE_FORBIDDEN),
+     new Rule('zoo', ['too'], RuleInterface::TYPE_DISCOURAGED),
+     new Rule('bli', ['bla', 'ble', 'blu'], RuleInterface::TYPE_ONLY),
+ ];
+
+ return new \Akeneo\CouplingDetector\Configuration\Configuration($rules, $finder);
+ ?&gt;
+</code></pre>
+
+<p>You can also use the default finder implementation if you want to analyse all the PHP files
+ of your directory:</p>
+
+<pre><code> &lt;?php
+ use \Akeneo\CouplingDetector\Domain\Rule;
+ use \Akeneo\CouplingDetector\Domain\RuleInterface;
+
+ $rules = [
+     new Rule('foo', ['bar', 'baz'], RuleInterface::TYPE_FORBIDDEN),
+     new Rule('zoo', ['too'], RuleInterface::TYPE_DISCOURAGED),
+     new Rule('bli', ['bla', 'ble', 'blu'], RuleInterface::TYPE_ONLY),
+ ];
+
+ return new \Akeneo\CouplingDetector\Configuration\Configuration(
+     $rules,
+     \Akeneo\CouplingDetector\Configuration\DefaultFinder
+ );
+ ?&gt;
+</code></pre>
+
+<p>With the <code>--config-file</code> option you can specify the path to the <code>.php_cd</code> file:</p>
+
+<pre><code> php bin/php-coupling-detector detect /path/to/dir --config-file=/path/to/my/configuration.php_cd
+</code></pre>
+
+<p>With the --format option you can specify the output format:</p>
+
+<pre><code>php %command.full_name% /path/to/dir --format=dot
+</code></pre>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/akeneo/php-coupling-detector">PHP Coupling Detector</a> is maintained by <a href="https://github.com/akeneo">akeneo</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
