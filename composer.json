@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=5.3.6",
-        "fabpot/php-cs-fixer": "~1.11",
+        "friendsofphp/php-cs-fixer": "~1.11",
         "symfony/event-dispatcher": "~2.3|~3.0",
         "symfony/finder": "~2.3|~3.0",
         "symfony/console": "~2.3|~3.0",
