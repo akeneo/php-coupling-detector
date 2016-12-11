@@ -1,25 +1,42 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html>
   <head>
-    <meta charset="UTF-8">
-    <title>PHP Coupling Detector by akeneo</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-  </head>
-  <body>
-    <section class="page-header">
-      <h1 class="project-name">PHP Coupling Detector</h1>
-      <h2 class="project-tagline">Detect all the coupling issues of your project with respect to the coupling rules you have defined.</h2>
-      <a href="https://github.com/akeneo/php-coupling-detector" class="btn">View on GitHub</a>
-      <a href="https://github.com/akeneo/php-coupling-detector/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/akeneo/php-coupling-detector/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
 
-    <section class="main-content">
-      <p>At the moment, only PHP coupling issues are detected by analyzing the use statements of the classes in your project. 
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>PHP Coupling Detector by akeneo</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>PHP Coupling Detector</h1>
+        <h2>Detect all the coupling issues of your project with respect to the coupling rules you have defined.</h2>
+        <a href="https://github.com/akeneo/php-coupling-detector" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="php-coupling-detector" class="anchor" href="#php-coupling-detector" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>PHP Coupling Detector</h1>
+
+<p><a href="https://travis-ci.org/akeneo/php-coupling-detector"><img src="https://travis-ci.org/akeneo/php-coupling-detector.png" alt="Build Status"></a></p>
+
+<p>The PHP Coupling Detector tool detects all the coupling issues of your project with respect to the coupling 
+rules you have defined. </p>
+
+<p>At the moment, only PHP coupling issues are detected by analysing the use statements of the classes in your project. 
 But adding a new kind of coupling detections is doable in the future. We could for example imagine to detect the 
  coupling issues of Symfony services that are defined in YAML or XML</p>
 
@@ -47,14 +64,12 @@ But adding a new kind of coupling detections is doable in the future. We could f
 
 <p>To install PHP-Coupling-Detector, install Composer and issue the following command:</p>
 
-<pre><code>$ ./composer.phar global require akeneo/php-coupling-detector
-</code></pre>
+<div class="highlight highlight-source-shell"><pre>    $ ./composer.phar global require akeneo/php-coupling-detector</pre></div>
 
 <p>Then, make sure you have <code>~/.composer/vendor/bin</code> in your <code>PATH</code>, and
 you're good to go:</p>
 
-<pre><code>export PATH="$PATH:$HOME/.composer/vendor/bin"
-</code></pre>
+<div class="highlight highlight-source-shell"><pre>    <span class="pl-k">export</span> PATH=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$PATH</span>:<span class="pl-smi">$HOME</span>/.composer/vendor/bin<span class="pl-pds">"</span></span></pre></div>
 
 <h2>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
@@ -62,9 +77,8 @@ you're good to go:</p>
 <p>The detect command detects coupling problems for a given file or directory depending on the
  coupling rules that have been defined:</p>
 
-<pre><code> php bin/php-coupling-detector detect /path/to/dir
- php bin/php-coupling-detector detect /path/to/file
-</code></pre>
+<div class="highlight highlight-source-shell"><pre>    php bin/php-coupling-detector detect /path/to/dir
+    php bin/php-coupling-detector detect /path/to/file</pre></div>
 
 <p>The exit status of the detect command can be: 0 if no violations have been raised, 10 in case of
  warnings and 99 in case of errors.</p>
@@ -74,63 +88,70 @@ you're good to go:</p>
  which lets you configure the rules and the directories that need to be analyzed.
  Here is an example below:</p>
 
-<pre><code> &lt;?php
- use \Akeneo\CouplingDetector\Domain\Rule;
- use \Akeneo\CouplingDetector\Domain\RuleInterface;
-
- $finder = new \Symfony\Component\Finder\Finder();
- $finder
-     -&gt;files()
-     -&gt;name('*.php')
-     -&gt;notPath('foo/bar/');
-
- $rules = [
-     new Rule('foo', ['bar', 'baz'], RuleInterface::TYPE_FORBIDDEN),
-     new Rule('zoo', ['too'], RuleInterface::TYPE_DISCOURAGED),
-     new Rule('bli', ['bla', 'ble', 'blu'], RuleInterface::TYPE_ONLY),
- ];
-
- return new \Akeneo\CouplingDetector\Configuration\Configuration($rules, $finder);
- ?&gt;
-</code></pre>
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1">    <span class="pl-k">&lt;</span>?<span class="pl-c1">php</span></span>
+<span class="pl-s1">    <span class="pl-k">use</span> <span class="pl-c1">\Akeneo\CouplingDetector\Domain\Rule</span>;</span>
+<span class="pl-s1">    <span class="pl-k">use</span> <span class="pl-c1">\Akeneo\CouplingDetector\Domain\RuleInterface</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-smi">$finder</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">\Symfony\Component\Finder\</span><span class="pl-c1">Finder</span>();</span>
+<span class="pl-s1">    <span class="pl-smi">$finder</span></span>
+<span class="pl-s1">        <span class="pl-k">-&gt;</span>files()</span>
+<span class="pl-s1">        <span class="pl-k">-&gt;</span>name(<span class="pl-s"><span class="pl-pds">'</span>*.php<span class="pl-pds">'</span></span>)</span>
+<span class="pl-s1">        <span class="pl-k">-&gt;</span>notPath(<span class="pl-s"><span class="pl-pds">'</span>foo/bar/<span class="pl-pds">'</span></span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-smi">$rules</span> <span class="pl-k">=</span> [</span>
+<span class="pl-s1">        <span class="pl-k">new</span> <span class="pl-c1">Rule</span>(<span class="pl-s"><span class="pl-pds">'</span>foo<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>bar<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>baz<span class="pl-pds">'</span></span>], <span class="pl-c1">RuleInterface</span><span class="pl-k">::</span><span class="pl-c1">TYPE_FORBIDDEN</span>),</span>
+<span class="pl-s1">        <span class="pl-k">new</span> <span class="pl-c1">Rule</span>(<span class="pl-s"><span class="pl-pds">'</span>zoo<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>too<span class="pl-pds">'</span></span>], <span class="pl-c1">RuleInterface</span><span class="pl-k">::</span><span class="pl-c1">TYPE_DISCOURAGED</span>),</span>
+<span class="pl-s1">        <span class="pl-k">new</span> <span class="pl-c1">Rule</span>(<span class="pl-s"><span class="pl-pds">'</span>bli<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>bla<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>ble<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>blu<span class="pl-pds">'</span></span>], <span class="pl-c1">RuleInterface</span><span class="pl-k">::</span><span class="pl-c1">TYPE_ONLY</span>),</span>
+<span class="pl-s1">    ];</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-c1">\Akeneo\CouplingDetector\Configuration\</span><span class="pl-c1">Configuration</span>(<span class="pl-smi">$rules</span>, <span class="pl-smi">$finder</span>);</span>
+<span class="pl-s1">    </span><span class="pl-pse"><span class="pl-s1">?</span>&gt;</span></pre></div>
 
 <p>You can also use the default finder implementation if you want to analyse all the PHP files
  of your directory:</p>
 
-<pre><code> &lt;?php
- use \Akeneo\CouplingDetector\Domain\Rule;
- use \Akeneo\CouplingDetector\Domain\RuleInterface;
-
- $rules = [
-     new Rule('foo', ['bar', 'baz'], RuleInterface::TYPE_FORBIDDEN),
-     new Rule('zoo', ['too'], RuleInterface::TYPE_DISCOURAGED),
-     new Rule('bli', ['bla', 'ble', 'blu'], RuleInterface::TYPE_ONLY),
- ];
-
- return new \Akeneo\CouplingDetector\Configuration\Configuration(
-     $rules,
-     \Akeneo\CouplingDetector\Configuration\DefaultFinder
- );
- ?&gt;
-</code></pre>
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1">    <span class="pl-k">&lt;</span>?<span class="pl-c1">php</span></span>
+<span class="pl-s1">    <span class="pl-k">use</span> <span class="pl-c1">\Akeneo\CouplingDetector\Domain\Rule</span>;</span>
+<span class="pl-s1">    <span class="pl-k">use</span> <span class="pl-c1">\Akeneo\CouplingDetector\Domain\RuleInterface</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-smi">$rules</span> <span class="pl-k">=</span> [</span>
+<span class="pl-s1">        <span class="pl-k">new</span> <span class="pl-c1">Rule</span>(<span class="pl-s"><span class="pl-pds">'</span>foo<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>bar<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>baz<span class="pl-pds">'</span></span>], <span class="pl-c1">RuleInterface</span><span class="pl-k">::</span><span class="pl-c1">TYPE_FORBIDDEN</span>),</span>
+<span class="pl-s1">        <span class="pl-k">new</span> <span class="pl-c1">Rule</span>(<span class="pl-s"><span class="pl-pds">'</span>zoo<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>too<span class="pl-pds">'</span></span>], <span class="pl-c1">RuleInterface</span><span class="pl-k">::</span><span class="pl-c1">TYPE_DISCOURAGED</span>),</span>
+<span class="pl-s1">        <span class="pl-k">new</span> <span class="pl-c1">Rule</span>(<span class="pl-s"><span class="pl-pds">'</span>bli<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>bla<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>ble<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>blu<span class="pl-pds">'</span></span>], <span class="pl-c1">RuleInterface</span><span class="pl-k">::</span><span class="pl-c1">TYPE_ONLY</span>),</span>
+<span class="pl-s1">    ];</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-c1">\Akeneo\CouplingDetector\Configuration\</span><span class="pl-c1">Configuration</span>(</span>
+<span class="pl-s1">        <span class="pl-smi">$rules</span>,</span>
+<span class="pl-s1">        <span class="pl-c1">\Akeneo\CouplingDetector\Configuration\</span><span class="pl-c1">DefaultFinder</span></span>
+<span class="pl-s1">    );</span>
+<span class="pl-s1">    </span><span class="pl-pse"><span class="pl-s1">?</span>&gt;</span>
+</pre></div>
 
 <p>With the <code>--config-file</code> option you can specify the path to the <code>.php_cd</code> file:</p>
 
-<pre><code> php bin/php-coupling-detector detect /path/to/dir --config-file=/path/to/my/configuration.php_cd
-</code></pre>
+<div class="highlight highlight-source-shell"><pre>    php bin/php-coupling-detector detect /path/to/dir --config-file=/path/to/my/configuration.php_cd</pre></div>
 
 <p>With the --format option you can specify the output format:</p>
 
-<pre><code>php %command.full_name% /path/to/dir --format=dot
-</code></pre>
+<div class="highlight highlight-source-shell"><pre>    php %<span class="pl-c1">command</span>.full_name% /path/to/dir --format=dot</pre></div>
+        </section>
 
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/akeneo/php-coupling-detector">PHP Coupling Detector</a> is maintained by <a href="https://github.com/akeneo">akeneo</a>.</span>
+        <aside id="sidebar">
+          <a href="https://github.com/akeneo/php-coupling-detector/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/akeneo/php-coupling-detector/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
 
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-      </footer>
+          <p class="repo-owner"><a href="https://github.com/akeneo/php-coupling-detector"></a> is maintained by <a href="https://github.com/akeneo">akeneo</a>.</p>
 
-    </section>
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
 
   
   </body>
