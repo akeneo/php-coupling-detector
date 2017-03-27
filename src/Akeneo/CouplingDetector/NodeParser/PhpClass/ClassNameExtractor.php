@@ -3,7 +3,7 @@
 namespace Akeneo\CouplingDetector\NodeParser\PhpClass;
 
 use Akeneo\CouplingDetector\NodeParser\ExtractionException;
-use Symfony\CS\Tokenizer\Tokens;
+use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * Extracts the class name from a file.

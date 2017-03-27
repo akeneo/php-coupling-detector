@@ -4,7 +4,7 @@ namespace spec\Akeneo\CouplingDetector\NodeParser\PhpClass;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-use Symfony\CS\Tokenizer\Tokens;
+use PhpCsFixer\Tokenizer\Tokens;
 
 class UseDeclarationsExtractorSpec extends ObjectBehavior
 {
