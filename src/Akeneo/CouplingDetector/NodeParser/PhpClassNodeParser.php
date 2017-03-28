@@ -7,7 +7,7 @@ use Akeneo\CouplingDetector\Domain\NodeInterface;
 use Akeneo\CouplingDetector\NodeParser\PhpClass\ClassNameExtractor;
 use Akeneo\CouplingDetector\NodeParser\PhpClass\NamespaceExtractor;
 use Akeneo\CouplingDetector\NodeParser\PhpClass\UseDeclarationsExtractor;
-use Symfony\CS\Tokenizer\Tokens;
+use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * Extract all the tokens of a PHP class.

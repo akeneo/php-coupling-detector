@@ -2,7 +2,7 @@
 
 namespace Akeneo\CouplingDetector\NodeParser\PhpClass;
 
-use Symfony\CS\Tokenizer\Tokens;
+use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * Extracts the namespace declarations used as imports in a file.
@@ -11,14 +11,10 @@ use Symfony\CS\Tokenizer\Tokens;
  * @author    Nicolas Dupont <nicolas@akeneo.com>
  * @copyright 2015 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/MIT MIT
- *
- * @see Symfony\CS\Fixer\Symfony\UnusedUseFixer
  */
 class UseDeclarationsExtractor
 {
     /**
-     * Copy/paste from a private method of Symfony\CS\Fixer\Symfony\UnusedUseFixer.
-     *
      * @param Tokens $tokens
      *
      * @return array
@@ -26,7 +22,8 @@ class UseDeclarationsExtractor
     public function extract(Tokens $tokens)
     {
         $uses = array();
-        $useIndexes = $tokens->getImportUseIndexes();
+        $useIndexes = array_keys($tokens->findGivenKind(T_USE));
+
         foreach ($useIndexes as $index) {
             $declarationEndIndex = $tokens->getNextTokenOfKind($index, array(';'));
             $declarationContent = $tokens->generatePartialCode($index + 1, $declarationEndIndex - 1);
