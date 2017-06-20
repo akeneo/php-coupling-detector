@@ -20,6 +20,9 @@ use PhpCsFixer\Tokenizer\Tokens;
  */
 class PhpClassNodeParser implements NodeParserInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function parse(\SplFileInfo $file)
     {
         $namespaceExtractor = new NamespaceExtractor();
@@ -28,8 +31,16 @@ class PhpClassNodeParser implements NodeParserInterface
 
         $content = file_get_contents($file->getRealPath());
         $tokens = Tokens::fromCode($content);
-        $classNamespace = $namespaceExtractor->extract($tokens);
-        $className = $classNameExtractor->extract($tokens);
+        try {
+            $classNamespace = $namespaceExtractor->extract($tokens, $file);
+            $className = $classNameExtractor->extract($tokens, $file);
+        } catch (ExtractionException $e) {
+            throw new ParsingException(sprintf(
+                "Parsing exception on \"%s\":\n%s",
+                $file->getPathname(),
+                $e->getMessage()
+            ));
+        }
         $classFullName = sprintf('%s\%s', $classNamespace, $className);
         $useDeclarations = $useDeclarationExtractor->extract($tokens);
 

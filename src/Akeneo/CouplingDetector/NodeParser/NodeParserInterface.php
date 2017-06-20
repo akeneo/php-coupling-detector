@@ -17,7 +17,7 @@ interface NodeParserInterface
      *
      * @return NodeInterface
      *
-     * @throws ExtractionException
+     * @throws ParsingException
      */
     public function parse(\SplFileInfo $file);
 }
