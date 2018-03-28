@@ -17,7 +17,7 @@ At the moment, 3 types of rules are supported:
 
 ## Requirements
 
-PHP needs to be a minimum version of PHP 5.3.6.
+PHP needs to be a minimum version of PHP 7.1
 
 ## Installation
 
@@ -38,73 +38,4 @@ you're good to go:
 
 ## Usage
 
-The detect command detects coupling problems for a given file or directory depending on the
- coupling rules that have been defined:
-
-```bash
-    php bin/php-coupling-detector detect /path/to/dir
-    php bin/php-coupling-detector detect /path/to/file
-```
-
- The exit status of the detect command can be: 0 if no violations have been raised, 10 in case of
- warnings and 99 in case of errors.
- 
- You can save the configuration in a ``.php_cd`` file in the root directory of
- your project. The file must return an instance of ``Akeneo\CouplingDetector\Configuration\Configuration``,
- which lets you configure the rules and the directories that need to be analyzed.
- Here is an example below:
- 
- ```php
-    <?php
-    use \Akeneo\CouplingDetector\Domain\Rule;
-    use \Akeneo\CouplingDetector\Domain\RuleInterface;
-
-    $finder = new \Symfony\Component\Finder\Finder();
-    $finder
-        ->files()
-        ->name('*.php')
-        ->notPath('foo/bar/');
- 
-    $rules = [
-        new Rule('foo', ['bar', 'baz'], RuleInterface::TYPE_FORBIDDEN),
-        new Rule('zoo', ['too'], RuleInterface::TYPE_DISCOURAGED),
-        new Rule('bli', ['bla', 'ble', 'blu'], RuleInterface::TYPE_ONLY),
-    ];
-
-    return new \Akeneo\CouplingDetector\Configuration\Configuration($rules, $finder);
-    ?>
-```
- 
- You can also use the default finder implementation if you want to analyse all the PHP files
- of your directory:
- 
- ```php
-    <?php
-    use \Akeneo\CouplingDetector\Domain\Rule;
-    use \Akeneo\CouplingDetector\Domain\RuleInterface;
-
-    $rules = [
-        new Rule('foo', ['bar', 'baz'], RuleInterface::TYPE_FORBIDDEN),
-        new Rule('zoo', ['too'], RuleInterface::TYPE_DISCOURAGED),
-        new Rule('bli', ['bla', 'ble', 'blu'], RuleInterface::TYPE_ONLY),
-    ];
- 
-    return new \Akeneo\CouplingDetector\Configuration\Configuration(
-        $rules,
-        \Akeneo\CouplingDetector\Configuration\DefaultFinder
-    );
-    ?>
-
- ```
- 
- With the ``--config-file`` option you can specify the path to the ``.php_cd`` file:
- 
-```bash
-    php bin/php-coupling-detector detect /path/to/dir --config-file=/path/to/my/configuration.php_cd
-```
-
-With the --format option you can specify the output format:
-
-```bash
-    php %command.full_name% /path/to/dir --format=dot
-```
+To discover how to use this tool, please read the usage of the [detect command](doc/DETECT.md).
