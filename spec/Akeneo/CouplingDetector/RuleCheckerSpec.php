@@ -111,7 +111,7 @@ class RuleCheckerSpec extends ObjectBehavior
         $this->check($rule, $node)->shouldBeLikeExpectedViolation($violation);
     }
 
-    public function getMatchers()
+    public function getMatchers(): array
     {
         return array(
             'beLikeExpectedViolation' => function ($subject, $expected) {
