@@ -56,8 +56,6 @@ The detect command detects coupling problems for a given file or directory depen
  
  ```php
     <?php
-    use \Akeneo\CouplingDetector\Domain\Rule;
-    use \Akeneo\CouplingDetector\Domain\RuleInterface;
 
     $finder = new \Symfony\Component\Finder\Finder();
     $finder
@@ -65,10 +63,12 @@ The detect command detects coupling problems for a given file or directory depen
         ->name('*.php')
         ->notPath('foo/bar/');
  
+    $builder = new \Akeneo\CouplingDetector\RuleBuilder();
+    
     $rules = [
-        new Rule('foo', ['bar', 'baz'], RuleInterface::TYPE_FORBIDDEN),
-        new Rule('zoo', ['too'], RuleInterface::TYPE_DISCOURAGED),
-        new Rule('bli', ['bla', 'ble', 'blu'], RuleInterface::TYPE_ONLY),
+        $builder->forbids(['bar', 'baz'])->in('foo'),
+        $builder->discourages(['too'])->in('zoo'),
+        $builder->only(['bla', 'ble', 'blu'])->in('bli'),
     ];
 
     return new \Akeneo\CouplingDetector\Configuration\Configuration($rules, $finder);
@@ -80,13 +80,13 @@ The detect command detects coupling problems for a given file or directory depen
  
  ```php
     <?php
-    use \Akeneo\CouplingDetector\Domain\Rule;
-    use \Akeneo\CouplingDetector\Domain\RuleInterface;
-
+    
+    $builder = new \Akeneo\CouplingDetector\RuleBuilder();
+    
     $rules = [
-        new Rule('foo', ['bar', 'baz'], RuleInterface::TYPE_FORBIDDEN),
-        new Rule('zoo', ['too'], RuleInterface::TYPE_DISCOURAGED),
-        new Rule('bli', ['bla', 'ble', 'blu'], RuleInterface::TYPE_ONLY),
+        $builder->forbids(['bar', 'baz'])->in('foo'),
+        $builder->discourages(['too'])->in('zoo'),
+        $builder->only(['bla', 'ble', 'blu'])->in('bli'),
     ];
  
     return new \Akeneo\CouplingDetector\Configuration\Configuration(
