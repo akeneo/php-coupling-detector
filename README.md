@@ -106,5 +106,5 @@ The detect command detects coupling problems for a given file or directory depen
 With the --format option you can specify the output format:
 
 ```bash
-    php %command.full_name% /path/to/dir --format=dot
+    php bin/php-coupling-detector /path/to/dir --format=dot
 ```
