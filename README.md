@@ -91,7 +91,7 @@ The detect command detects coupling problems for a given file or directory depen
  
     return new \Akeneo\CouplingDetector\Configuration\Configuration(
         $rules,
-        \Akeneo\CouplingDetector\Configuration\DefaultFinder
+        new \Akeneo\CouplingDetector\Configuration\DefaultFinder()
     );
     ?>
 
