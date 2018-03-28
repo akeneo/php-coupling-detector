@@ -100,7 +100,7 @@ The detect command detects coupling problems for a given file or directory depen
  With the ``--config-file`` option you can specify the path to the ``.php_cd`` file:
  
 ```bash
-    php bin/php-coupling-detector detect /path/to/dir --config-file=/path/to/my/configuration.php_cd
+    php bin/php-coupling-detector detect /path/to/dir --config-file=/path/to/my/own_configuration_file.php
 ```
 
 With the --format option you can specify the output format:
