@@ -17,7 +17,7 @@ At the moment, 3 types of rules are supported:
 
 ## Requirements
 
-PHP needs to be a minimum version of PHP 5.3.6.
+PHP needs to be a minimum version of PHP 7.1
 
 ## Installation
 
