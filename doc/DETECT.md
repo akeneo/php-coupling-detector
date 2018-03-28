@@ -1,6 +1,6 @@
 # Detect coupling problems
 
-The detect command detects coupling problems for a given file or directory depending on the
+The _detect_ command detects coupling problems for a given file or directory depending on the
  coupling rules that have been defined:
 
 ```bash
@@ -8,8 +8,8 @@ The detect command detects coupling problems for a given file or directory depen
     php bin/php-coupling-detector detect /path/to/file
 ```
 
- The exit status of the detect command can be: 0 if no violations have been raised, 10 in case of
- warnings and 99 in case of errors.
+ The exit status of the _detect_ command can be: ``0`` if no violations have been raised, ``10`` in case of
+ warnings and ``99`` in case of errors.
  
  You can save the configuration in a ``.php_cd`` file in the root directory of
  your project. The file must return an instance of ``Akeneo\CouplingDetector\Configuration\Configuration``,

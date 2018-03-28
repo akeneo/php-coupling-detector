@@ -60,64 +60,7 @@ class DetectCommand extends Command
                 )
             )
             ->setDescription('Detect coupling rules')
-            ->setHelp(
-                <<<HELP
-The <info>%command.name%</info> command detects coupling problems for a given file or directory depending on the
-coupling rules that have been defined:
-    <info>php %command.full_name% /path/to/dir</info>
-    <info>php %command.full_name% /path/to/file</info>
-
-The exit status of the <info>%command.name%</info> command can be: 0 if no rules have been raised, 10 in case of
-warnings and 99 in case of errors.
-
-You can save the configuration in a <comment>.php_cd</comment> file in the root directory of
-your project. The file must return an instance of ``Akeneo\CouplingDetector\Configuration\Configuration``,
-which lets you configure the rules and the directories that need to be analyzed.
-Here is an example below:
-    <?php
-    use \Akeneo\CouplingDetector\Domain\Rule;
-    use \Akeneo\CouplingDetector\Domain\RuleInterface;
-
-    \$finder = new \Symfony\Component\Finder\Finder();
-    \$finder
-        ->files()
-        ->name('*.php')
-        ->notPath('foo/bar/');
-
-    \$rules = [
-        new Rule('foo', ['bar', 'baz'], RuleInterface::TYPE_FORBIDDEN),
-        new Rule('zoo', ['too'], RuleInterface::TYPE_DISCOURAGED),
-        new Rule('bli', ['bla', 'ble', 'blu'], RuleInterface::TYPE_ONLY),
-    ];
-
-    return new \Akeneo\CouplingDetector\Configuration\Configuration(\$rules, \$finder);
-    ?>
-
-You can also use the default finder implementation if you want to analyse all the PHP files
-of your directory:
-    <?php
-    use \Akeneo\CouplingDetector\Domain\Rule;
-    use \Akeneo\CouplingDetector\Domain\RuleInterface;
-
-    \$rules = [
-        new Rule('foo', ['bar', 'baz'], RuleInterface::TYPE_FORBIDDEN),
-        new Rule('zoo', ['too'], RuleInterface::TYPE_DISCOURAGED),
-        new Rule('bli', ['bla', 'ble', 'blu'], RuleInterface::TYPE_ONLY),
-    ];
-
-    return new \Akeneo\CouplingDetector\Configuration\Configuration(
-        \$rules,
-        \Akeneo\CouplingDetector\Configuration\DefaultFinder
-    );
-    ?>
-
-With the <comment>--config-file</comment> option you can specify the path to the <comment>.php_cd</comment> file:
-    <info>php %command.full_name% /path/to/dir --config-file=/path/to/my/configuration.php_cd</info>
-
-With the <comment>--format</comment> option you can specify the output format:
-    <info>php %command.full_name% /path/to/dir --format=dot</info>
-HELP
-            )
+            ->setHelp($this->loadHelpContent())
         ;
     }
 
@@ -244,5 +187,18 @@ HELP
         $eventDispatcher->addSubscriber($formatter);
 
         return $eventDispatcher;
+    }
+
+    private function loadHelpContent(): string
+    {
+        $content = file_get_contents(__DIR__ . '/../../../../../doc/DETECT.md');
+        $content = preg_replace('/^.+\n/', '', $content);
+        $content = str_replace('bin/php-coupling-detector', '%command.full_name%', $content);
+        $content = str_replace('_detect_ command', '<info>%command.name%</info> command', $content);
+        $content = preg_replace('/```bash(.*?)```/s', '<info>$1</info>', $content);
+        $content = preg_replace('/```php(.*?)```/s', '<question>$1</question>', $content);
+        $content = preg_replace('/``(.*?)``/s', '<comment>$1</comment>', $content);
+
+        return $content;
     }
 }
