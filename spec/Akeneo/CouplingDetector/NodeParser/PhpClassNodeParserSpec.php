@@ -32,7 +32,7 @@ class PhpClassNodeParserSpec extends ObjectBehavior
         $this->parse($file)->shouldBeLikeExpectedNode($expectedNode);
     }
 
-    public function getMatchers()
+    public function getMatchers(): array
     {
         return array(
             'beLikeExpectedNode' => function ($subject, $expected) {
