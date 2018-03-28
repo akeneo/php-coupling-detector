@@ -115,8 +115,21 @@ class DotFormatter extends AbstractFormatter
             )
         );
 
-        if ($this->violationsCount > 0) {
-            $this->output->writeln(sprintf('<broken-bg>%d coupling problems</broken-bg>', $this->violationsCount));
+        $this->output->writeln('');
+        $this->output->writeln('');
+
+        if (0 === $this->violationsCount) {
+            $this->output->write('<passed-bg>No coupling issues found </passed-bg>');
+            $this->output->write("<passed-bg>\xE2\x9C\x94</passed-bg>");
+            $this->output->write("<passed-bg>\xF0\x9F\x98\x83</passed-bg>");
+            $this->output->writeln("<passed-bg>\xF0\x9F\x8D\xBB</passed-bg>");
+        } else {
+            $this->output->write(
+                sprintf('<broken-bg>%d coupling issues found </broken-bg>', $this->violationsCount)
+            );
+            $this->output->write("<broken-bg>\xE2\x9C\x96</broken-bg>");
+            $this->output->write("<broken-bg>\xF0\x9F\x98\xA5</broken-bg>");
+            $this->output->writeln("<broken-bg>\xF0\x9F\x8D\x86</broken-bg>");
         }
     }
 
