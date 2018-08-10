@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Akeneo\CouplingDetector\Event;
 
 use Symfony\Component\EventDispatcher\Event;

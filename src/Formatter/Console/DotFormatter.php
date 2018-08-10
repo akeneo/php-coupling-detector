@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Akeneo\CouplingDetector\Formatter\Console;
 
 use Akeneo\CouplingDetector\Event\PostNodesParsedEvent;

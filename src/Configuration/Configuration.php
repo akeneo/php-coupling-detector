@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Akeneo\CouplingDetector\Configuration;
 
 use Akeneo\CouplingDetector\Domain\RuleInterface;

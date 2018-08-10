@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Akeneo\CouplingDetector\Console;
 
 use Symfony\Component\Console\Formatter\OutputFormatter as BaseOutputFormatter;

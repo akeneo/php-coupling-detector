@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Akeneo\CouplingDetector;
 
 use Akeneo\CouplingDetector\Domain\NodeInterface;
