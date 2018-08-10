@@ -28,7 +28,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Akeneo\\CouplingDetector\\": "src/Akeneo/CouplingDetector/"
+            "Akeneo\\CouplingDetector\\": "src/"
         }
     },
     "bin": ["bin/php-coupling-detector"],
