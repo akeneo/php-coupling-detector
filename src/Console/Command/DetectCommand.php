@@ -194,6 +194,10 @@ class DetectCommand extends Command
     private function loadHelpContent(): string
     {
         $content = file_get_contents(__DIR__ . '/../../../doc/DETECT.md');
+        if (false === $content) {
+            throw new \RuntimeException('Unable to load the help content.');
+        }
+
         $content = preg_replace('/^.+\n/', '', $content);
         $content = str_replace('bin/php-coupling-detector', '%command.full_name%', $content);
         $content = str_replace('_detect_ command', '<info>%command.name%</info> command', $content);

@@ -38,7 +38,7 @@ class DotFormatter extends AbstractFormatter
     /**
      * {@inheritdoc}
      */
-    protected function outputPreNodesParsed(PreNodesParsedEvent $event)
+    protected function outputPreNodesParsed(PreNodesParsedEvent $event): void
     {
         $this->output->writeln('Parsing nodes');
     }
@@ -46,7 +46,7 @@ class DotFormatter extends AbstractFormatter
     /**
      * {@inheritdoc}
      */
-    protected function outputNodeParsed(NodeParsedEvent $event)
+    protected function outputNodeParsed(NodeParsedEvent $event): void
     {
         $this->output->write('<passed>.</passed>');
         $this->displayProgress($this->output, $this->parsingNodeIteration, $this->nodeCount);
@@ -55,14 +55,14 @@ class DotFormatter extends AbstractFormatter
     /**
      * {@inheritdoc}
      */
-    protected function outputPostNodesParsed(PostNodesParsedEvent $event)
+    protected function outputPostNodesParsed(PostNodesParsedEvent $event): void
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function outputPreRulesChecked(PreRulesCheckedEvent $event)
+    protected function outputPreRulesChecked(PreRulesCheckedEvent $event): void
     {
         $this->output->writeln("\n\nChecking rules");
     }
@@ -70,18 +70,18 @@ class DotFormatter extends AbstractFormatter
     /**
      * {@inheritdoc}
      */
-    protected function outputNodeChecked(NodeChecked $event)
+    protected function outputNodeChecked(NodeChecked $event): void
     {
         $key = $event->getNode()->getFilepath();
         if (null !== $event->getViolation() && !in_array($key, $this->nodesOnError)) {
-            $this->nodesOnError[] = $key;
+            $this->nodesOnError[] = $event->getNode();
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function outputRuleChecked(RuleCheckedEvent $event)
+    protected function outputRuleChecked(RuleCheckedEvent $event): void
     {
         $nbErrors = count($event->getViolations());
         if (0 === $nbErrors) {
@@ -96,7 +96,7 @@ class DotFormatter extends AbstractFormatter
     /**
      * {@inheritdoc}
      */
-    protected function outputPostRulesChecked(PostRulesCheckedEvent $event)
+    protected function outputPostRulesChecked(PostRulesCheckedEvent $event): void
     {
         $this->output->writeln('');
         $this->output->writeln('');
@@ -135,12 +135,7 @@ class DotFormatter extends AbstractFormatter
         }
     }
 
-    /**
-     * @param OutputInterface $output
-     * @param int             $iteration
-     * @param int             $total
-     */
-    private function displayProgress(OutputInterface $output, $iteration, $total)
+    private function displayProgress(OutputInterface $output, int $iteration, int $total): void
     {
         if ($iteration % 50 === 0) {
             $length = strlen((string) $total);

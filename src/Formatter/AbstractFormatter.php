@@ -68,7 +68,7 @@ abstract class AbstractFormatter implements EventSubscriberInterface
     /**
      * @param PreNodesParsedEvent $event
      */
-    public function preNodesParsed(PreNodesParsedEvent $event)
+    public function preNodesParsed(PreNodesParsedEvent $event): void
     {
         $this->nodeCount = $event->getFinder()->count();
         $this->outputPreNodesParsed($event);
@@ -77,7 +77,7 @@ abstract class AbstractFormatter implements EventSubscriberInterface
     /**
      * @param NodeParsedEvent $event
      */
-    public function nodeParsed(NodeParsedEvent $event)
+    public function nodeParsed(NodeParsedEvent $event): void
     {
         ++$this->parsingNodeIteration;
         $this->outputNodeParsed($event);
@@ -86,7 +86,7 @@ abstract class AbstractFormatter implements EventSubscriberInterface
     /**
      * @param PostNodesParsedEvent $event
      */
-    public function postNodesParsed(PostNodesParsedEvent $event)
+    public function postNodesParsed(PostNodesParsedEvent $event): void
     {
         $this->outputPostNodesParsed($event);
     }
@@ -94,7 +94,7 @@ abstract class AbstractFormatter implements EventSubscriberInterface
     /**
      * @param PreRulesCheckedEvent $event
      */
-    public function preRulesChecked(PreRulesCheckedEvent $event)
+    public function preRulesChecked(PreRulesCheckedEvent $event): void
     {
         $this->ruleCount = count($event->getRules());
         $this->outputPreRulesChecked($event);
@@ -103,12 +103,12 @@ abstract class AbstractFormatter implements EventSubscriberInterface
     /**
      * @param NodeChecked $event
      */
-    public function nodeChecked(NodeChecked $event)
+    public function nodeChecked(NodeChecked $event): void
     {
         ++$this->checkingNodeIteration;
         $key = $event->getNode()->getFilepath();
         if (null !== $event->getViolation() && !in_array($key, $this->nodesOnError)) {
-            $this->nodesOnError[] = $key;
+            $this->nodesOnError[] = $event->getNode();
         }
 
         $this->outputNodeChecked($event);
@@ -117,7 +117,7 @@ abstract class AbstractFormatter implements EventSubscriberInterface
     /**
      * @param RuleCheckedEvent $event
      */
-    public function ruleChecked(RuleCheckedEvent $event)
+    public function ruleChecked(RuleCheckedEvent $event): void
     {
         ++$this->checkingRuleIteration;
         $this->checkingNodeIteration = 0;
@@ -134,16 +134,16 @@ abstract class AbstractFormatter implements EventSubscriberInterface
     /**
      * @param PostRulesCheckedEvent $event
      */
-    public function postRulesChecked(PostRulesCheckedEvent $event)
+    public function postRulesChecked(PostRulesCheckedEvent $event): void
     {
         $this->outputPostRulesChecked($event);
     }
 
-    abstract protected function outputPreNodesParsed(PreNodesParsedEvent $event);
-    abstract protected function outputNodeParsed(NodeParsedEvent $event);
-    abstract protected function outputPostNodesParsed(PostNodesParsedEvent $event);
-    abstract protected function outputPreRulesChecked(PreRulesCheckedEvent $event);
-    abstract protected function outputNodeChecked(NodeChecked $event);
-    abstract protected function outputRuleChecked(RuleCheckedEvent $event);
-    abstract protected function outputPostRulesChecked(PostRulesCheckedEvent $event);
+    abstract protected function outputPreNodesParsed(PreNodesParsedEvent $event): void;
+    abstract protected function outputNodeParsed(NodeParsedEvent $event): void;
+    abstract protected function outputPostNodesParsed(PostNodesParsedEvent $event): void;
+    abstract protected function outputPreRulesChecked(PreRulesCheckedEvent $event): void;
+    abstract protected function outputNodeChecked(NodeChecked $event): void;
+    abstract protected function outputRuleChecked(RuleCheckedEvent $event): void;
+    abstract protected function outputPostRulesChecked(PostRulesCheckedEvent $event): void;
 }

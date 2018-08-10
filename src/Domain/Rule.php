@@ -21,18 +21,10 @@ class Rule implements RuleInterface
     /** @var string */
     private $type;
 
-    /** @var string */
+    /** @var string|null */
     private $description;
 
-    /**
-     * Rule constructor.
-     *
-     * @param string $subject
-     * @param array  $requirements
-     * @param string $type
-     * @param string $description
-     */
-    public function __construct($subject, array $requirements, $type, $description = null)
+    public function __construct(string $subject, array $requirements, string $type, ?string $description = null)
     {
         $this->requirements = $requirements;
         $this->subject = $subject;
@@ -47,7 +39,7 @@ class Rule implements RuleInterface
     /**
      * {@inheritdoc}
      */
-    public function getSubject()
+    public function getSubject(): string
     {
         return $this->subject;
     }
@@ -55,7 +47,7 @@ class Rule implements RuleInterface
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -63,7 +55,7 @@ class Rule implements RuleInterface
     /**
      * {@inheritdoc}
      */
-    public function getRequirements()
+    public function getRequirements(): array
     {
         return $this->requirements;
     }
@@ -71,7 +63,7 @@ class Rule implements RuleInterface
     /**
      * {@inheritdoc}
      */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }

@@ -18,20 +18,12 @@ class NodeParsedEvent extends Event
     /** @var NodeInterface */
     private $node;
 
-    /**
-     * NodeParsedEvent constructor.
-     *
-     * @param NodeInterface $node
-     */
     public function __construct(NodeInterface $node)
     {
         $this->node = $node;
     }
 
-    /**
-     * @return NodeInterface
-     */
-    public function getNode()
+    public function getNode(): NodeInterface
     {
         return $this->node;
     }

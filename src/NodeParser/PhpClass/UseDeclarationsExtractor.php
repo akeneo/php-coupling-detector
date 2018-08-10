@@ -16,12 +16,7 @@ use PhpCsFixer\Tokenizer\Tokens;
  */
 class UseDeclarationsExtractor
 {
-    /**
-     * @param Tokens $tokens
-     *
-     * @return array
-     */
-    public function extract(Tokens $tokens)
+    public function extract(Tokens $tokens): array
     {
         $uses = array();
         $useIndexes = array_keys($tokens->findGivenKind(T_USE));
@@ -37,6 +32,9 @@ class UseDeclarationsExtractor
             }
 
             $declarationParts = preg_split('/\s+as\s+/i', $declarationContent);
+            if (false === $declarationParts) {
+                throw new \RuntimeException('Impossible to split the usage and its alias.');
+            }
 
             if (1 === count($declarationParts)) {
                 $fullName = $declarationContent;

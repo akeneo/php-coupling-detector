@@ -29,11 +29,7 @@ class PrettyFormatter extends AbstractFormatter
     /** @var bool */
     private $verbose;
 
-    /**
-     * @param OutputInterface $output
-     * @param bool            $verbose
-     */
-    public function __construct(OutputInterface $output, $verbose = false)
+    public function __construct(OutputInterface $output, bool $verbose = false)
     {
         $this->output = $output;
         $this->verbose = $verbose;
@@ -42,7 +38,7 @@ class PrettyFormatter extends AbstractFormatter
     /**
      * {@inheritdoc}
      */
-    protected function outputPreNodesParsed(PreNodesParsedEvent $event)
+    protected function outputPreNodesParsed(PreNodesParsedEvent $event): void
     {
         $this->output->writeln(sprintf('Parsing %s nodes<blink>...</blink>', $this->nodeCount));
     }
@@ -50,21 +46,21 @@ class PrettyFormatter extends AbstractFormatter
     /**
      * {@inheritdoc}
      */
-    protected function outputNodeParsed(NodeParsedEvent $event)
+    protected function outputNodeParsed(NodeParsedEvent $event): void
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function outputPostNodesParsed(PostNodesParsedEvent $event)
+    protected function outputPostNodesParsed(PostNodesParsedEvent $event): void
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function outputPreRulesChecked(PreRulesCheckedEvent $event)
+    protected function outputPreRulesChecked(PreRulesCheckedEvent $event): void
     {
         $this->output->writeln(sprintf('Checking %s rules<blink>...</blink>', $this->ruleCount));
     }
@@ -72,7 +68,7 @@ class PrettyFormatter extends AbstractFormatter
     /**
      * {@inheritdoc}
      */
-    protected function outputNodeChecked(NodeChecked $event)
+    protected function outputNodeChecked(NodeChecked $event): void
     {
         if (null === $event->getViolation()) {
             return;
@@ -115,14 +111,14 @@ MSG
     /**
      * {@inheritdoc}
      */
-    protected function outputRuleChecked(RuleCheckedEvent $event)
+    protected function outputRuleChecked(RuleCheckedEvent $event): void
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function outputPostRulesChecked(PostRulesCheckedEvent $event)
+    protected function outputPostRulesChecked(PostRulesCheckedEvent $event): void
     {
         $this->output->writeln('');
         $this->output->writeln('');

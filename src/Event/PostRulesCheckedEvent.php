@@ -29,7 +29,7 @@ class PostRulesCheckedEvent extends Event
     /**
      * @return ViolationInterface[]
      */
-    public function getViolations()
+    public function getViolations(): array
     {
         return $this->violations;
     }

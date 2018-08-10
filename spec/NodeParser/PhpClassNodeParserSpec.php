@@ -32,6 +32,13 @@ class PhpClassNodeParserSpec extends ObjectBehavior
         $this->parse($file)->shouldBeLikeExpectedNode($expectedNode);
     }
 
+    function it_throws_an_exception_if_the_file_does_not_exists()
+    {
+        $file = new \SplFileInfo('does/not/exist');
+
+        $this->shouldThrow(\Exception::class)->during('parse', [$file]);
+    }
+
     public function getMatchers(): array
     {
         return array(

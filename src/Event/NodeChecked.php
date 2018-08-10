@@ -23,43 +23,27 @@ class NodeChecked extends Event
     /** @var RuleInterface */
     private $rule;
 
-    /** @var ViolationInterface */
+    /** @var ViolationInterface|null */
     private $violation;
 
-    /**
-     * NodeChecked constructor.
-     *
-     * @param NodeInterface           $node
-     * @param RuleInterface           $rule
-     * @param ViolationInterface|null $violation
-     */
-    public function __construct(NodeInterface $node, RuleInterface $rule, ViolationInterface $violation = null)
+    public function __construct(NodeInterface $node, RuleInterface $rule, ?ViolationInterface $violation)
     {
         $this->node = $node;
         $this->rule = $rule;
         $this->violation = $violation;
     }
 
-    /**
-     * @return NodeInterface
-     */
-    public function getNode()
+    public function getNode(): NodeInterface
     {
         return $this->node;
     }
 
-    /**
-     * @return RuleInterface
-     */
-    public function getRule()
+    public function getRule(): RuleInterface
     {
         return $this->rule;
     }
 
-    /**
-     * @return ViolationInterface
-     */
-    public function getViolation()
+    public function getViolation(): ?ViolationInterface
     {
         return $this->violation;
     }

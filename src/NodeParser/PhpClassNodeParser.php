@@ -22,19 +22,31 @@ use PhpCsFixer\Tokenizer\Tokens;
  */
 class PhpClassNodeParser implements NodeParserInterface
 {
-    public function parse(\SplFileInfo $file)
+    /**
+     * @throws \Exception
+     */
+    public function parse(\SplFileInfo $file): NodeInterface
     {
         $namespaceExtractor = new NamespaceExtractor();
         $classNameExtractor = new ClassNameExtractor();
         $useDeclarationExtractor = new UseDeclarationsExtractor();
 
-        $content = file_get_contents($file->getRealPath());
+        $realPath = $file->getRealPath();
+        if (false === $realPath) {
+            throw new \Exception('The file does not exist.');
+        }
+
+        $content = file_get_contents($realPath);
+        if (false === $content) {
+            throw new \Exception('The content of the file is not readable.');
+        }
+
         $tokens = Tokens::fromCode($content);
         $classNamespace = $namespaceExtractor->extract($tokens);
         $className = $classNameExtractor->extract($tokens);
         $classFullName = sprintf('%s\%s', $classNamespace, $className);
         $useDeclarations = $useDeclarationExtractor->extract($tokens);
 
-        return new Node($useDeclarations, $classFullName, $file->getRealPath(), NodeInterface::TYPE_PHP_USE);
+        return new Node($useDeclarations, $classFullName, $realPath, NodeInterface::TYPE_PHP_USE);
     }
 }

@@ -26,10 +26,7 @@ class PreRulesCheckedEvent extends Event
         $this->rules = $rules;
     }
 
-    /**
-     * @return RuleInterface[]
-     */
-    public function getRules()
+    public function getRules(): array
     {
         return $this->rules;
     }

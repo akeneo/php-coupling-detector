@@ -17,13 +17,9 @@ use PhpCsFixer\Tokenizer\Tokens;
 class NamespaceExtractor
 {
     /**
-     * @param Tokens $tokens
-     *
      * @throws ExtractionException
-     *
-     * @return string
      */
-    public function extract(Tokens $tokens)
+    public function extract(Tokens $tokens): string
     {
         $namespace = null;
 

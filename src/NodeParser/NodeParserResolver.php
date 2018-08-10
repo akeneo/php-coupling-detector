@@ -12,15 +12,10 @@ namespace Akeneo\CouplingDetector\NodeParser;
  */
 class NodeParserResolver
 {
-    /** @var NodeParserInterface */
+    /** @var PhpClassNodeParser */
     private $phpClassExtractor;
 
-    /**
-     * @param \SplFileInfo $file
-     *
-     * @return NodeParserInterface|null
-     */
-    public function resolve(\SplFileInfo $file)
+    public function resolve(\SplFileInfo $file): ?NodeParserInterface
     {
         if ('php' === strtolower($file->getExtension())) {
             return $this->getPhpClassExtractor();
@@ -29,10 +24,7 @@ class NodeParserResolver
         return null;
     }
 
-    /**
-     * @return PhpClassNodeParser
-     */
-    private function getPhpClassExtractor()
+    private function getPhpClassExtractor(): PhpClassNodeParser
     {
         if (null === $this->phpClassExtractor) {
             $this->phpClassExtractor = new PhpClassNodeParser();

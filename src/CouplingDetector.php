@@ -63,7 +63,7 @@ class CouplingDetector
      *
      * @return ViolationInterface[]
      */
-    public function detect(Finder $finder, array $rules)
+    public function detect(Finder $finder, array $rules): array
     {
         $nodes = $this->parseNodes($finder);
         $violations = array();
@@ -103,13 +103,14 @@ class CouplingDetector
      *
      * @return NodeInterface[]
      */
-    private function parseNodes(Finder $finder)
+    private function parseNodes(Finder $finder): array
     {
         $this->eventDispatcher->dispatch(Events::PRE_NODES_PARSED, new PreNodesParsedEvent($finder));
 
         $nodes = array();
         foreach ($finder as $file) {
-            if (null !== $parser = $this->nodeParserResolver->resolve($file)) {
+            $parser = $this->nodeParserResolver->resolve($file);
+            if (null !== $parser) {
                 $node = $parser->parse($file);
                 $nodes[] = $node;
                 $this->eventDispatcher->dispatch(Events::NODE_PARSED, new NodeParsedEvent($node));

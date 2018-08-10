@@ -15,11 +15,7 @@ use Akeneo\CouplingDetector\Domain\NodeInterface;
 interface NodeParserInterface
 {
     /**
-     * @param \SplFileInfo $file
-     *
-     * @return NodeInterface
-     *
      * @throws ExtractionException
      */
-    public function parse(\SplFileInfo $file);
+    public function parse(\SplFileInfo $file): NodeInterface;
 }

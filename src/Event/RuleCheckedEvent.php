@@ -34,18 +34,12 @@ class RuleCheckedEvent extends Event
         $this->violations = $violations;
     }
 
-    /**
-     * @return RuleInterface
-     */
-    public function getRule()
+    public function getRule(): RuleInterface
     {
         return $this->rule;
     }
 
-    /**
-     * @return ViolationInterface[]
-     */
-    public function getViolations()
+    public function getViolations(): array
     {
         return $this->violations;
     }

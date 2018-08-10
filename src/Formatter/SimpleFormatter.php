@@ -26,49 +26,49 @@ class SimpleFormatter extends AbstractFormatter
     /**
      * {@inheritdoc}
      */
-    protected function outputPreNodesParsed(PreNodesParsedEvent $event)
+    protected function outputPreNodesParsed(PreNodesParsedEvent $event): void
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function outputNodeParsed(NodeParsedEvent $event)
+    protected function outputNodeParsed(NodeParsedEvent $event): void
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function outputPostNodesParsed(PostNodesParsedEvent $event)
+    protected function outputPostNodesParsed(PostNodesParsedEvent $event): void
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function outputPreRulesChecked(PreRulesCheckedEvent $event)
+    protected function outputPreRulesChecked(PreRulesCheckedEvent $event): void
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function outputNodeChecked(NodeChecked $event)
+    protected function outputNodeChecked(NodeChecked $event): void
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function outputRuleChecked(RuleCheckedEvent $event)
+    protected function outputRuleChecked(RuleCheckedEvent $event): void
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function outputPostRulesChecked(PostRulesCheckedEvent $event)
+    protected function outputPostRulesChecked(PostRulesCheckedEvent $event): void
     {
         $errorCount = 0;
         $warningCount = 0;

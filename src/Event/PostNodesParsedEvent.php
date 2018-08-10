@@ -29,7 +29,7 @@ class PostNodesParsedEvent extends Event
     /**
      * @return NodeInterface[]
      */
-    public function getNodes()
+    public function getNodes(): array
     {
         return $this->nodes;
     }

@@ -39,7 +39,8 @@ class RuleBuilder
         $this->requirements = $requirements;
         $this->type = RuleInterface::TYPE_ONLY;
 
-        return $this;    }
+        return $this;
+    }
 
     public function discourages(array $requirements): RuleBuilder
     {

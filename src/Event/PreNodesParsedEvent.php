@@ -18,18 +18,12 @@ class PreNodesParsedEvent extends Event
     /** @var Finder */
     private $finder;
 
-    /**
-     * @param Finder $finder
-     */
     public function __construct(Finder $finder)
     {
         $this->finder = $finder;
     }
 
-    /**
-     * @return Finder
-     */
-    public function getFinder()
+    public function getFinder(): Finder
     {
         return $this->finder;
     }

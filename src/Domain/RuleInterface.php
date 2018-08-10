@@ -16,23 +16,11 @@ interface RuleInterface
     const TYPE_DISCOURAGED = 'discouraged';
     const TYPE_ONLY = 'only';
 
-    /**
-     * @return string
-     */
-    public function getSubject();
+    public function getSubject(): string;
 
-    /**
-     * @return array
-     */
-    public function getRequirements();
+    public function getRequirements(): array;
 
-    /**
-     * @return string
-     */
-    public function getType();
+    public function getType(): string;
 
-    /**
-     * @return string
-     */
-    public function getDescription();
+    public function getDescription(): ?string;
 }

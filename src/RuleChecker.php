@@ -26,14 +26,9 @@ use Akeneo\CouplingDetector\Domain\ViolationInterface;
 class RuleChecker
 {
     /**
-     * Does a node matches a rule?
-     *
-     * @param RuleInterface $rule
-     * @param NodeInterface $node
-     *
-     * @return bool
+     * Does a node match a rule?
      */
-    public function match(RuleInterface $rule, NodeInterface $node)
+    public function match(RuleInterface $rule, NodeInterface $node): bool
     {
         if (false !== strpos($node->getSubject(), $rule->getSubject())) {
             return true;
@@ -44,16 +39,11 @@ class RuleChecker
 
     /**
      * Checks if a node respect a rule.
-     *
-     * @param RuleInterface $rule
-     * @param NodeInterface $node
-     *
-     * @return Violation|null
      */
-    public function check(RuleInterface $rule, NodeInterface $node)
+    public function check(RuleInterface $rule, NodeInterface $node): ?ViolationInterface
     {
         if (!$this->match($rule, $node)) {
-            return;
+            return null;
         }
 
         switch ($rule->getType()) {
@@ -74,13 +64,8 @@ class RuleChecker
     /**
      * Checks if a node respects a "forbidden" or "discouraged" rule.
      * A node respects such a rule if no rule token is present in the node.
-     *
-     * @param RuleInterface $rule
-     * @param NodeInterface $node
-     *
-     * @return Violation|null
      */
-    private function checkForbiddenOrDiscouragedRule(RuleInterface $rule, NodeInterface $node)
+    private function checkForbiddenOrDiscouragedRule(RuleInterface $rule, NodeInterface $node): ?ViolationInterface
     {
         $errors = array();
 
@@ -100,18 +85,13 @@ class RuleChecker
             return new Violation($node, $rule, $errors, $type);
         }
 
-        return;
+        return null;
     }
 
     /**
      * Checks if a token fits a "forbidden" / "discouraged" rule or not.
-     *
-     * @param RuleInterface $rule
-     * @param string        $token
-     *
-     * @return bool
      */
-    private function checkTokenForForbiddenOrDiscouragedRule(RuleInterface $rule, $token)
+    private function checkTokenForForbiddenOrDiscouragedRule(RuleInterface $rule, string $token): bool
     {
         foreach ($rule->getRequirements() as $req) {
             if (strpos($token, $req) !== false) {
@@ -125,13 +105,8 @@ class RuleChecker
     /**
      * Checks if a node respects a "only" rule.
      * A node respects such a rule if the node contains only tokens defined in the rule.
-     *
-     * @param RuleInterface $rule
-     * @param NodeInterface $node
-     *
-     * @return Violation|null
      */
-    private function checkOnlyRule(RuleInterface $rule, NodeInterface $node)
+    private function checkOnlyRule(RuleInterface $rule, NodeInterface $node): ?Violation
     {
         $errors = array();
 
@@ -146,18 +121,13 @@ class RuleChecker
             return new Violation($node, $rule, $errors, ViolationInterface::TYPE_ERROR);
         }
 
-        return;
+        return null;
     }
 
     /**
      * Checks if a token fits a "only" rule or not.
-     *
-     * @param RuleInterface $rule
-     * @param string        $token
-     *
-     * @return bool
      */
-    private function checkTokenForOnlyRule(RuleInterface $rule, $token)
+    private function checkTokenForOnlyRule(RuleInterface $rule, $token): bool
     {
         $fitRuleRequirements = false;
         foreach ($rule->getRequirements() as $req) {
