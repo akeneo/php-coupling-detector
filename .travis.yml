@@ -16,3 +16,4 @@ before_script:
 
 script:
     - ./bin/phpspec run
+    - ./bin/phpstan analyse src -l 6

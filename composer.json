@@ -21,14 +21,15 @@
         "symfony/filesystem": "^3.0||^4.0"
     },
     "require-dev": {
-        "phpspec/phpspec": "^3.0||^4.0"
+        "phpspec/phpspec": "^3.0||^4.0",
+        "phpstan/phpstan": "^0.10.2"
     },
     "config": {
         "bin-dir": "bin"
     },
     "autoload": {
         "psr-4": {
-            "Akeneo\\CouplingDetector\\": "src/Akeneo/CouplingDetector/"
+            "Akeneo\\CouplingDetector\\": "src/"
         }
     },
     "bin": ["bin/php-coupling-detector"],
