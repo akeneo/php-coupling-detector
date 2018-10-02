@@ -15,6 +15,7 @@ use Akeneo\CouplingDetector\Event\PreNodesParsedEvent;
 use Akeneo\CouplingDetector\Event\PreRulesCheckedEvent;
 use Akeneo\CouplingDetector\Event\RuleCheckedEvent;
 use Akeneo\CouplingDetector\Event\PostRulesCheckedEvent;
+use Akeneo\CouplingDetector\NodeParser\ExtractionException;
 use Akeneo\CouplingDetector\NodeParser\NodeParserResolver;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\Finder;
@@ -109,11 +110,16 @@ class CouplingDetector
 
         $nodes = array();
         foreach ($finder as $file) {
-            $parser = $this->nodeParserResolver->resolve($file);
-            if (null !== $parser) {
-                $node = $parser->parse($file);
-                $nodes[] = $node;
-                $this->eventDispatcher->dispatch(Events::NODE_PARSED, new NodeParsedEvent($node));
+            try {
+                $parser = $this->nodeParserResolver->resolve($file);
+                if (null !== $parser) {
+                    $node = $parser->parse($file);
+                    $nodes[] = $node;
+                    $this->eventDispatcher->dispatch(Events::NODE_PARSED, new NodeParsedEvent($node));
+                }
+            } catch (ExtractionException $e) {
+                // Ignore unprocessable files
+                continue;
             }
         }
 
