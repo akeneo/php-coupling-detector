@@ -47,7 +47,7 @@ class PhpClassNodeParser implements NodeParserInterface
             $className = $classNameExtractor->extract($tokens);
         } catch (ExtractionException $e) {
             throw new ExtractionException(
-                'File is not a class file, ignoring.', null, $e
+                'File is not a class file, ignoring.', $e->getCode(), $e
             );
         }
         $classFullName = sprintf('%s\%s', $classNamespace, $className);
