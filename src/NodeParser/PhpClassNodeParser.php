@@ -42,8 +42,14 @@ class PhpClassNodeParser implements NodeParserInterface
         }
 
         $tokens = Tokens::fromCode($content);
-        $classNamespace = $namespaceExtractor->extract($tokens);
-        $className = $classNameExtractor->extract($tokens);
+        try {
+            $classNamespace = $namespaceExtractor->extract($tokens);
+            $className = $classNameExtractor->extract($tokens);
+        } catch (ExtractionException $e) {
+            throw new ExtractionException(
+                'File is not a class file, ignoring.', $e->getCode(), $e
+            );
+        }
         $classFullName = sprintf('%s\%s', $classNamespace, $className);
         $useDeclarations = $useDeclarationExtractor->extract($tokens);
 
