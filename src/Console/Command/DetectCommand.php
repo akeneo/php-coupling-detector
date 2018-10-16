@@ -44,7 +44,7 @@ class DetectCommand extends Command
         $this
             ->setName('detect')
             ->setDefinition(
-                array(
+                [
                     new InputArgument('path', InputArgument::OPTIONAL, 'path of the project', null),
                     new InputOption(
                         'config-file',
@@ -59,11 +59,10 @@ class DetectCommand extends Command
                         sprintf('Output format (%s)', implode(', ', $this->formats)),
                         $this->formats[0]
                     ),
-                )
+                ]
             )
             ->setDescription('Detect coupling rules')
-            ->setHelp($this->loadHelpContent())
-        ;
+            ->setHelp($this->loadHelpContent());
     }
 
     /**
@@ -73,22 +72,22 @@ class DetectCommand extends Command
     {
         $output->setFormatter(new OutputFormatter(true));
 
-        if (null !== $format = $input->getOption('format')) {
-            if (!in_array($format,  $this->formats)) {
+        if (null !== $format = $this->getFormatOption($input)) {
+            if (!in_array($format, $this->formats)) {
                 throw new \RuntimeException(
                     sprintf('Format "%s" is unknown. Available formats: %s.', $format, implode(', ', $this->formats))
                 );
             }
         }
 
-        if (null !== $path = $input->getArgument('path')) {
+        if (null !== $path = $this->getPathArgument($input)) {
             $filesystem = new Filesystem();
             if (!$filesystem->isAbsolutePath($path)) {
-                $path = getcwd().DIRECTORY_SEPARATOR.$path;
+                $path = getcwd() . DIRECTORY_SEPARATOR . $path;
             }
         }
 
-        if (null === $configFile = $input->getOption('config-file')) {
+        if (null === $configFile = $this->getConfigFileOption($input)) {
             $configDir = $path;
             if (is_file($path) && $dirName = pathinfo($path, PATHINFO_DIRNAME)) {
                 $configDir = $dirName;
@@ -96,7 +95,7 @@ class DetectCommand extends Command
                 $configDir = getcwd();
                 // path is directory
             }
-            $configFile = $configDir.DIRECTORY_SEPARATOR.'.php_cd';
+            $configFile = $configDir . DIRECTORY_SEPARATOR . '.php_cd';
         }
 
         $config = $this->loadConfiguration($configFile);
@@ -106,7 +105,7 @@ class DetectCommand extends Command
 
         $nodeParserResolver = new NodeParserResolver();
         $ruleChecker = new RuleChecker();
-        $eventDispatcher = $this->initEventDispatcher($output, $format, $input->getOption('verbose'));
+        $eventDispatcher = $this->initEventDispatcher($output, $format, $this->getVerboseOption($input));
         $detector = new CouplingDetector($nodeParserResolver, $ruleChecker, $eventDispatcher);
 
         $violations = $detector->detect($finder, $rules);
@@ -163,21 +162,17 @@ class DetectCommand extends Command
 
     /**
      * Init the event dispatcher by attaching the output formatters.
-     *
-     * @param OutputInterface $output
-     * @param string          $formatterName
-     * @param bool            $verbose
-     *
-     * @return EventDispatcherInterface
      */
-    private function initEventDispatcher(OutputInterface $output, $formatterName, $verbose)
-    {
+    private function initEventDispatcher(
+        OutputInterface $output,
+        string $formatterName,
+        bool $verbose
+    ): EventDispatcherInterface {
         if ('dot' === $formatterName) {
             $formatter = new DotFormatter($output);
         } elseif ('pretty' === $formatterName) {
             $formatter = new PrettyFormatter($output, $verbose);
-        }
-          elseif ('simple' === $formatterName) {
+        } elseif ('simple' === $formatterName) {
             $formatter = new SimpleFormatter();
         } else {
             throw new \RuntimeException(
@@ -206,5 +201,25 @@ class DetectCommand extends Command
         $content = preg_replace('/``(.*?)``/s', '<comment>$1</comment>', $content);
 
         return $content;
+    }
+
+    private function getFormatOption(InputInterface $input): ?string
+    {
+        return $input->getOption('format');
+    }
+
+    private function getPathArgument(InputInterface $input): ?string
+    {
+        return $input->getArgument('path');
+    }
+
+    private function getConfigFileOption(InputInterface $input): ?string
+    {
+        return $input->getOption('config-file');
+    }
+
+    private function getVerboseOption(InputInterface $input): bool
+    {
+        return true === $input->getOption('verbose');
     }
 }

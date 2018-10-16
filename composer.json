@@ -24,9 +24,6 @@
         "phpspec/phpspec": "^3.0||^4.0",
         "phpstan/phpstan": "^0.10.2"
     },
-    "config": {
-        "bin-dir": "bin"
-    },
     "autoload": {
         "psr-4": {
             "Akeneo\\CouplingDetector\\": "src/"

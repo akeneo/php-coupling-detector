@@ -12,7 +12,8 @@ cache:
 
 before_script:
   - composer self-update
+  - composer install --dev
 
 script:
-    - ./bin/phpspec run
-    - ./bin/phpstan analyse src -l 6
+    - ./vendor/bin/phpspec run
+    - ./vendor/bin/phpstan analyse src -l 5
