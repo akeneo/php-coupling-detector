@@ -6,6 +6,7 @@ use Akeneo\CouplingDetector\Domain\NodeInterface;
 use Akeneo\CouplingDetector\Domain\RuleInterface;
 use Akeneo\CouplingDetector\Domain\ViolationInterface;
 use Akeneo\CouplingDetector\Event\Events;
+use Akeneo\CouplingDetector\NodeParser\ExtractionException;
 use Akeneo\CouplingDetector\NodeParser\NodeParserInterface;
 use Akeneo\CouplingDetector\NodeParser\NodeParserResolver;
 use Akeneo\CouplingDetector\RuleChecker;
@@ -17,28 +18,28 @@ use Symfony\Component\Finder\Finder;
 class CouplingDetectorSpec extends ObjectBehavior
 {
     function let(
-        NodeParserResolver $nodeExtractorResolver,
+        NodeParserResolver $nodeParserResolver,
         RuleChecker $ruleChecker,
         EventDispatcherInterface $eventDispatcher
     ) {
-        $this->beConstructedWith($nodeExtractorResolver, $ruleChecker, $eventDispatcher);
+        $this->beConstructedWith($nodeParserResolver, $ruleChecker, $eventDispatcher);
     }
 
     function it_detects_the_violations_of_files(
         $ruleChecker,
-        $nodeExtractorResolver,
+        $nodeParserResolver,
         $eventDispatcher,
         NodeInterface $node,
         ViolationInterface $violation,
         Finder $finder,
         RuleInterface $rule1,
         RuleInterface $rule2,
-        NodeParserInterface $extractor
+        NodeParserInterface $parser
     ) {
         $file = new \SplFileObject(__FILE__);
         $finder->getIterator()->willReturn(new \ArrayIterator(array($file)));
-        $nodeExtractorResolver->resolve(Argument::any())->willReturn($extractor);
-        $extractor->parse($file)->willReturn($node);
+        $nodeParserResolver->resolve(Argument::any())->willReturn($parser);
+        $parser->parse($file)->willReturn($node);
 
         $ruleChecker->check($rule1, $node)->willReturn(null);
         $ruleChecker->check($rule2, $node)->willReturn($violation);
@@ -55,5 +56,27 @@ class CouplingDetectorSpec extends ObjectBehavior
         $violations->shouldHaveCount(1);
         $violations->shouldBeArray();
         $violations[0]->shouldBeAnInstanceOf('Akeneo\CouplingDetector\Domain\ViolationInterface');
+    }
+
+    function it_ignores_invalid_nodes(
+        $nodeParserResolver,
+        $eventDispatcher,
+        Finder $finder,
+        NodeParserInterface $parser
+    ) {
+        $file = new \SplFileObject(__DIR__.'/fixtures/InvalidNode.php');
+        $finder->getIterator()->willReturn(new \ArrayIterator([$file]));
+        $nodeParserResolver->resolve(Argument::any())->willReturn($parser);
+        $parser->parse(Argument::any())->willThrow(ExtractionException::class);
+
+        $eventDispatcher->dispatch(Events::PRE_NODES_PARSED, Argument::type('Akeneo\CouplingDetector\Event\PreNodesParsedEvent'))->shouldBeCalled();
+        $eventDispatcher->dispatch(Events::NODE_PARSED, Argument::type('Akeneo\CouplingDetector\Event\NodeParsedEvent'))->shouldNotBeCalled();
+        $eventDispatcher->dispatch(Events::POST_NODES_PARSED, Argument::type('Akeneo\CouplingDetector\Event\PostNodesParsedEvent'))->shouldBeCalled();
+        $eventDispatcher->dispatch(Events::PRE_RULES_CHECKED, Argument::type('Akeneo\CouplingDetector\Event\PreRulesCheckedEvent'))->shouldBeCalled();
+        $eventDispatcher->dispatch(Events::POST_RULES_CHECKED, Argument::type('Akeneo\CouplingDetector\Event\PostRulesCheckedEvent'))->shouldBeCalled();
+
+        $violations = $this->detect($finder, []);
+        $violations->shouldHaveCount(0);
+        $violations->shouldBeArray();
     }
 }

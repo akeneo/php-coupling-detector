@@ -110,16 +110,16 @@ class CouplingDetector
 
         $nodes = array();
         foreach ($finder as $file) {
-            try {
-                $parser = $this->nodeParserResolver->resolve($file);
-                if (null !== $parser) {
+            $parser = $this->nodeParserResolver->resolve($file);
+            if (null !== $parser) {
+                try {
                     $node = $parser->parse($file);
                     $nodes[] = $node;
                     $this->eventDispatcher->dispatch(Events::NODE_PARSED, new NodeParsedEvent($node));
+                } catch (ExtractionException $e) {
+                    // at the moment, let's just ignore invalid node
+                    // need to fix that with a better design
                 }
-            } catch (ExtractionException $e) {
-                // Ignore unprocessable files
-                continue;
             }
         }
 
