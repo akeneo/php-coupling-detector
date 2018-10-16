@@ -15,4 +15,4 @@ before_script:
 
 script:
     - ./bin/phpspec run
-    - ./bin/phpstan analyse src -l 6
+    - ./bin/phpstan analyse src -l 5
