@@ -14,5 +14,5 @@ before_script:
   - composer self-update
 
 script:
-    - ./bin/phpspec run
-    - ./bin/phpstan analyse src -l 5
+    - ./vendor/bin/phpspec run
+    - ./vendor/bin/phpstan analyse src -l 5
