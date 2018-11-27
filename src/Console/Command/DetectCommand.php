@@ -70,7 +70,7 @@ class DetectCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->setFormatter(new OutputFormatter(true));
+        $output->setFormatter(new OutputFormatter($output->isDecorated()));
 
         if (null !== $format = $this->getFormatOption($input)) {
             if (!in_array($format, $this->formats)) {
