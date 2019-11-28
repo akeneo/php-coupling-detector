@@ -83,19 +83,21 @@ class PrettyFormatter extends AbstractFormatter
         $msg = !$this->verbose ?
             sprintf(
                 'Node <comment>%s</comment> does not respect the rule <comment>%s</comment> because of the tokens:',
-                $node->getFilepath(),
+                $node->getSubject(),
                 $rule->getSubject()
             ) :
             sprintf(<<<MSG
 Node <comment>%s</comment> does not respect the rule <comment>%s</comment>:
+    * filepath: %s
     * type: %s
     * description: %s
     * requirements: %s
 The following tokens are wrong:
 MSG
                 ,
-                $node->getFilepath(),
+                $node->getSubject(),
                 $rule->getSubject(),
+                $node->getFilepath(),
                 $rule->getType(),
                 $rule->getDescription() ?: 'N/A',
                 implode(', ', $rule->getRequirements())
