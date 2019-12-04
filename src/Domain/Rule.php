@@ -68,7 +68,12 @@ class Rule implements RuleInterface
         return $this->description;
     }
 
-    public function getUnusedRequirementsInNodes(array $nodes): array
+    public function matches(NodeInterface $node): bool
+    {
+        return false !== strpos($node->getSubject(), $this->subject);
+    }
+
+    public function getUnusedRequirements(array $nodes): array
     {
         // Not relevant for other types of rules
         if (RuleInterface::TYPE_ONLY !== $this->type) {
@@ -76,7 +81,7 @@ class Rule implements RuleInterface
         }
 
         $matchingNodes = array_filter($nodes, function (NodeInterface $node) {
-            return $this->matchesNode($node);
+            return $this->matches($node);
         });
 
         return array_filter($this->requirements, function (string $requirement) use ($matchingNodes) {

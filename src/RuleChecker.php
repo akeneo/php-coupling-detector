@@ -26,23 +26,11 @@ use Akeneo\CouplingDetector\Domain\ViolationInterface;
 class RuleChecker
 {
     /**
-     * Does a node match a rule?
-     */
-    public function match(RuleInterface $rule, NodeInterface $node): bool
-    {
-        if (false !== strpos($node->getSubject(), $rule->getSubject())) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Checks if a node respect a rule.
      */
     public function check(RuleInterface $rule, NodeInterface $node): ?ViolationInterface
     {
-        if (!$this->match($rule, $node)) {
+        if (!$rule->matches($node)) {
             return null;
         }
 

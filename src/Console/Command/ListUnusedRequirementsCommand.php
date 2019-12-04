@@ -91,7 +91,7 @@ final class ListUnusedRequirementsCommand extends Command
 
         $exitCode = 0;
         foreach ($rules as $rule) {
-            $ruleUnusedRequirements = $rule->getUnusedRequirementsInNodes($nodes);
+            $ruleUnusedRequirements = $rule->getUnusedRequirements($nodes);
             if (count($ruleUnusedRequirements) > 0) {
                 $exitCode = self::EXIT_WITH_WARNINGS;
             }

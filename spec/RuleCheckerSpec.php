@@ -2,125 +2,136 @@
 
 namespace spec\Akeneo\CouplingDetector;
 
+use Akeneo\CouplingDetector\Domain\Node;
 use Akeneo\CouplingDetector\Domain\NodeInterface;
+use Akeneo\CouplingDetector\Domain\Rule;
 use Akeneo\CouplingDetector\Domain\RuleInterface;
+use Akeneo\CouplingDetector\Domain\Violation;
 use Akeneo\CouplingDetector\Domain\ViolationInterface;
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
 class RuleCheckerSpec extends ObjectBehavior
 {
-    function it_matches_a_node(RuleInterface $rule, NodeInterface $node)
+    function it_checks_a_valid_node_with_forbidden_rule()
     {
-        $rule->getSubject()->willReturn('foo\bar');
-        $node->getSubject()->willReturn('foo\bar\baz');
-        $this->match($rule, $node)->shouldReturn(true);
-
-        $rule->getSubject()->willReturn('foo\bar');
-        $node->getSubject()->willReturn('blu\bla\blo');
-        $this->match($rule, $node)->shouldReturn(false);
-    }
-
-    function it_checks_a_valid_node_with_forbidden_rule(RuleInterface $rule, NodeInterface $node)
-    {
-        $rule->getSubject()->willReturn('foo\bar');
-        $rule->getRequirements()->willReturn(array('blu', 'bla', 'bli'));
-        $rule->getType()->willReturn(RuleInterface::TYPE_FORBIDDEN);
-        $node->getSubject()->willReturn('foo\bar\baz');
-        $node->getTokens()->willReturn(array('blo', 'bly'));
-
-        $this->check($rule, $node)->shouldReturn(null);
-    }
-
-    function it_checks_an_invalid_node_with_forbidden_rule(
-        RuleInterface $rule,
-        NodeInterface $node,
-        ViolationInterface $violation
-    ) {
-        $rule->getSubject()->willReturn('foo\bar');
-        $rule->getRequirements()->willReturn(array('blu', 'bla', 'bli'));
-        $rule->getType()->willReturn(RuleInterface::TYPE_FORBIDDEN);
-        $node->getSubject()->willReturn('foo\bar\baz');
-        $node->getTokens()->willReturn(array('blu', 'bla', 'blo', 'bly'));
-
-        $violation->getNode()->willReturn($node);
-        $violation->getRule()->willReturn($rule);
-        $violation->getType()->willReturn(ViolationInterface::TYPE_ERROR);
-        $violation->getTokenViolations()->willReturn(array('blu', 'bla'));
-
-        $this->check($rule, $node)->shouldBeLikeExpectedViolation($violation);
-    }
-
-    function it_checks_a_valid_node_with_discouraged_rule(RuleInterface $rule, NodeInterface $node)
-    {
-        $rule->getSubject()->willReturn('foo\bar');
-        $rule->getRequirements()->willReturn(array('blu', 'bla', 'bli'));
-        $rule->getType()->willReturn(RuleInterface::TYPE_DISCOURAGED);
-        $node->getSubject()->willReturn('foo\bar\baz');
-        $node->getTokens()->willReturn(array('blo', 'bly'));
-
-        $this->check($rule, $node)->shouldReturn(null);
-    }
-
-    function it_checks_an_invalid_node_with_discouraged_rule(
-        RuleInterface $rule,
-        NodeInterface $node,
-        ViolationInterface $violation
-    ) {
-        $rule->getSubject()->willReturn('foo\bar');
-        $rule->getRequirements()->willReturn(array('blu', 'bla', 'bli'));
-        $rule->getType()->willReturn(RuleInterface::TYPE_DISCOURAGED);
-        $node->getSubject()->willReturn('foo\bar\baz');
-        $node->getTokens()->willReturn(array('blu', 'bla', 'blo', 'bly'));
-
-        $violation->getNode()->willReturn($node);
-        $violation->getRule()->willReturn($rule);
-        $violation->getType()->willReturn(ViolationInterface::TYPE_WARNING);
-        $violation->getTokenViolations()->willReturn(array('blu', 'bla'));
-
-        $this->check($rule, $node)->shouldBeLikeExpectedViolation($violation);
-    }
-
-    function it_checks_a_valid_node_with_only_rule(RuleInterface $rule, NodeInterface $node)
-    {
-        $rule->getSubject()->willReturn('foo\bar');
-        $rule->getRequirements()->willReturn(array('blu', 'bla', 'bli'));
-        $rule->getType()->willReturn(RuleInterface::TYPE_ONLY);
-        $node->getSubject()->willReturn('foo\bar\baz');
-        $node->getTokens()->willReturn(array('blu', 'bla'));
-
-        $this->check($rule, $node)->shouldReturn(null);
-    }
-
-    function it_checks_an_invalid_node_with_only_rule(
-        RuleInterface $rule,
-        NodeInterface $node,
-        ViolationInterface $violation
-    ) {
-        $rule->getSubject()->willReturn('foo\bar');
-        $rule->getRequirements()->willReturn(array('blu', 'bla', 'bli'));
-        $rule->getType()->willReturn(RuleInterface::TYPE_ONLY);
-        $node->getSubject()->willReturn('foo\bar\baz');
-        $node->getTokens()->willReturn(array('blu', 'bla', 'blo', 'bly'));
-
-        $violation->getNode()->willReturn($node);
-        $violation->getRule()->willReturn($rule);
-        $violation->getType()->willReturn(ViolationInterface::TYPE_ERROR);
-        $violation->getTokenViolations()->willReturn(array('blo', 'bly'));
-
-        $this->check($rule, $node)->shouldBeLikeExpectedViolation($violation);
-    }
-
-    public function getMatchers(): array
-    {
-        return array(
-            'beLikeExpectedViolation' => function ($subject, $expected) {
-                return
-                    $subject->getNode() === $expected->getNode() &&
-                    $subject->getRule() === $expected->getRule() &&
-                    $subject->getTokenViolations() === $expected->getTokenViolations() &&
-                    $subject->getType() === $expected->getType();
-            },
+        $rule = new Rule(
+            'foo\bar',
+            ['blu', 'bla', 'bli'],
+            RuleInterface::TYPE_FORBIDDEN
         );
+
+        $node = new Node(
+            ['blo', 'bly'],
+            'foo\bar\baz',
+            '/path/to/file',
+            NodeInterface::TYPE_PHP_USE
+        );
+
+        $this->check($rule, $node)->shouldReturn(null);
+    }
+
+    function it_checks_an_invalid_node_with_forbidden_rule()
+    {
+        $rule = new Rule(
+            'foo\bar',
+            ['blu', 'bla', 'bli'],
+            RuleInterface::TYPE_FORBIDDEN
+        );
+
+        $node = new Node(
+            ['blu', 'bla', 'blo', 'bly'],
+            'foo\bar\baz',
+            '/path/to/file',
+            NodeInterface::TYPE_PHP_USE
+        );
+
+        $this->check($rule, $node)->shouldBeLike(new Violation(
+            $node,
+            $rule,
+            ['blu', 'bla'],
+            ViolationInterface::TYPE_ERROR
+        ));
+    }
+
+    function it_checks_a_valid_node_with_discouraged_rule()
+    {
+        $rule = new Rule(
+            'foo\bar',
+            ['blu', 'bla', 'bli'],
+            RuleInterface::TYPE_DISCOURAGED
+        );
+
+        $node = new Node(
+            ['blo', 'bly'],
+            'foo\bar\baz',
+            '/path/to/file',
+            NodeInterface::TYPE_PHP_USE
+        );
+
+        $this->check($rule, $node)->shouldReturn(null);
+    }
+
+    function it_checks_an_invalid_node_with_discouraged_rule()
+    {
+        $rule = new Rule(
+            'foo\bar',
+            ['blu', 'bla', 'bli'],
+            RuleInterface::TYPE_DISCOURAGED
+        );
+
+        $node = new Node(
+            ['blu', 'bla', 'blo', 'bly'],
+            'foo\bar\baz',
+            '/path/to/file',
+            NodeInterface::TYPE_PHP_USE
+        );
+
+        $this->check($rule, $node)->shouldBeLike(new Violation(
+            $node,
+            $rule,
+            ['blu', 'bla'],
+            ViolationInterface::TYPE_WARNING
+        ));
+    }
+
+    function it_checks_a_valid_node_with_only_rule()
+    {
+        $rule = new Rule(
+            'foo\bar',
+            ['blu', 'bla', 'bli'],
+            RuleInterface::TYPE_ONLY
+        );
+
+        $node = new Node(
+            ['blu', 'bla'],
+            'foo\bar\baz',
+            '/path/to/file',
+            NodeInterface::TYPE_PHP_USE
+        );
+
+        $this->check($rule, $node)->shouldReturn(null);
+    }
+
+    function it_checks_an_invalid_node_with_only_rule()
+    {
+        $rule = new Rule(
+            'foo\bar',
+            ['blu', 'bla', 'bli'],
+            RuleInterface::TYPE_ONLY
+        );
+
+        $node = new Node(
+            ['blu', 'bla', 'blo', 'bly'],
+            'foo\bar\baz',
+            '/path/to/file',
+            NodeInterface::TYPE_PHP_USE
+        );
+
+        $this->check($rule, $node)->shouldBeLike(new Violation(
+            $node,
+            $rule,
+            ['blo', 'bly'],
+            ViolationInterface::TYPE_ERROR
+        ));
     }
 }
