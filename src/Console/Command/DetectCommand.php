@@ -151,8 +151,9 @@ class DetectCommand extends Command
         if (!$config instanceof Configuration) {
             throw new \InvalidArgumentException(
                 sprintf(
-                    'The configuration file "%s" must return a "Akeneo\CouplingDetector\Configuration\Configuration"',
-                    $filePath
+                    'The configuration file "%s" must return a "%s" instance.',
+                    $filePath,
+                    Configuration::class
                 )
             );
         }

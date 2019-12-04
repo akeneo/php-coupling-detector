@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Akeneo\CouplingDetector\Console;
 
 use Akeneo\CouplingDetector\Console\Command\DetectCommand;
+use Akeneo\CouplingDetector\Console\Command\ListUnusedRequirementsCommand;
 use Akeneo\CouplingDetector\CouplingDetector;
 use Symfony\Component\Console\Application as BaseApplication;
 
@@ -23,5 +24,6 @@ class Application extends BaseApplication
         error_reporting(-1);
         parent::__construct('Akeneo coupling detector', CouplingDetector::VERSION);
         $this->add(new DetectCommand());
+        $this->add(new ListUnusedRequirementsCommand());
     }
 }

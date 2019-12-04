@@ -70,7 +70,7 @@ class RuleChecker
         $errors = array();
 
         foreach ($node->getTokens() as $token) {
-            if (!$this->checkTokenForForbiddenOrDiscouragedRule($rule, $token) &&
+            if (!$this->doesTokenRespectForbiddenOrDiscouragedRule($rule, $token) &&
                 !in_array($token, $errors)) {
                 $errors[] = $token;
             }
@@ -91,7 +91,7 @@ class RuleChecker
     /**
      * Checks if a token fits a "forbidden" / "discouraged" rule or not.
      */
-    private function checkTokenForForbiddenOrDiscouragedRule(RuleInterface $rule, string $token): bool
+    private function doesTokenRespectForbiddenOrDiscouragedRule(RuleInterface $rule, string $token): bool
     {
         foreach ($rule->getRequirements() as $req) {
             if (strpos($token, $req) !== false) {
@@ -111,7 +111,7 @@ class RuleChecker
         $errors = array();
 
         foreach ($node->getTokens() as $token) {
-            if (!$this->checkTokenForOnlyRule($rule, $token) &&
+            if (!$this->doesTokenRespectOnlyRule($rule, $token) &&
                 !in_array($token, $errors)) {
                 $errors[] = $token;
             }
@@ -127,7 +127,7 @@ class RuleChecker
     /**
      * Checks if a token fits a "only" rule or not.
      */
-    private function checkTokenForOnlyRule(RuleInterface $rule, $token): bool
+    private function doesTokenRespectOnlyRule(RuleInterface $rule, $token): bool
     {
         $fitRuleRequirements = false;
         foreach ($rule->getRequirements() as $req) {
