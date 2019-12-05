@@ -3,7 +3,6 @@
 namespace spec\Akeneo\CouplingDetector\NodeParser\PhpClass;
 
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 use PhpCsFixer\Tokenizer\Tokens;
 
 class UseDeclarationsExtractorSpec extends ObjectBehavior

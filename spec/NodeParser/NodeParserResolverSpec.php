@@ -3,7 +3,6 @@
 namespace spec\Akeneo\CouplingDetector\NodeParser;
 
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
 class NodeParserResolverSpec extends ObjectBehavior
 {

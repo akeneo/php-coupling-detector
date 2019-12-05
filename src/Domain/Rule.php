@@ -67,4 +67,37 @@ class Rule implements RuleInterface
     {
         return $this->description;
     }
+
+    public function matches(NodeInterface $node): bool
+    {
+        return false !== strpos($node->getSubject(), $this->subject);
+    }
+
+    public function getUnusedRequirements(array $nodes): array
+    {
+        // Not relevant for other types of rules
+        if (RuleInterface::TYPE_ONLY !== $this->type) {
+            return [];
+        }
+
+        $matchingNodes = array_filter($nodes, function (NodeInterface $node) {
+            return $this->matches($node);
+        });
+
+        return array_filter($this->requirements, function (string $requirement) use ($matchingNodes) {
+            if ($this->subject === $requirement) {
+                return false;
+            }
+
+            foreach ($matchingNodes as $node) {
+                foreach ($node->getTokens() as $token) {
+                    if (false !== strpos($token, $requirement)) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        });
+    }
 }

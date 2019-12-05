@@ -23,4 +23,8 @@ interface RuleInterface
     public function getType(): string;
 
     public function getDescription(): ?string;
+
+    public function matches(NodeInterface $node): bool;
+
+    public function getUnusedRequirements(array $nodes): array;
 }
