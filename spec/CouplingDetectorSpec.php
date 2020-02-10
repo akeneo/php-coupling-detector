@@ -6,13 +6,20 @@ use Akeneo\CouplingDetector\Domain\NodeInterface;
 use Akeneo\CouplingDetector\Domain\RuleInterface;
 use Akeneo\CouplingDetector\Domain\ViolationInterface;
 use Akeneo\CouplingDetector\Event\Events;
+use Akeneo\CouplingDetector\Event\NodeChecked;
+use Akeneo\CouplingDetector\Event\NodeParsedEvent;
+use Akeneo\CouplingDetector\Event\PostNodesParsedEvent;
+use Akeneo\CouplingDetector\Event\PostRulesCheckedEvent;
+use Akeneo\CouplingDetector\Event\PreNodesParsedEvent;
+use Akeneo\CouplingDetector\Event\PreRulesCheckedEvent;
+use Akeneo\CouplingDetector\Event\RuleCheckedEvent;
 use Akeneo\CouplingDetector\NodeParser\ExtractionException;
 use Akeneo\CouplingDetector\NodeParser\NodeParserInterface;
 use Akeneo\CouplingDetector\NodeParser\NodeParserResolver;
 use Akeneo\CouplingDetector\RuleChecker;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\Finder;
 
 class CouplingDetectorSpec extends ObjectBehavior
@@ -44,13 +51,27 @@ class CouplingDetectorSpec extends ObjectBehavior
         $ruleChecker->check($rule1, $node)->willReturn(null);
         $ruleChecker->check($rule2, $node)->willReturn($violation);
 
-        $eventDispatcher->dispatch(Events::PRE_NODES_PARSED, Argument::type('Akeneo\CouplingDetector\Event\PreNodesParsedEvent'))->shouldBeCalled();
-        $eventDispatcher->dispatch(Events::NODE_PARSED, Argument::type('Akeneo\CouplingDetector\Event\NodeParsedEvent'))->shouldBeCalled();
-        $eventDispatcher->dispatch(Events::POST_NODES_PARSED, Argument::type('Akeneo\CouplingDetector\Event\PostNodesParsedEvent'))->shouldBeCalled();
-        $eventDispatcher->dispatch(Events::PRE_RULES_CHECKED, Argument::type('Akeneo\CouplingDetector\Event\PreRulesCheckedEvent'))->shouldBeCalled();
-        $eventDispatcher->dispatch(Events::NODE_CHECKED, Argument::type('Akeneo\CouplingDetector\Event\NodeChecked'))->shouldBeCalledTimes(2);
-        $eventDispatcher->dispatch(Events::RULE_CHECKED, Argument::type('Akeneo\CouplingDetector\Event\RuleCheckedEvent'))->shouldBeCalledTimes(2);
-        $eventDispatcher->dispatch(Events::POST_RULES_CHECKED, Argument::type('Akeneo\CouplingDetector\Event\PostRulesCheckedEvent'))->shouldBeCalled();
+        $eventDispatcher
+            ->dispatch(Argument::type(PreNodesParsedEvent::class), Events::PRE_NODES_PARSED)
+            ->shouldBeCalled();
+        $eventDispatcher
+            ->dispatch(Argument::type(NodeParsedEvent::class), Events::NODE_PARSED)
+            ->shouldBeCalled();
+        $eventDispatcher
+            ->dispatch(Argument::type(PostNodesParsedEvent::class), Events::POST_NODES_PARSED)
+            ->shouldBeCalled();
+        $eventDispatcher
+            ->dispatch(Argument::type(PreRulesCheckedEvent::class), Events::PRE_RULES_CHECKED)
+            ->shouldBeCalled();
+        $eventDispatcher
+            ->dispatch(Argument::type(NodeChecked::class), Events::NODE_CHECKED)
+            ->shouldBeCalledTimes(2);
+        $eventDispatcher
+            ->dispatch(Argument::type(RuleCheckedEvent::class), Events::RULE_CHECKED)
+            ->shouldBeCalledTimes(2);
+        $eventDispatcher
+            ->dispatch(Argument::type(PostRulesCheckedEvent::class), Events::POST_RULES_CHECKED)
+            ->shouldBeCalled();
 
         $violations = $this->detect($finder, array($rule1, $rule2));
         $violations->shouldHaveCount(1);
@@ -69,11 +90,21 @@ class CouplingDetectorSpec extends ObjectBehavior
         $nodeParserResolver->resolve(Argument::any())->willReturn($parser);
         $parser->parse(Argument::any())->willThrow(ExtractionException::class);
 
-        $eventDispatcher->dispatch(Events::PRE_NODES_PARSED, Argument::type('Akeneo\CouplingDetector\Event\PreNodesParsedEvent'))->shouldBeCalled();
-        $eventDispatcher->dispatch(Events::NODE_PARSED, Argument::type('Akeneo\CouplingDetector\Event\NodeParsedEvent'))->shouldNotBeCalled();
-        $eventDispatcher->dispatch(Events::POST_NODES_PARSED, Argument::type('Akeneo\CouplingDetector\Event\PostNodesParsedEvent'))->shouldBeCalled();
-        $eventDispatcher->dispatch(Events::PRE_RULES_CHECKED, Argument::type('Akeneo\CouplingDetector\Event\PreRulesCheckedEvent'))->shouldBeCalled();
-        $eventDispatcher->dispatch(Events::POST_RULES_CHECKED, Argument::type('Akeneo\CouplingDetector\Event\PostRulesCheckedEvent'))->shouldBeCalled();
+        $eventDispatcher
+            ->dispatch(Argument::type(PreNodesParsedEvent::class), Events::PRE_NODES_PARSED)
+            ->shouldBeCalled();
+        $eventDispatcher
+            ->dispatch(Argument::type(NodeParsedEvent::class), Events::NODE_PARSED)
+            ->shouldNotBeCalled();
+        $eventDispatcher
+            ->dispatch(Argument::type(PostNodesParsedEvent::class), Events::POST_NODES_PARSED)
+            ->shouldBeCalled();
+        $eventDispatcher
+            ->dispatch(Argument::type(PreRulesCheckedEvent::class), Events::PRE_RULES_CHECKED)
+            ->shouldBeCalled();
+        $eventDispatcher
+            ->dispatch(Argument::type(PostRulesCheckedEvent::class), Events::POST_RULES_CHECKED)
+            ->shouldBeCalled();
 
         $violations = $this->detect($finder, []);
         $violations->shouldHaveCount(0);

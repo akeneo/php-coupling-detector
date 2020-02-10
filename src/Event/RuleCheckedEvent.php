@@ -6,7 +6,7 @@ namespace Akeneo\CouplingDetector\Event;
 
 use Akeneo\CouplingDetector\Domain\RuleInterface;
 use Akeneo\CouplingDetector\Domain\ViolationInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Dispatched when a rule has been checked for all nodes.

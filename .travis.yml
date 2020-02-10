@@ -4,11 +4,13 @@ language: php
 #sudo: false
 
 php:
-  - '7.1'
+  - '7.2'
+  - '7.3'
+  - '7.4'
 
 cache:
-    directories:
-        - vendor
+  directories:
+    - $HOME/.composer/cache
 
 before_script:
   - composer self-update

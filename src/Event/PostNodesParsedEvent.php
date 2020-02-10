@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Akeneo\CouplingDetector\Event;
 
 use Akeneo\CouplingDetector\Domain\NodeInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Dispatched when all nodes have been parsed.
