@@ -17,7 +17,7 @@ use Akeneo\CouplingDetector\Event\RuleCheckedEvent;
 use Akeneo\CouplingDetector\Event\PostRulesCheckedEvent;
 use Akeneo\CouplingDetector\NodeParser\ExtractionException;
 use Akeneo\CouplingDetector\NodeParser\NodeParserResolver;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -69,7 +69,7 @@ class CouplingDetector
         $nodes = $this->parseNodes($finder);
         $violations = array();
 
-        $this->eventDispatcher->dispatch(Events::PRE_RULES_CHECKED, new PreRulesCheckedEvent($rules));
+        $this->eventDispatcher->dispatch(new PreRulesCheckedEvent($rules), Events::PRE_RULES_CHECKED);
 
         foreach ($rules as $rule) {
             $ruleViolations = array();
@@ -80,21 +80,15 @@ class CouplingDetector
                     $ruleViolations[] = $violation;
                 }
 
-                $this->eventDispatcher->dispatch(
-                    Events::NODE_CHECKED,
-                    new NodeChecked($node, $rule, $violation)
-                );
+                $this->eventDispatcher->dispatch(new NodeChecked($node, $rule, $violation), Events::NODE_CHECKED);
             }
 
-            $this->eventDispatcher->dispatch(
-                Events::RULE_CHECKED,
-                new RuleCheckedEvent($rule, $ruleViolations)
-            );
+            $this->eventDispatcher->dispatch(new RuleCheckedEvent($rule, $ruleViolations), Events::RULE_CHECKED);
 
             $violations = array_merge($violations, $ruleViolations);
         }
 
-        $this->eventDispatcher->dispatch(Events::POST_RULES_CHECKED, new PostRulesCheckedEvent($violations));
+        $this->eventDispatcher->dispatch(new PostRulesCheckedEvent($violations), Events::POST_RULES_CHECKED);
 
         return $violations;
     }
@@ -106,7 +100,7 @@ class CouplingDetector
      */
     private function parseNodes(Finder $finder): array
     {
-        $this->eventDispatcher->dispatch(Events::PRE_NODES_PARSED, new PreNodesParsedEvent($finder));
+        $this->eventDispatcher->dispatch(new PreNodesParsedEvent($finder), Events::PRE_NODES_PARSED);
 
         $nodes = array();
         foreach ($finder as $file) {
@@ -115,7 +109,7 @@ class CouplingDetector
                 try {
                     $node = $parser->parse($file);
                     $nodes[] = $node;
-                    $this->eventDispatcher->dispatch(Events::NODE_PARSED, new NodeParsedEvent($node));
+                    $this->eventDispatcher->dispatch(new NodeParsedEvent($node), Events::NODE_PARSED);
                 } catch (ExtractionException $e) {
                     // at the moment, let's just ignore invalid node
                     // need to fix that with a better design
@@ -123,7 +117,7 @@ class CouplingDetector
             }
         }
 
-        $this->eventDispatcher->dispatch(Events::POST_NODES_PARSED, new PostNodesParsedEvent($nodes));
+        $this->eventDispatcher->dispatch(new PostNodesParsedEvent($nodes), Events::POST_NODES_PARSED);
 
         return $nodes;
     }

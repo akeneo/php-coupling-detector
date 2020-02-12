@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Akeneo\CouplingDetector\Event;
 
 use Akeneo\CouplingDetector\Domain\ViolationInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Dispatched when all rules have been checked, ie at the end of the program.

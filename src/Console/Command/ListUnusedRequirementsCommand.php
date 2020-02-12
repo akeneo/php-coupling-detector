@@ -127,7 +127,7 @@ final class ListUnusedRequirementsCommand extends Command
         NodeParserResolver $nodeParserResolver,
         EventDispatcher $eventDispatcher
     ): array {
-        $eventDispatcher->dispatch(Events::PRE_NODES_PARSED, new PreNodesParsedEvent($finder));
+        $eventDispatcher->dispatch(new PreNodesParsedEvent($finder), Events::PRE_NODES_PARSED);
 
         $nodes = array();
         foreach ($finder as $file) {
@@ -136,7 +136,7 @@ final class ListUnusedRequirementsCommand extends Command
                 try {
                     $node = $parser->parse($file);
                     $nodes[] = $node;
-                    $eventDispatcher->dispatch(Events::NODE_PARSED, new NodeParsedEvent($node));
+                    $eventDispatcher->dispatch(new NodeParsedEvent($node), Events::NODE_PARSED);
                 } catch (ExtractionException $e) {
                     // at the moment, let's just ignore invalid node
                     // need to fix that with a better design
@@ -144,7 +144,7 @@ final class ListUnusedRequirementsCommand extends Command
             }
         }
 
-        $eventDispatcher->dispatch(Events::POST_NODES_PARSED, new PostNodesParsedEvent($nodes));
+        $eventDispatcher->dispatch(new PostNodesParsedEvent($nodes), Events::POST_NODES_PARSED);
 
         return $nodes;
     }

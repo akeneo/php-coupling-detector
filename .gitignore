@@ -1,3 +1,4 @@
 vendor
 bin/phpspec
 bin/php-cs-fixer
+composer.lock
