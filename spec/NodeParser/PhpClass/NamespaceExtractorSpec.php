@@ -38,8 +38,9 @@ EOF;
         $this->extract($tokens)->shouldReturn('Pim\Bundle\CatalogBundle\Model');
     }
 
-    function it_throws_an_exception_when_class_name_cannot_be_extracted(Tokens $tokens)
+    function it_throws_an_exception_when_class_name_cannot_be_extracted()
     {
+        $tokens = Tokens::fromCode('');
         $this->shouldThrow('Akeneo\CouplingDetector\NodeParser\ExtractionException')->duringExtract($tokens);
     }
 }

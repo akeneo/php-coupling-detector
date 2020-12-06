@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": ">=7.2",
         "friendsofphp/php-cs-fixer": "^2.1",
         "symfony/event-dispatcher": "^4.4||^5.0",
         "symfony/finder": "^4.4||^5.0",
