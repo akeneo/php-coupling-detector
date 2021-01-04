@@ -38,4 +38,4 @@ you're good to go:
 
 ## Usage
 
-To discover how to use this tool, please read the usage of the [detect command](doc/DETECT.md).
+To discover how to use this tool, please read the usage of the [detect](doc/DETECT.md) and [list-unused-requirements](doc/LIST_UNUSED_REQUIREMENTS.md) commands.
