@@ -1,7 +1,5 @@
 # PHP Coupling Detector
 
-[![Build Status](https://travis-ci.org/akeneo/php-coupling-detector.png)](https://travis-ci.org/akeneo/php-coupling-detector)
-
 The PHP Coupling Detector tool detects all the coupling issues of your project with respect to the coupling 
 rules you have defined. 
 
