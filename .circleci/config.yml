@@ -9,4 +9,4 @@ jobs:
             - run: composer install --dev
             - run: ./vendor/bin/phpspec run
             - run: ./vendor/bin/phpstan analyse src -l 5
-            
+
