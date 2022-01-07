@@ -13,26 +13,21 @@
         }
     ],
     "require": {
-        "php": "^7.2||8.0.*",
-        "friendsofphp/php-cs-fixer": "^2.1||^3.0",
-        "symfony/event-dispatcher": "^4.4||^5.0",
-        "symfony/finder": "^4.4||^5.0",
-        "symfony/console": "^4.4||^5.0",
-        "symfony/filesystem": "^4.4||^5.0"
+        "php": "^7.3||8.0.*",
+        "friendsofphp/php-cs-fixer": "2.1||^3.0",
+        "symfony/event-dispatcher": "^4.4||^5.0||^6.0",
+        "symfony/finder": "^4.4||^5.0||^6.0",
+        "symfony/console": "^4.4||^5.0||^6.0",
+        "symfony/filesystem": "^4.4||^5.0||^6.0"
     },
     "require-dev": {
-        "phpspec/phpspec": "^6.0",
-        "phpstan/phpstan": "^0.12.0"
+        "phpspec/phpspec": "^6.0||^7.0",
+        "phpstan/phpstan": "^0.12.0||^1.0"
     },
     "autoload": {
         "psr-4": {
             "Akeneo\\CouplingDetector\\": "src/"
         }
     },
-    "bin": ["bin/php-coupling-detector"],
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.x-dev"
-        }
-    }
+    "bin": ["bin/php-coupling-detector"]
 }
