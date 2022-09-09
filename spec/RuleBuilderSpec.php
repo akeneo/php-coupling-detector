@@ -14,13 +14,6 @@ class RuleBuilderSpec extends ObjectBehavior
         $this->shouldHaveType(RuleBuilder::class);
     }
 
-    function it_does_not_create_a_rule_without_constraints()
-    {
-        $this
-            ->shouldThrow(new \Exception('Can not create a rule without any requirement defined previously.'))
-            ->during('in', ['baz']);
-    }
-
     function it_chains_the_methods_for_building_a_rule()
     {
         $this->forbids(['foo', 'bar'])->shouldReturn($this);
