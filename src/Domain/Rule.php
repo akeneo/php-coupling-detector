@@ -83,6 +83,10 @@ class Rule implements RuleInterface
         $matchingNodes = array_filter($nodes, function (NodeInterface $node) {
             return $this->matches($node);
         });
+        
+        if ([] === $matchingNodes) {
+            return [];
+        }
 
         return array_filter($this->requirements, function (string $requirement) use ($matchingNodes) {
             if ($this->subject === $requirement) {
