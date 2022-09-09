@@ -52,10 +52,6 @@ class RuleBuilder
 
     public function in(string $subject): RuleInterface
     {
-        if (empty($this->requirements)) {
-            throw new \Exception('Can not create a rule without any requirement defined previously.');
-        }
-
         if (null === $this->type) {
             throw new \Exception('Can not create a rule without any type defined previously.');
         }
