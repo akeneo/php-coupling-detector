@@ -19,21 +19,26 @@ PHP needs to be a minimum version of PHP 7.2
 
 ## Installation
 
-### Globally (Composer)
-
-To install PHP-Coupling-Detector, install Composer and issue the following command:
-
 ```bash
-    $ ./composer.phar global require akeneo/php-coupling-detector
-```
-
-Then, make sure you have ``~/.composer/vendor/bin`` in your ``PATH``, and
-you're good to go:
-
-```bash
-    export PATH="$PATH:$HOME/.composer/vendor/bin"
+    $ composer require akeneo/php-coupling-detector
 ```
 
 ## Usage
 
 To discover how to use this tool, please read the usage of the [detect](doc/DETECT.md) and [list-unused-requirements](doc/LIST_UNUSED_REQUIREMENTS.md) commands.
+
+## Development
+
+You can develop out of the box thanks to the provided `docker-compose.yml` and `Makefile` files 
+
+To install the app:
+
+```bash
+    $ make vendor
+```
+
+To launch tests on your machine:
+
+```bash
+    $ make test
+```

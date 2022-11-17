@@ -26,3 +26,12 @@ jobs:
 
             - name: Static tests
               run: ./vendor/bin/phpstan analyse src -l 5
+
+    tests_with_docker:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Build the stack
+              run: make vendor
+            - name: Test
+              run: make test
