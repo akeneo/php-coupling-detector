@@ -35,7 +35,6 @@ To install the app:
 
 ```bash
     $ make install
-    $ make up
     $ make vendor
 ```
 
