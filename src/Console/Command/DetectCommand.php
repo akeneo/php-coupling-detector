@@ -68,7 +68,7 @@ class DetectCommand extends Command
     /**
      * {@inheritedDoc}.
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->setFormatter(new OutputFormatter($output->isDecorated()));
 
@@ -115,10 +115,8 @@ class DetectCommand extends Command
 
     /**
      * @param ViolationInterface[] $violations
-     *
-     * @return int
      */
-    private function determineExitCode(array $violations)
+    private function determineExitCode(array $violations): int
     {
         if (0 === count($violations)) {
             return 0;
@@ -137,10 +135,8 @@ class DetectCommand extends Command
 
     /**
      * @param string $filePath
-     *
-     * @return Configuration
      */
-    private function loadConfiguration($filePath)
+    private function loadConfiguration($filePath): Configuration
     {
         if (!is_file($filePath)) {
             throw new \InvalidArgumentException(sprintf('The configuration file "%s" does not exit', $filePath));

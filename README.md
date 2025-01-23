@@ -34,6 +34,7 @@ You can develop out of the box thanks to the provided `docker-compose.yml` and `
 To install the app:
 
 ```bash
+    $ make install
     $ make vendor
 ```
 

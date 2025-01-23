@@ -1,11 +1,10 @@
-version: '3'
-
 services:
     php:
         build:
             context: .
-        image: php:8.1-cli
         container_name: coupling_detector
         volumes:
             - ./:/opt/app
+            - '${HOST_COMPOSER_CACHE_DIR:-~/.cache/composer}:/home/composer/.cache/composer'
+            - '${HOST_COMPOSER_HOME:-~/.config/composer}:/home/composer/.config/composer'
         working_dir: /opt/app
