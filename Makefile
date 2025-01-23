@@ -1,6 +1,13 @@
 .PHONY: test
 
-DOCKER_RUN = docker-compose run --rm php
+DOCKER_COMPOSE = docker compose
+DOCKER_RUN = $(DOCKER_COMPOSE) run --rm php
+
+install:
+	$(DOCKER_COMPOSE) build --no-cache
+
+up:
+	$(DOCKER_COMPOSE) up --remove-orphans -d --build
 
 vendor:
 	${DOCKER_RUN} composer install --no-interaction
